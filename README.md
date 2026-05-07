@@ -1,6 +1,6 @@
 # ACE Home
 
-The first school for [ACE](https://github.com/prod9/ace) — the foundation that every
+The first school for [ACE](https://github.com/ace-rs/ace) — the foundation that every
 other school inherits from.
 
 ## What is this?

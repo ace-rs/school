@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-This is **ACE Home** — an [ACE](https://github.com/prod9/ace) school repo. It is
+This is **ACE Home** — an [ACE](https://github.com/ace-rs/ace) school repo. It is
 intended to become the *base* school that other ACE schools inherit from via `[[imports]]`
 in their `school.toml`.
 
