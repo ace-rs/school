@@ -51,6 +51,9 @@ ACE Home intentionally stays minimal. It contains only the foundational `ace-` s
 required for ACE itself to operate (e.g. `ace-school` for managing schools). Anything
 team- or project-specific belongs in **your** school, not here.
 
+See [`ACE.md`](ACE.md) for an overview of the `ace-*` workflow skills (`ace`, `ace-save`,
+`ace-audit`, `ace-realign`, `ace-school`).
+
 To extend your team's coding environment:
 
 1. Create your school with `ace school init`.
