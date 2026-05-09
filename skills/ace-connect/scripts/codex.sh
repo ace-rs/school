@@ -7,48 +7,40 @@ set -euo pipefail
 # processes are cleaned up on exit.
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-bridge_script="$script_dir/codex-app-bridge.mjs"
+bridge_script="$script_dir/codex-app-bridge.sh"
 
 slug="school.codex"
-effort="low"
-model=""
 cwd="$PWD"
 
 usage() {
   cat <<'USAGE'
-Usage: codex.sh [--slug NAME] [--effort LEVEL] [--model MODEL] [--cwd DIR]
+Usage: codex.sh [--slug NAME] [--cwd DIR]
 
 Options:
-  --slug NAME      ace-connect slug for incoming peer messages (default: school.codex)
-  --effort LEVEL   reasoning effort passed to bridge (default: low)
-  --model MODEL    model name forwarded to bridge for advanced/manual modes
-  --cwd DIR        working directory for app-server and bridge (default: $PWD)
+  --slug NAME   ace-connect slug for incoming peer messages (default: school.codex)
+  --cwd DIR     working directory for app-server and bridge (default: $PWD)
 USAGE
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --slug)   slug="${2:?--slug requires a value}"; shift 2 ;;
-    --effort) effort="${2:?--effort requires a value}"; shift 2 ;;
-    --model)  model="${2:?--model requires a value}"; shift 2 ;;
-    --cwd)    cwd="${2:?--cwd requires a value}"; shift 2 ;;
+    --slug) slug="${2:?--slug requires a value}"; shift 2 ;;
+    --cwd)  cwd="${2:?--cwd requires a value}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "unknown argument: $1" >&2; usage >&2; exit 2 ;;
   esac
 done
 
-if [[ ! -f "$bridge_script" ]]; then
-  echo "bridge script not found at: $bridge_script" >&2
+if [[ ! -x "$bridge_script" ]]; then
+  echo "bridge script not found or not executable: $bridge_script" >&2
   exit 1
 fi
-if ! command -v codex >/dev/null 2>&1; then
-  echo "codex CLI not found in PATH" >&2
-  exit 1
-fi
-if ! command -v node >/dev/null 2>&1; then
-  echo "node not found in PATH" >&2
-  exit 1
-fi
+for tool in codex websocat jq socat; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    echo "$tool not found in PATH" >&2
+    exit 1
+  fi
+done
 
 if ! cwd=$(cd -- "$cwd" && pwd); then
   echo "working directory does not exist: $cwd" >&2
@@ -137,18 +129,12 @@ if [[ -z "$url" ]]; then
   exit 1
 fi
 
-bridge_args=(
-  --app-url "$url"
-  --slug "$slug"
-  --effort "$effort"
-  --cwd "$cwd"
-  --wait-for-loaded-thread
-)
-if [[ -n "$model" ]]; then
-  bridge_args+=(--model "$model")
-fi
-
-node "$bridge_script" "${bridge_args[@]}" >"$bridge_log" 2>&1 &
+"$bridge_script" \
+  --app-url "$url" \
+  --slug "$slug" \
+  --cwd "$cwd" \
+  --wait-for-loaded-thread \
+  >"$bridge_log" 2>&1 &
 bridge_pid=$!
 
 # Brief settle before handing the terminal to the TUI. In --app-url mode the

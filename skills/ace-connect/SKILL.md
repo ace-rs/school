@@ -84,7 +84,8 @@ and reference the path in `body`. Don't clean up tmp files; let the OS handle it
 
 - `references/opencode.md` — OpenCode (`serve` + `attach` + REST bridge)
 - `references/codex.md` — Codex (`app-server` + `--remote` TUI + websocket
-  bridge, experimental). For interactive Codex TUI use `scripts/codex.sh`.
+  bridge, experimental). For interactive Codex TUI use `scripts/codex.sh`,
+  which requires `websocat` and `jq` on PATH (`brew install websocat jq`).
 
 ## Out of scope
 
