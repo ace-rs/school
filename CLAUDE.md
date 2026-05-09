@@ -8,10 +8,35 @@ This is **ACE Home** — an [ACE](https://github.com/ace-rs/ace) school repo. It
 intended to become the *base* school that other ACE schools inherit from via `[[imports]]`
 in their `school.toml`.
 
-A school is a git repo of shared skills, conventions, and session prompts. Projects
-subscribe via `ace setup <school>`; ACE clones the school and symlinks `skills/` into
-each project. There is no build, no tests, no runtime — the "code" here is markdown
-that downstream AI sessions read.
+A school is a git repo that bundles everything an ACE-managed coding session
+needs to behave consistently across projects. Projects subscribe via
+`ace setup <school>`; ACE clones the school into a cache and wires it into
+each project. There is no build, no tests, no runtime — the contents are
+markdown and config that downstream AI sessions read.
+
+A school can ship:
+
+- **Skills** (`skills/<name>/SKILL.md`) — progressively-disclosed instruction
+  bundles the AI loads on trigger. Symlinked into each project so edits flow
+  back to the school clone.
+- **Session prompt** (`school.toml: session_prompt`) — text prepended to every
+  session in subscriber projects.
+- **Environment variables** (`school.toml: env`) — exported into each session
+  shell.
+- **MCP server registrations** (`[[mcp]]`) — remote MCP endpoints (URL,
+  headers, auth hints) made available to every subscriber.
+- **Backend declarations** (`[[backends]]`) — custom invocations of `claude`,
+  `codex`, or other backends, selectable via `ace -b <name>`.
+- **Imports** (`[[imports]]`) — other schools to inherit from. A school is
+  composable: a downstream school can pull skills, MCP entries, and backend
+  declarations from one or more upstreams. Wildcards (`skill = "*"`) are
+  supported for whole-school inheritance.
+- **Conventions and durable docs** (`CLAUDE.md`, `docs/`) — house-style rules
+  and project-history artifacts the AI consults during work.
+
+`ace.toml` (per-project) and `~/.config/ace/ace.toml` (per-user) layer on top
+of the school's `school.toml` to choose backend, trust mode, session prompt
+overrides, MCP allow-list, and which skills to include or exclude.
 
 ## Repo layout
 
