@@ -123,6 +123,23 @@ Codex version; the app-server API is still experimental.
 Goal: incoming lines on `<dir>/<slug>.sock` become user messages in the running TUI's
 current thread.
 
+For an idle local Codex model that peers can wake without an attached TUI, prefer the
+bundled proof-of-concept bridge:
+
+```sh
+node skills/ace-connect/scripts/codex-app-bridge.mjs \
+  --slug school.codex-app \
+  --model gpt-5.4-mini \
+  --effort low \
+  --sandbox workspace-write
+```
+
+The script starts `codex app-server`, creates one thread, binds
+`<dir>/<slug>.sock`, injects each incoming ace-connect line as `turn/start`, and
+replies to the sender's `<from>.sock` with the final assistant message. This was
+verified on 2026-05-09 with a Claude peer sending to `school.codex-app-test.sock` and
+receiving `CLAUDE_BRIDGE_READY`.
+
 Steps on session start:
 
 1. Start the app-server on a free localhost port:
