@@ -1,12 +1,9 @@
 ---
 name: ace-connect
 description: >
-  Minimal local agent-to-agent bridge over unix domain sockets. TRIGGER when the user
-  says "start the bridge", "listen for messages", "tell the X agent …", "send message
-  to <agent>", "what agents are running", asks to make Codex receive Claude messages,
-  or invokes `/ace-connect`. For interactive Codex TUI sessions, `scripts/codex.sh`
-  is the primary launcher. DO NOT TRIGGER for intra-session communication, MCP tool
-  setup, or any cross-machine / network messaging — this is local-socket only.
+  Local agent-to-agent bridge over unix sockets. TRIGGER on `/ace-connect`, "start
+  the bridge", "listen for messages", "tell/send to <agent>", or "what agents are
+  running". DO NOT TRIGGER for intra-session, MCP, or cross-machine messaging.
 ---
 
 # ace-connect
