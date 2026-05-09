@@ -1,15 +1,17 @@
 # docs
 
-Durable artifacts about the project. Three peers, mutually exclusive — pick by
-artifact shape:
+Durable artifacts about the project, sorted by **permanence** — the three
+sub-dirs differ in how long their claims should be considered current.
 
-- [`spec/`](spec/) — forward-looking design specifications, RFCs, API
-  contracts. What we intend to build.
-- [`decisions/`](decisions/) — rulings during reviews and maintenance that
-  resolve ambiguity, pick between alternatives, or set a precedent. What we
-  decided.
-- [`notes/`](notes/) — research, surveys, drafts, transcripts, exploratory
-  write-ups. What we explored.
+- [`notes/`](notes/) — **impermanent.** Research, surveys, drafts,
+  transcripts, exploratory write-ups. *What we explored.* Today's notes
+  may be obsolete next week.
+- [`decisions/`](decisions/) — **point-in-time.** Rulings made on a
+  specific date for a specific question. *What we decided.* Frozen at the
+  moment of decision; later reversals are new decisions that supersede.
+- [`spec/`](spec/) — **current understanding.** Forward-looking design
+  specs, RFCs, interface contracts. *What we intend to build.* Updated in
+  place as understanding evolves; reflects the present, not history.
 
-Default for "this might be useful later" is `notes/`. Move it to `decisions/`
+Default for "this might be useful later" is `notes/`. Move to `decisions/`
 or `spec/` only when it actually fits one of those shapes.

@@ -1,21 +1,24 @@
 # Notes
 
-Durable artifacts that are **not decisions** — research dumps, surveys, drafts,
-transcripts, exploratory write-ups, feature-request bodies. Anything an agent
-or human produces that's worth preserving for future context but doesn't resolve
-ambiguity, pick between alternatives, or set a precedent.
+**Impermanent durable artifacts** — research dumps, surveys, drafts,
+transcripts, exploratory write-ups, feature-request bodies. Anything an
+agent or human produces that's worth preserving for context, but whose
+claims are not expected to remain current.
 
-If it *is* a decision, use `../decisions/` instead. If it describes
-intended-to-build behavior, use `../spec/`.
+If the artifact is a ruling on a question, it's a decision — use
+`../decisions/`. If it describes intended-to-build behavior, use
+`../spec/`.
 
 ## Format
 
-One file per artifact: `YYYY-MM-DD-slug.md`. No required template — write
-whatever shape fits the content. A short header (date, who/what produced it,
-what it's for) is helpful but not enforced.
+One file per artifact: `YYYY-MM-DD-slug.md` (the date matters because
+notes are about the moment they were written). No required template —
+write whatever shape fits the content.
 
 ## Lifecycle
 
-Append-only by default. Updates that materially change the conclusion belong
-in a new dated file that links back; minor corrections in-place are fine.
-Nothing here is binding — these are notes, not policy.
+Notes are disposable. Edit them, rewrite them, delete them — whichever
+fits. They're a snapshot of past thinking, not policy and not a claim
+about the present. If a note has become misleading or noisy, removing
+it is fine. Nothing else in the project should depend on a specific
+note still existing.

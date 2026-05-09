@@ -14,20 +14,23 @@ description: >
 
 # ace-docs
 
-Scaffold a `docs/` directory with three peer sub-directories so future
-artifacts have a clear, mutually-exclusive home:
+Scaffold a `docs/` directory with three peer sub-directories. The split
+exists to make **the permanence of an artifact explicit on disk**, so future
+readers know how durable any given file is supposed to be:
 
-- `docs/spec/` — forward-looking design specifications. *What we intend
-  to build.*
-- `docs/decisions/` — rulings that resolve ambiguity or set a precedent
-  future PRs should follow. *What we decided.*
-- `docs/notes/` — research, surveys, drafts, transcripts, exploratory
-  write-ups. *What we explored.*
+- `docs/notes/` — **impermanent.** Sketches, surveys, transcripts, research
+  dumps, exploratory write-ups. *What we explored.* Today's notes may be
+  obsolete next week and that's fine.
+- `docs/decisions/` — **point-in-time, durable.** Rulings made on a specific
+  date for a specific question. *What we decided.* Each entry is frozen at
+  the moment it was made; a later reversal lives in a new decision that
+  supersedes the old one.
+- `docs/spec/` — **current understanding of intent.** Forward-looking design
+  specs, RFCs, interface contracts. *What we intend to build.* Updated in
+  place as understanding evolves; reflects the present, not history.
 
-The point of three peers (versus one catch-all) is to stop "everything
-becomes a decision record" gravity. Most artifacts agents and humans
-produce are notes, not decisions. With `notes/` available as the
-default, agents stop force-fitting research into `decisions/`.
+Default for unfamiliar artifacts is `notes/`. Promote to `decisions/` or
+`spec/` only when the artifact's permanence shape clearly fits.
 
 ## When to run this skill
 
@@ -78,19 +81,24 @@ Don't run when:
    ```markdown
    ## Durable artifacts
 
-   All under `docs/` — three peers, mutually exclusive. Pick by artifact
-   shape:
+   All under `docs/` — three peers, sorted by permanence:
 
-   - `docs/spec/` — forward-looking design specs, RFCs, interface
-     contracts. *What we intend to build.*
-   - `docs/decisions/` — rulings that resolve ambiguity or set a
-     precedent future PRs should follow. *What we decided.*
-   - `docs/notes/` — research, surveys, drafts, transcripts, exploratory
-     write-ups. *What we explored.*
+   - `docs/notes/` — impermanent. Research, surveys, drafts, transcripts,
+     exploratory write-ups. *What we explored.* Disposable; edit or delete
+     freely.
+   - `docs/decisions/` — point-in-time. Rulings that go against the
+     obvious default (mainstream practice, agent training data, prior
+     convention) and exist primarily to head off future re-litigation.
+     If the answer was obvious, document the result in `docs/spec/`
+     instead — don't add a decision entry.
+   - `docs/spec/` — current understanding. Forward-looking design specs,
+     RFCs, interface contracts. *What we intend to build.* Updated in
+     place as understanding evolves.
 
    Default for "this might be useful later" is `docs/notes/`. Move to
-   `docs/decisions/` only if you can name what was decided in one line;
-   to `docs/spec/` only if it describes intended-to-build behavior.
+   `docs/decisions/` only if a future agent or reviewer would otherwise
+   re-argue the choice; to `docs/spec/` only if it describes
+   intended-to-build behavior.
    ```
 
    Place this section near other "where things go" guidance — usually
@@ -103,8 +111,9 @@ Don't run when:
    Scaffold docs/{spec,decisions,notes} for durable artifacts
 
    Adds the three-peer doc structure so future specs, decisions, and
-   research have a clear home. Each sub-dir has its own README defining
-   scope. CLAUDE.md (or AGENTS.md) updated to point at it.
+   research have a clear home sorted by permanence. Each sub-dir has
+   its own README defining scope. CLAUDE.md (or AGENTS.md) updated to
+   point at it.
    ```
 
 ## Gotchas
@@ -114,7 +123,8 @@ Don't run when:
   for you to delete".
 - **Don't put `docs/spec/` files in `YYYY-MM-DD-slug.md` form.** Specs
   describe a thing, not a moment; use `<slug>.md` with a status header.
-  `decisions/` and `notes/` *do* use date-prefixed filenames.
+  `decisions/` and `notes/` *do* use date-prefixed filenames because
+  the moment matters for those.
 - **Don't symlink to existing scattered docs.** Prefer moving them so
   `git log --follow` keeps history. If the user wants to migrate
   existing doc files in, that's a separate task — propose it explicitly
