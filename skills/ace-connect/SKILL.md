@@ -13,139 +13,81 @@ description: >
 
 Print `## ace-connect` as the first line.
 
-Local A2A bridge. Each running agent listens on its own unix socket; peers send by
-writing one line to that socket. Single-user trust boundary. No auth, no encryption,
-no persistence, fire-and-forget.
+Local A2A bridge. Each running agent listens on its own unix socket; peers send
+one line to that socket. Single-user trust boundary. No auth, no encryption, no
+persistence, fire-and-forget.
 
 ## Socket directory
 
-`${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages/`
-
-Create it if missing (`mkdir -p`, mode 0700). Every live agent's socket lives here as
-a flat file. Discovery is `ls` on this directory — no index, no registry.
+`${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages/` — `mkdir -p`, mode 0700. Every
+live agent's socket lives here as a flat file. Discovery is `ls`.
 
 ## Picking your own slug
 
-Slug format: `<workspace>.<backend>` (e.g. `school.claude`, `school.codex`,
-`infra-defs.opencode`). The backend suffix prevents collisions when the same workdir
-hosts multiple agents on different harnesses simultaneously.
+Format: `<workspace>.<backend>` (e.g. `school.claude`, `bluepages-infra.codex`).
+Backend tags: `claude`, `codex`, `opencode` — short, lowercase.
 
-Backend tags: `claude` (Claude Code), `codex`, `opencode`. Add new ones as new
-backends land — keep them short and lowercase.
+Workspace component starts from the workdir basename, but include parent segments
+when the basename alone is ambiguous (`infra`, `app`, `web`, `api`, `server`,
+`cli`, `docs` rarely are unique). `bluepages/infra` and `sso/infra` checked out
+side by side need `bluepages-infra.codex` and `sso-infra.codex`.
 
-On listen, choose a slug that is:
+Before binding, `ls` the directory; if your candidate is taken, add another
+parent segment or a short hash of the absolute path. Stable for the session.
+Announce it once on start.
 
-- Recognizable to the user — workspace component starts from the workdir basename, but
-  include enough of the parent path that the slug uniquely identifies *which* project
-  the user means. Generic basenames like `infra`, `app`, `web`, `api`, `server`, `cli`,
-  `docs` are almost never unique on their own — a developer with `bluepages/infra` and
-  `sso/infra` checked out at once needs `bluepages-infra.codex` and `sso-infra.codex`,
-  not two collisions on `infra.codex`. Prefer `<parent>-<basename>` (joined with `-`)
-  whenever the basename alone would be ambiguous; reserve the bare-basename form for
-  workdirs whose name is already distinctive (e.g. `school`, `ace`, `prodigy9-defs`).
-- Unique among current sockets in the directory — `ls` first; if `<workspace>.<backend>`
-  is already taken (same workdir, same backend, second instance, or basename collision
-  you didn't anticipate), disambiguate the workspace component further: add another
-  parent segment, or suffix with a short hash of the absolute path or git remote — pick
-  what the user is most likely to type.
-- Stable for the session — don't rotate mid-session.
+## Listening (Claude Code recipe)
 
-Announce the chosen slug to the user once, on start.
+Run `scripts/listen.sh <slug>` inside the harness's long-running process /
+monitor tool. It binds `<dir>/<slug>.sock`, emits one line per accepted
+connection on stdout, and removes the socket on exit.
 
-## Listening
+Underneath: `socat UNIX-LISTEN:<path>,fork,unlink-early -`.
 
-Each backend reaches an "incoming line surfaces inside the running interactive
-session" outcome differently. If `references/<backend>.md` exists for your harness,
-follow it. Otherwise use the Claude Code recipe below (works wherever your harness
-can stream a long-running process's stdout into the session as notifications).
+Other backends: load `references/<backend>.md` if present; for Codex with a TUI
+use `scripts/codex.sh`.
 
-### Claude Code recipe
-
-Use the harness's long-running process / monitor tool. Bind a stream socket at
-`<dir>/<slug>.sock`, accept connections, surface each received line as a notification
-you act on.
-
-```
-socat UNIX-LISTEN:<path>,fork,unlink-early -
-```
-
-Each accepted connection's stdout becomes one notification line. Read, decide whether
-to act, respond to the user inline. Do not auto-reply across the bridge — keeps every
-cross-agent action observable to the human.
-
-Clean up the socket file on shutdown.
-
-## Discovering peers
-
-`ls "${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages/"`
-
-Match against the name the user gave ("the infra-defs agent" → look for
-`*infra-defs*.sock`). If multiple match, ask the user which.
+Don't auto-reply across the bridge — keep every cross-agent action observable
+to the human.
 
 ## Sending
 
-One-shot connect, write one line, close. **Always terminate the line with `\n`** —
-the receiver reads line-buffered and a missing newline leaves the line stuck in its
-buffer until the connection closes (and on some receivers, never surfaces at all).
-Reference recipe:
-
 ```
-printf '%s\n' "<line>" | socat - UNIX-CONNECT:<peer-path>
+scripts/send.sh FROM TO BODY
 ```
 
-If connect fails (no such socket, or peer not listening), report the failure to the
-user — do not retry, do not queue.
+Strips tabs/CR/LF from `BODY` (reserved by the wire format). Single attempt; on
+connect failure, exits non-zero. Don't retry — duplicate semantics aren't
+settled.
 
-## Message line format
+Underneath: `printf 'from=%s\tto=%s\tbody=%s\n' … | socat - UNIX-CONNECT:<path>`.
 
-Single line, tab-separated key=value:
+## Discovering peers
+
+`ls "${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages/"`. Match against the name the
+user gave ("the infra-defs agent" → `*infra-defs*.sock`). If multiple match, ask.
+
+## Wire format
+
+One line, tab-separated:
 
 ```
 from=<your-slug>\tto=<peer-slug>\tbody=<text>
 ```
 
-`body` may contain spaces but no tabs or newlines. Caller escapes if needed. No JSON,
-no schema version. Add fields later only when a real need shows up.
+Keep the whole line under ~500 characters; some receivers (notably Claude Code's
+notification surface) silently truncate beyond that. For anything that won't fit
+— code, diffs, logs, long prose — write a tmp file (`/tmp/<purpose>-<slug>.<ext>`)
+and reference the path in `body`. Don't clean up tmp files; let the OS handle it.
 
-## Passing larger payloads
-
-Keep the whole line under ~500 characters. Some receivers (notably Claude Code's
-notification surface) truncate longer lines silently — the peer's listener gets
-the full bytes, but the agent reading them only sees the prefix. Treat 500 chars
-as a soft ceiling; below ~300 is safe everywhere.
-
-For anything that won't fit — code, diffs, logs, multi-line prose, or just a
-verbose explanation — write a tmp file (`/tmp/<purpose>-<slug>.<ext>`, e.g.
-`/tmp/notes-for-xkz-problem.cue`) and reference the path in `body`. Receiver
-reads the file directly. Use descriptive filenames — the path is the only
-context the peer gets. Don't clean up tmp files automatically; let the OS
-handle it.
-
-## Other backends
-
-Backend-specific recipes live in `references/`. Load the one matching your harness
-on start:
+## Backend references
 
 - `references/opencode.md` — OpenCode (`serve` + `attach` + REST bridge)
-- `references/codex.md` — Codex (`app-server` + `--remote` TUI + websocket bridge,
-  experimental). Codex users running an interactive TUI: launch via
-  `scripts/codex.sh` for a one-command setup.
-
-The socket directory, `<slug>.sock` filename, and message line format are the
-cross-backend contract — every backend exposes the same wire interface so peers don't
-need to know what's behind it. Everything inside the bridge (websocket, REST,
-JSON-RPC, etc.) is per-backend.
-
-## Switch dialects when chatter grows
-
-Plain prose in `body=` is the floor, not the ceiling. Once peers exchange more
-than a handful of lines per task, switch to a compressed LLM-to-LLM dialect both
-agents can follow. Keep using `body=` as the carrier, keep it one line with no tabs
-or newlines, and announce the dialect in the first message so the peer can switch
-decoders.
+- `references/codex.md` — Codex (`app-server` + `--remote` TUI + websocket
+  bridge, experimental). For interactive Codex TUI use `scripts/codex.sh`.
 
 ## Out of scope
 
-Auth. Encryption. Cross-machine. Persistence. Multi-message threading. Acks, retries,
-delivery guarantees. If the user asks for any of these, stop and discuss — this skill
-is deliberately a floor, not a framework.
+Auth. Encryption. Cross-machine. Persistence. Multi-message threading. Acks,
+retries, delivery guarantees. If the user asks for any of these, stop and
+discuss.
