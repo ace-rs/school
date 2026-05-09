@@ -125,6 +125,8 @@ not scratch files.
 
 1. **`$ARGUMENTS`** — user told you what to focus on.
 2. **Built-in tasks/memory** — survives compaction, not `/clear` or session exit.
-3. **Task tracker** — Linear, GitHub Issues, Jira, or whatever the project uses.
-4. **Scratch files** — `.tasks.md`, `TODO.md`, CLAUDE.md scratchpad.
-5. **Git state** — `git status`, `git diff`, `git log --oneline -20`.
+3. **Agent inbox** — if an ace-connect bridge is running and `.inbox.log` exists
+   in the repo root, read it for tasks queued by peer agents.
+4. **Task tracker** — Linear, GitHub Issues, Jira, or whatever the project uses.
+5. **Scratch files** — `.tasks.md`, `TODO.md`, CLAUDE.md scratchpad.
+6. **Git state** — `git status`, `git diff`, `git log --oneline -20`.
