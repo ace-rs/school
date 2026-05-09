@@ -2,14 +2,10 @@
 name: ace-docs
 description: >
   Scaffold a durable-docs directory with three peers: spec/, decisions/, notes/.
-  TRIGGER when the user says "set up docs", "where should I put this design
-  doc/decision/research", "we need a place for ADRs", "scaffold the docs
-  directory", or invokes `/ace-docs`. Also use when an agent is about to
-  create the first design spec, decision record, or research write-up in a
-  repo that has no `docs/` yet — set the structure up first instead of
-  improvising a one-off location. DO NOT TRIGGER for editing existing
-  individual doc files, generating user-facing product docs, or writing API
-  reference / man pages.
+  TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should ADRs/specs
+  go", or before creating the first spec/decision/notes file in a repo with no
+  `docs/`. DO NOT TRIGGER for editing existing docs or writing user-facing
+  product/API docs.
 ---
 
 # ace-docs
