@@ -110,7 +110,8 @@ on start:
 
 - `references/opencode.md` — OpenCode (`serve` + `attach` + REST bridge)
 - `references/codex.md` — Codex (`app-server` + `--remote` TUI + websocket bridge,
-  experimental)
+  experimental). Codex users running an interactive TUI: launch via
+  `scripts/codex-interactive-bridge.sh` for a one-command setup.
 
 The socket directory, `<slug>.sock` filename, and message line format are the
 cross-backend contract — every backend exposes the same wire interface so peers don't

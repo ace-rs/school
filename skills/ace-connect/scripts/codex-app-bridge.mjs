@@ -20,6 +20,7 @@ const model = args.model ?? "gpt-5.4-mini";
 const effort = args.effort ?? "low";
 const sandbox = args.sandbox ?? "workspace-write";
 const approvalPolicy = args.approvalPolicy ?? "never";
+const captureOutput = args.captureOutput ?? !args.appUrl;
 
 let appServer = null;
 let ws = null;
@@ -40,9 +41,9 @@ async function main() {
   fs.mkdirSync(socketDir, { recursive: true, mode: 0o700 });
   fs.chmodSync(socketDir, 0o700);
 
-  const appUrl = await startAppServer();
+  const appUrl = args.appUrl ?? await startAppServer();
   ws = await connectAppServer(appUrl);
-  threadId = await startThread();
+  threadId = await selectThread();
 
   await listenForAceMessages();
   console.log(`ace-connect codex app bridge listening slug=${slug} socket=${socketPath}`);
@@ -136,6 +137,40 @@ async function startThread() {
     sandbox,
   });
   return result.thread.id;
+}
+
+async function selectThread() {
+  if (args.threadId) {
+    if (captureOutput) {
+      await resumeThread(args.threadId);
+    }
+    return args.threadId;
+  }
+
+  if (args.appUrl) {
+    const result = await request(ws, "thread/loaded/list", {});
+    const loadedThreads = result.data ?? [];
+    if (loadedThreads.length === 1) {
+      if (captureOutput) {
+        await resumeThread(loadedThreads[0]);
+      }
+      return loadedThreads[0];
+    }
+
+    if (loadedThreads.length > 1) {
+      const choices = loadedThreads.join(", ");
+      throw new Error(`multiple loaded Codex threads; pass --thread-id explicitly: ${choices}`);
+    }
+  }
+
+  return startThread();
+}
+
+async function resumeThread(selectedThreadId) {
+  await request(ws, "thread/resume", {
+    threadId: selectedThreadId,
+    excludeTurns: true,
+  });
 }
 
 function listenForAceMessages() {
@@ -236,6 +271,10 @@ async function runTurn(prompt) {
   });
 
   const turnId = result.turn.id;
+  if (!captureOutput) {
+    return `delivered to Codex thread ${threadId} turn ${turnId}`;
+  }
+
   return new Promise((resolve, reject) => {
     pendingTurns.set(turnId, { text: "", resolve, reject });
   });

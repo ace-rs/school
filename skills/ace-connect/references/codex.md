@@ -140,6 +140,46 @@ replies to the sender's `<from>.sock` with the final assistant message. This was
 verified on 2026-05-09 with a Claude peer sending to `school.codex-app-test.sock` and
 receiving `CLAUDE_BRIDGE_READY`.
 
+To make a human-facing interactive Codex TUI receive the same injected messages,
+prefer the bundled wrapper. It boots `codex app-server`, starts the bridge against
+the printed URL, and attaches the TUI in the foreground; all three are torn down
+together when the TUI exits or the shell is signalled:
+
+```sh
+skills/ace-connect/scripts/codex-interactive-bridge.sh \
+  --slug school.codex \
+  --effort low
+```
+
+Flags: `--slug`, `--effort`, `--model` (forwarded to the bridge for fresh threads),
+and `--cwd`. Run from the project root so relative paths resolve correctly.
+
+If you need to wire it up by hand — for example to attach to an already-running
+app-server — the equivalent three-terminal flow is:
+
+```sh
+# Terminal 1
+codex app-server --listen ws://127.0.0.1:0
+
+# Terminal 2, using the printed URL
+codex --remote ws://127.0.0.1:<P> --no-alt-screen
+
+# Terminal 3, after the TUI has started and created one loaded thread
+node skills/ace-connect/scripts/codex-app-bridge.mjs \
+  --app-url ws://127.0.0.1:<P> \
+  --slug school.codex \
+  --effort low
+```
+
+If multiple threads are loaded in the app-server, pass `--thread-id <id>` to the
+bridge. `thread/loaded/list` returns loaded thread ids; `thread/list` or the TUI
+resume line can help identify the right one.
+
+In `--app-url` mode the bridge injects the turn and replies with a delivery ack by
+default. The human-facing TUI receives and displays the actual model response. The
+self-owned mode, where the bridge starts its own app-server, captures the final
+assistant text and replies with that text because there is no TUI display.
+
 Steps on session start:
 
 1. Start the app-server on a free localhost port:
