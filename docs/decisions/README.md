@@ -6,7 +6,8 @@ set a precedent future PRs should follow. When conflicts arise from re-applied
 or overlapping changes, consult this log for context.
 
 If your artifact is research, a survey, a draft, a transcript, or any kind of
-exploratory write-up — that's not a decision. Use `notes/` instead.
+exploratory write-up — that's not a decision. Use `../notes/` instead. If it's
+a forward-looking design spec, use `../spec/`.
 
 ## Format
 

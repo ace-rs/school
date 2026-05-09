@@ -22,10 +22,8 @@ that downstream AI sessions read.
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
 - [`RTK.md`](RTK.md) — RTK command catalogue (token-optimized shell wrapper)
-- `decisions/` — append-only decision log: rulings that resolve ambiguity or set
-  a precedent (see `decisions/README.md` for format)
-- `notes/` — durable non-decision artifacts: research, surveys, drafts,
-  transcripts, exploratory write-ups (see `notes/README.md`)
+- `docs/` — durable artifacts about the project (see `docs/README.md` for the
+  three sub-homes: `docs/spec/`, `docs/decisions/`, `docs/notes/`)
 - `.claude/skills/` etc. — symlinks ACE manages; never edit manually (see `.gitignore`)
 
 ## Editing rules specific to this repo
@@ -65,18 +63,21 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 ## Durable artifacts
 
-Two homes, mutually exclusive — pick the right one before writing.
+All under `docs/` — three peers, mutually exclusive. Pick by artifact shape:
 
-- `decisions/` — **decisions only**: rulings during reviews, skill changes, or
-  maintenance that resolve ambiguity, pick between alternatives, or set a
-  precedent future PRs should follow. Check existing decisions before proposing
-  changes that might conflict. Format: `decisions/README.md`.
-- `notes/` — everything else worth keeping that isn't a decision: research,
-  surveys, drafts, transcripts, exploratory write-ups, feature-request bodies,
-  context for future calls. No required template. Format: `notes/README.md`.
+- `docs/spec/` — forward-looking design specs, RFCs, interface contracts.
+  *What we intend to build.*
+- `docs/decisions/` — rulings that resolve ambiguity or set a precedent
+  future PRs should follow. *What we decided.* Check before proposing
+  changes that might conflict.
+- `docs/notes/` — research, surveys, drafts, transcripts, exploratory
+  write-ups. *What we explored.*
 
-Default for "this might be useful later" is `notes/`. Only use `decisions/` if
-you can name what was decided in one line.
+Default for "this might be useful later" is `docs/notes/`. Move to
+`docs/decisions/` only if you can name what was decided in one line; to
+`docs/spec/` only if it describes intended-to-build behavior.
+
+See `docs/README.md` and the per-dir READMEs for format details.
 
 ## RTK — token-optimized command wrapper
 

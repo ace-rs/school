@@ -5,7 +5,8 @@ transcripts, exploratory write-ups, feature-request bodies. Anything an agent
 or human produces that's worth preserving for future context but doesn't resolve
 ambiguity, pick between alternatives, or set a precedent.
 
-If it *is* a decision, use `decisions/` instead.
+If it *is* a decision, use `../decisions/` instead. If it describes
+intended-to-build behavior, use `../spec/`.
 
 ## Format
 
