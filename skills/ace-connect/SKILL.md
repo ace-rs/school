@@ -35,11 +35,19 @@ backends land — keep them short and lowercase.
 
 On listen, choose a slug that is:
 
-- Recognizable to the user — workspace component is usually the workdir basename.
+- Recognizable to the user — workspace component starts from the workdir basename, but
+  include enough of the parent path that the slug uniquely identifies *which* project
+  the user means. Generic basenames like `infra`, `app`, `web`, `api`, `server`, `cli`,
+  `docs` are almost never unique on their own — a developer with `bluepages/infra` and
+  `sso/infra` checked out at once needs `bluepages-infra.codex` and `sso-infra.codex`,
+  not two collisions on `infra.codex`. Prefer `<parent>-<basename>` (joined with `-`)
+  whenever the basename alone would be ambiguous; reserve the bare-basename form for
+  workdirs whose name is already distinctive (e.g. `school`, `ace`, `prodigy9-defs`).
 - Unique among current sockets in the directory — `ls` first; if `<workspace>.<backend>`
-  is already taken (same workdir, same backend, second instance), disambiguate the
-  workspace component (suffix with a short hash of the absolute path, parent dir name,
-  or git remote — pick what the user is most likely to type).
+  is already taken (same workdir, same backend, second instance, or basename collision
+  you didn't anticipate), disambiguate the workspace component further: add another
+  parent segment, or suffix with a short hash of the absolute path or git remote — pick
+  what the user is most likely to type.
 - Stable for the session — don't rotate mid-session.
 
 Announce the chosen slug to the user once, on start.
@@ -121,6 +129,14 @@ The socket directory, `<slug>.sock` filename, and message line format are the
 cross-backend contract — every backend exposes the same wire interface so peers don't
 need to know what's behind it. Everything inside the bridge (websocket, REST,
 JSON-RPC, etc.) is per-backend.
+
+## Switch dialects when chatter grows
+
+Plain prose in `body=` is the floor, not the ceiling. Once peers exchange more
+than a handful of lines per task, switch to a compressed LLM-to-LLM dialect both
+agents can follow. Keep using `body=` as the carrier, keep it one line with no tabs
+or newlines, and announce the dialect in the first message so the peer can switch
+decoders.
 
 ## Out of scope
 
