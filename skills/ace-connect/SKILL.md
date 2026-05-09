@@ -3,9 +3,10 @@ name: ace-connect
 description: >
   Minimal local agent-to-agent bridge over unix domain sockets. TRIGGER when the user
   says "start the bridge", "listen for messages", "tell the X agent …", "send message
-  to <agent>", "what agents are running", or invokes `/ace-connect`. DO NOT TRIGGER for
-  intra-session communication, MCP tool setup, or any cross-machine / network
-  messaging — this is local-socket only.
+  to <agent>", "what agents are running", asks to make Codex receive Claude messages,
+  or invokes `/ace-connect`. For interactive Codex TUI sessions, `scripts/codex.sh`
+  is the primary launcher. DO NOT TRIGGER for intra-session communication, MCP tool
+  setup, or any cross-machine / network messaging — this is local-socket only.
 ---
 
 # ace-connect
@@ -75,7 +76,10 @@ Match against the name the user gave ("the infra-defs agent" → look for
 
 ## Sending
 
-One-shot connect, write one line, close. Reference recipe:
+One-shot connect, write one line, close. **Always terminate the line with `\n`** —
+the receiver reads line-buffered and a missing newline leaves the line stuck in its
+buffer until the connection closes (and on some receivers, never surfaces at all).
+Reference recipe:
 
 ```
 printf '%s\n' "<line>" | socat - UNIX-CONNECT:<peer-path>
@@ -111,7 +115,7 @@ on start:
 - `references/opencode.md` — OpenCode (`serve` + `attach` + REST bridge)
 - `references/codex.md` — Codex (`app-server` + `--remote` TUI + websocket bridge,
   experimental). Codex users running an interactive TUI: launch via
-  `scripts/codex-interactive-bridge.sh` for a one-command setup.
+  `scripts/codex.sh` for a one-command setup.
 
 The socket directory, `<slug>.sock` filename, and message line format are the
 cross-backend contract — every backend exposes the same wire interface so peers don't

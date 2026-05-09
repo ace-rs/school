@@ -21,6 +21,15 @@ const effort = args.effort ?? "low";
 const sandbox = args.sandbox ?? "workspace-write";
 const approvalPolicy = args.approvalPolicy ?? "never";
 const captureOutput = args.captureOutput ?? !args.appUrl;
+const waitForLoadedThreadFlag = readBooleanFlag(args.waitForLoadedThread);
+const loadedThreadTimeoutMs = readPositiveInteger(
+  args.loadedThreadTimeoutMs ?? 60_000,
+  "--loaded-thread-timeout-ms",
+);
+const loadedThreadPollTimeoutMs = readPositiveInteger(
+  args.loadedThreadPollTimeoutMs ?? 2_000,
+  "--loaded-thread-poll-timeout-ms",
+);
 
 let appServer = null;
 let ws = null;
@@ -73,6 +82,23 @@ function parseArgs(argv) {
 
 function toCamel(value) {
   return value.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
+}
+
+function readBooleanFlag(value) {
+  return value === true || value === "true" || value === "1";
+}
+
+function readPositiveInteger(value, flagName) {
+  if (value === true) {
+    throw new Error(`${flagName} requires a positive integer value`);
+  }
+
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`${flagName} must be a positive integer, got: ${value}`);
+  }
+
+  return parsed;
 }
 
 function startAppServer() {
@@ -148,12 +174,49 @@ async function selectThread() {
   }
 
   if (args.appUrl) {
-    const result = await request(ws, "thread/loaded/list", {});
-    const loadedThreads = result.data ?? [];
+    const selectedThreadId = await selectAppUrlThread();
+    if (captureOutput) {
+      await resumeThread(selectedThreadId);
+    }
+    return selectedThreadId;
+  }
+
+  return startThread();
+}
+
+async function selectAppUrlThread() {
+  if (waitForLoadedThreadFlag) {
+    return waitForLoadedThread();
+  }
+
+  const loadedThreads = await listLoadedThreads();
+  if (loadedThreads.length === 1) {
+    return loadedThreads[0];
+  }
+
+  if (loadedThreads.length > 1) {
+    const choices = loadedThreads.join(", ");
+    throw new Error(`multiple loaded Codex threads; pass --thread-id explicitly: ${choices}`);
+  }
+
+  return startThread();
+}
+
+async function waitForLoadedThread() {
+  const deadline = Date.now() + loadedThreadTimeoutMs;
+  let lastError = null;
+
+  while (Date.now() < deadline) {
+    let loadedThreads = [];
+    try {
+      loadedThreads = await listLoadedThreads();
+      lastError = null;
+    } catch (error) {
+      lastError = error;
+      console.error(`waiting for loaded Codex thread: ${error.message}`);
+    }
+
     if (loadedThreads.length === 1) {
-      if (captureOutput) {
-        await resumeThread(loadedThreads[0]);
-      }
       return loadedThreads[0];
     }
 
@@ -161,9 +224,30 @@ async function selectThread() {
       const choices = loadedThreads.join(", ");
       throw new Error(`multiple loaded Codex threads; pass --thread-id explicitly: ${choices}`);
     }
+
+    const remainingMs = deadline - Date.now();
+    if (remainingMs > 0) {
+      await sleep(Math.min(250, remainingMs));
+    }
   }
 
-  return startThread();
+  const lastErrorText = lastError ? `; last error: ${lastError.message}` : "";
+  throw new Error(
+    `timed out waiting ${loadedThreadTimeoutMs}ms for a loaded Codex TUI thread${lastErrorText}`,
+  );
+}
+
+async function listLoadedThreads() {
+  const result = await request(ws, "thread/loaded/list", {}, {
+    timeoutMs: loadedThreadPollTimeoutMs,
+  });
+  return result.data ?? [];
+}
+
+function sleep(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
 }
 
 async function resumeThread(selectedThreadId) {
@@ -280,13 +364,32 @@ async function runTurn(prompt) {
   });
 }
 
-function request(socket, method, params) {
+function request(socket, method, params, options = {}) {
   const id = nextRequestId;
   nextRequestId += 1;
 
   const payload = { jsonrpc: "2.0", id, method, params };
   return new Promise((resolve, reject) => {
-    pendingRequests.set(id, { resolve, reject });
+    let timer = null;
+    const settle = (callback, value) => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      callback(value);
+    };
+
+    pendingRequests.set(id, {
+      resolve: (value) => settle(resolve, value),
+      reject: (error) => settle(reject, error),
+    });
+
+    if (options.timeoutMs) {
+      timer = setTimeout(() => {
+        pendingRequests.delete(id);
+        reject(new Error(`${method} timed out after ${options.timeoutMs}ms`));
+      }, options.timeoutMs);
+    }
+
     socket.send(JSON.stringify(payload));
   });
 }

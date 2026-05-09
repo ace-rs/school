@@ -64,6 +64,9 @@ printf 'from=%s\tto=%s\tbody=%s\n' "$ME" "$PEER" "$MSG" \
   | socat - "UNIX-CONNECT:$dir/$PEER.sock"
 ```
 
+The trailing `\n` in the `printf` format is mandatory — the peer's listener reads
+line-buffered, so a missing newline leaves the line stuck in the receive buffer.
+
 `socat` exiting with code 0 confirms the write/connect side. It does not prove the
 peer acted on the line; ask the peer to reply if you need an end-to-end ack.
 
@@ -134,25 +137,29 @@ node skills/ace-connect/scripts/codex-app-bridge.mjs \
   --sandbox workspace-write
 ```
 
-The script starts `codex app-server`, creates one thread, binds
+In self-owned mode, the script starts `codex app-server`, creates one thread, binds
 `<dir>/<slug>.sock`, injects each incoming ace-connect line as `turn/start`, and
-replies to the sender's `<from>.sock` with the final assistant message. This was
-verified on 2026-05-09 with a Claude peer sending to `school.codex-app-test.sock` and
-receiving `CLAUDE_BRIDGE_READY`.
+replies to the sender's `<from>.sock` with the final assistant message. `--model`,
+`--sandbox`, and `--approval-policy` apply when the bridge starts that fresh thread.
+This was verified on 2026-05-09 with a Claude peer sending to
+`school.codex-app-test.sock` and receiving `CLAUDE_BRIDGE_READY`.
 
 To make a human-facing interactive Codex TUI receive the same injected messages,
 prefer the bundled wrapper. It boots `codex app-server`, starts the bridge against
-the printed URL, and attaches the TUI in the foreground; all three are torn down
-together when the TUI exits or the shell is signalled:
+the printed URL, and attaches the TUI in the foreground. The wrapper passes
+`--wait-for-loaded-thread`, so the bridge waits for the TUI to create one loaded
+thread, then binds the ace-connect socket. All background processes are torn down
+when the TUI exits or the shell is signalled:
 
 ```sh
-skills/ace-connect/scripts/codex-interactive-bridge.sh \
+skills/ace-connect/scripts/codex.sh \
   --slug school.codex \
   --effort low
 ```
 
-Flags: `--slug`, `--effort`, `--model` (forwarded to the bridge for fresh threads),
-and `--cwd`. Run from the project root so relative paths resolve correctly.
+Flags: `--slug`, `--effort`, `--model` (advanced/manual bridge modes), and `--cwd`.
+Run from the project root so relative paths resolve correctly. Logs are written under
+`${CODEX_BRIDGE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}`.
 
 If you need to wire it up by hand — for example to attach to an already-running
 app-server — the equivalent three-terminal flow is:
@@ -171,9 +178,12 @@ node skills/ace-connect/scripts/codex-app-bridge.mjs \
   --effort low
 ```
 
+If the bridge starts before the TUI, add `--wait-for-loaded-thread`; without that
+flag, a bare `--app-url` bridge starts a fresh thread when no loaded thread exists.
 If multiple threads are loaded in the app-server, pass `--thread-id <id>` to the
 bridge. `thread/loaded/list` returns loaded thread ids; `thread/list` or the TUI
-resume line can help identify the right one.
+resume line can help identify the right one. `--wait-for-loaded-thread` waits up to
+60 seconds by default; override with `--loaded-thread-timeout-ms`.
 
 In `--app-url` mode the bridge injects the turn and replies with a delivery ack by
 default. The human-facing TUI receives and displays the actual model response. The
