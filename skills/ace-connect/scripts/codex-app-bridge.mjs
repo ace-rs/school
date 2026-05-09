@@ -21,7 +21,10 @@ const effort = args.effort ?? "low";
 const sandbox = args.sandbox ?? "workspace-write";
 const approvalPolicy = args.approvalPolicy ?? "never";
 const captureOutput = args.captureOutput ?? !args.appUrl;
-const waitForLoadedThreadFlag = readBooleanFlag(args.waitForLoadedThread);
+const waitForLoadedThreadFlag = readBooleanFlag(
+  args.waitForLoadedThread,
+  "--wait-for-loaded-thread",
+);
 const loadedThreadTimeoutMs = readPositiveInteger(
   args.loadedThreadTimeoutMs ?? 60_000,
   "--loaded-thread-timeout-ms",
@@ -84,8 +87,20 @@ function toCamel(value) {
   return value.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 }
 
-function readBooleanFlag(value) {
-  return value === true || value === "true" || value === "1";
+function readBooleanFlag(value, flagName) {
+  if (value === undefined) {
+    return false;
+  }
+
+  if (value === true || value === "true" || value === "1") {
+    return true;
+  }
+
+  if (value === "false" || value === "0") {
+    return false;
+  }
+
+  throw new Error(`${flagName} must be a bare flag or true/false, got: ${value}`);
 }
 
 function readPositiveInteger(value, flagName) {

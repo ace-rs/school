@@ -62,6 +62,14 @@ if ! [[ "$startup_timeout_ms" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 log_dir="${CODEX_BRIDGE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}"
+socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
+socket_path="$socket_dir/$slug.sock"
+if [[ -e "$socket_path" ]]; then
+  echo "ace-connect socket already exists for slug=$slug: $socket_path" >&2
+  echo "choose another --slug or remove the stale socket" >&2
+  exit 1
+fi
+
 mkdir -p "$log_dir"
 safe_slug=$(printf '%s' "$slug" | tr -c 'A-Za-z0-9_.-' '_')
 app_log="$log_dir/$safe_slug.app-server.log"

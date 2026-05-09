@@ -178,10 +178,12 @@ node skills/ace-connect/scripts/codex-app-bridge.mjs \
   --effort low
 ```
 
-If the bridge starts before the TUI, add `--wait-for-loaded-thread`; without that
-flag, a bare `--app-url` bridge starts a fresh thread when no loaded thread exists.
-If multiple threads are loaded in the app-server, pass `--thread-id <id>` to the
-bridge. `thread/loaded/list` returns loaded thread ids; `thread/list` or the TUI
+If the bridge starts before the TUI, add bare flag `--wait-for-loaded-thread`;
+without that flag, a bare `--app-url` bridge starts a fresh thread when no loaded
+thread exists. If the app-server already has one loaded thread, the bridge claims it
+without prompting; pass `--thread-id` to be explicit, or restart the app-server
+first. If multiple threads are loaded in the app-server, pass `--thread-id <id>` to
+the bridge. `thread/loaded/list` returns loaded thread ids; `thread/list` or the TUI
 resume line can help identify the right one. `--wait-for-loaded-thread` waits up to
 60 seconds by default; override with `--loaded-thread-timeout-ms`.
 
