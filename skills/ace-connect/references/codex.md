@@ -3,128 +3,204 @@
 Read `../SKILL.md` first for the shared contract (socket dir, slug, wire format,
 out-of-scope). This file covers Codex-specific listen/send wiring.
 
-**Status: experimental.** Codex's `app-server` and TUI `--remote` are marked
-experimental upstream. Treat the recipe below as a starting hypothesis to refine —
-not a verified working pattern. Codex agents reading this file: improve it.
+**Status: experimental.** There are two distinct Codex cases:
 
-## Architecture
+- Codex tool-harness sessions, where the agent can run shell commands through
+  `exec_command` / `write_stdin`.
+- Codex CLI `app-server` + remote TUI sessions, where a sidecar can speak the
+  app-server JSON-RPC protocol.
 
-Codex can be split into server + TUI client similar to OpenCode:
+Do not assume a detached background listener will notify a Codex tool-harness agent.
+As of the 2026-05-09 test session, output from a long-running PTY listener only
+surfaced after an explicit `write_stdin` poll. The working tool-harness pattern is a
+blocking one-shot receive, process the returned line, then re-arm.
+
+## Tool-Harness Receive
+
+Use this path when you are already inside an interactive Codex session with command
+tools and need peer messages to make the agent act without the human relaying them.
+
+1. Pick the slug from `../SKILL.md`, normally `<workspace>.codex`.
+2. Ask the peer to send only after the socket is armed, or ask it to retry until the
+   socket exists.
+3. Run one blocking receive command with a generous timeout:
+
+   ```sh
+   dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
+   slug="school.codex"
+   sock="$dir/$slug.sock"
+
+   mkdir -p "$dir"
+   chmod 700 "$dir"
+   rm -f "$sock"
+   socat -u "UNIX-LISTEN:$sock,unlink-early" -
+   ```
+
+4. When the tool call returns, parse the single line, act on it, optionally reply to
+   the peer, and immediately re-arm with the same command if more work is expected.
+
+This is intentionally one-shot. A persistent command such as
+`socat UNIX-LISTEN:<path>,fork -` proves the socket can receive data, but in the
+current Codex tool harness its output is pull-based and does not surface to the agent
+until the session is polled. One-shot receive makes the shell command exit on the
+message, so the tool result returns to the agent's active turn.
+
+Known trade-offs:
+
+- There is a small gap between messages while the agent processes and re-arms.
+- Concurrent senders can race; keep test messages serialized.
+- If no message arrives before the tool timeout, re-run the one-shot receive.
+- This is an active wait pattern for the current turn, not a daemon that can wake an
+  idle model after the assistant has already sent a final response.
+
+## Tool-Harness Send
+
+Use the shared contract. This path worked from Codex to a Claude peer over
+`school.claude.sock`:
+
+```sh
+dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
+printf 'from=%s\tto=%s\tbody=%s\n' "$ME" "$PEER" "$MSG" \
+  | socat - "UNIX-CONNECT:$dir/$PEER.sock"
+```
+
+`socat` exiting with code 0 confirms the write/connect side. It does not prove the
+peer acted on the line; ask the peer to reply if you need an end-to-end ack.
+
+## App-Server Architecture
+
+Codex can also be split into server + TUI client similar to OpenCode:
 
 - `codex app-server --listen <URL>` — long-running server speaking the Codex
   app-server JSON-RPC protocol. `--listen` accepts `stdio://`, `unix://PATH`, or
   `ws://IP:PORT`.
-- `codex --remote ws://IP:PORT` — TUI client connecting to the app-server (TUI's
-  `--remote` only accepts `ws://` / `wss://` per `codex --help`).
+- `codex --remote ws://IP:PORT` — TUI client connecting to the app-server. The TUI's
+  `--remote` option accepts `ws://` / `wss://` per `codex --help`.
 
-Multiple clients can speak to one app-server (otherwise `--ws-auth` would not exist).
-This is the seam: TUI is one client, the ace-connect inbound bridge is another, both
-talking JSON-RPC about the same conversation.
+Multiple clients can speak to one app-server. This is the app-server bridge seam: TUI
+is one client, the ace-connect inbound bridge is another, both talking JSON-RPC about
+the same thread.
 
-## Protocol discovery
+## Protocol Discovery
 
-Generate the schema before wiring anything:
+Generate the schema before wiring app-server injection:
 
-```
-codex app-server generate-json-schema --out /tmp/codex-protocol
+```sh
+codex app-server generate-json-schema --experimental --out /tmp/codex-protocol
 ls /tmp/codex-protocol
 ```
 
 Look at:
 
-- `ClientRequest.json` — RPCs the client (TUI / bridge) can issue.
-- `ClientNotification.json` — fire-and-forget client → server messages.
+- `ClientRequest.json` — RPCs the client, TUI, or bridge can issue.
+- `ClientNotification.json` — fire-and-forget client-to-server messages.
 - `codex_app_server_protocol.v2.schemas.json` — combined schema, easiest single
   reference.
+- `v2/TurnStartParams.json` — params for starting a user turn.
 
-Identify the request that submits a user turn into an existing conversation. Likely
-candidates by name pattern: something like `sendUserMessage`, `addUserInput`,
-`conversation.submit`, or similar — confirm against the schema, do not guess.
+The 2026-05-09 schema shows the user-turn request as:
 
-Also identify how to enumerate or create conversations so the bridge knows which
-conversationId to attach the incoming line to.
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "turn/start",
+  "params": {
+    "threadId": "<thread-id>",
+    "input": [
+      { "type": "text", "text": "<incoming ace-connect line>" }
+    ]
+  }
+}
+```
 
-## Listening (inbound bridge)
+Use `thread/loaded/list`, `thread/list`, `thread/read`, and `thread/turns/list` to
+discover candidate threads. Confirm against the generated schema in the installed
+Codex version; the app-server API is still experimental.
+
+## App-Server Receive
 
 Goal: incoming lines on `<dir>/<slug>.sock` become user messages in the running TUI's
-current conversation.
+current thread.
 
 Steps on session start:
 
 1. Start the app-server on a free localhost port:
-   ```
-   codex app-server --listen ws://127.0.0.1:0 &
-   ```
-   Capture the bound URL (printed on stderr at startup — verify).
-2. Start the TUI: `codex --remote ws://127.0.0.1:<P>`. Capture the conversation id
-   the TUI creates (mechanism: query the app-server, or derive from server-side
-   notifications — refine after schema review).
-3. Spawn a sidecar bridge process that:
-   - Listens on `<dir>/<slug>.sock` via `socat UNIX-LISTEN:<path>,fork`.
-   - For each incoming line, opens (or reuses) a websocket connection to the
-     app-server.
-   - Sends a JSON-RPC request submitting that line as a user message into the
-     captured conversationId.
-4. On shutdown, kill bridge, kill app-server, remove `<slug>.sock`.
 
-Reference sidecar skeleton (Python, `websockets` package — adapt):
+   ```sh
+   codex app-server --listen ws://127.0.0.1:0
+   ```
+
+   Capture the bound URL from startup output.
+
+2. Start the TUI:
+
+   ```sh
+   codex --remote ws://127.0.0.1:<P>
+   ```
+
+3. Identify the current TUI thread id. Start with `thread/loaded/list` and
+   `thread/list` filtered to the current cwd. If more than one thread is loaded, ask
+   the user which one to target.
+
+4. Spawn a sidecar bridge process that listens on `<dir>/<slug>.sock`, opens or
+   reuses a websocket connection to the app-server, and sends `turn/start` with the
+   captured `threadId` for each incoming line.
+
+Reference sidecar shape, with method and params verified from the generated schema:
 
 ```python
-import asyncio, json, socket, websockets
+import asyncio
+import json
+import socket
+
+import websockets
 
 WS = "ws://127.0.0.1:<P>"
-CONV = "<conversation-id>"
+THREAD = "<thread-id>"
 SOCK = "<dir>/<slug>.sock"
 
+
 async def forward(line, ws):
-    # Replace method + params shape after reading the schema.
     await ws.send(json.dumps({
-        "jsonrpc": "2.0", "id": 1,
-        "method": "<verified-method>",
-        "params": {"conversationId": CONV, "input": line},
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "turn/start",
+        "params": {
+            "threadId": THREAD,
+            "input": [{"type": "text", "text": line}],
+        },
     }))
     print(await ws.recv())
 
+
 async def main():
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.bind(SOCK); s.listen()
+    s.bind(SOCK)
+    s.listen()
     async with websockets.connect(WS) as ws:
         loop = asyncio.get_event_loop()
         while True:
             conn, _ = await loop.sock_accept(s)
             data = (await loop.sock_recv(conn, 65536)).decode().strip()
-            if data: await forward(data, ws)
+            if data:
+                await forward(data, ws)
             conn.close()
+
 
 asyncio.run(main())
 ```
 
-`socat`-only equivalent is possible but messier — JSON-RPC framing over ws is awkward
-to do in shell. Prefer a tiny script.
+Prefer a tiny script for app-server bridging. Pure shell is awkward because JSON-RPC
+framing over websockets is the hard part, not the Unix socket receive.
 
-## Sending (outbound)
-
-Use the shared contract — write one line to the peer's `<dir>/<slug>.sock`:
-
-```
-printf 'from=%s\tto=%s\tbody=%s\n' "$ME" "$PEER" "$MSG" \
-  | socat - UNIX-CONNECT:<dir>/<peer>.sock
-```
-
-The peer's bridge translates into whatever its native injection looks like.
-
-## Open questions for Codex agents reading this
+## Open Questions
 
 Refine this file as answers land:
 
-1. Exact JSON-RPC method name and params for "submit user message into existing
-   conversation". Source: the generated schema.
-2. How to obtain the conversation id after TUI startup — does the TUI announce it
-   via a server-side notification we can subscribe to from the bridge?
-3. Whether the same conversation can accept input concurrently from TUI and bridge
-   without state corruption, or whether a serializing lock is required.
-4. Whether `unix://PATH` listen mode could replace the `ws://` + bridge combo (TUI
-   does not currently accept `unix://` for `--remote`, so this only helps if that
-   changes).
-
-Update this file with verified findings and remove the corresponding question.
+1. Exact reliable way to identify the currently attached TUI thread when multiple
+   threads are loaded for one app-server.
+2. Whether the same thread can accept input concurrently from TUI and bridge without
+   state corruption, or whether a serializing lock is required.
+3. Whether `unix://PATH` listen mode can replace the websocket app-server path for
+   bridge clients. The TUI still needs `ws://` / `wss://` for `--remote`.
