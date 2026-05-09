@@ -22,7 +22,10 @@ that downstream AI sessions read.
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
 - [`RTK.md`](RTK.md) — RTK command catalogue (token-optimized shell wrapper)
-- `decisions/` — append-only decision log (see `decisions/README.md` for format)
+- `decisions/` — append-only decision log: rulings that resolve ambiguity or set
+  a precedent (see `decisions/README.md` for format)
+- `notes/` — durable non-decision artifacts: research, surveys, drafts,
+  transcripts, exploratory write-ups (see `notes/README.md`)
 - `.claude/skills/` etc. — symlinks ACE manages; never edit manually (see `.gitignore`)
 
 ## Editing rules specific to this repo
@@ -60,13 +63,20 @@ why-clauses.** skill-creator advises explaining the *why* behind each rule; in p
 why-clauses rarely change model behavior — agents skim them. Stick to imperatives, with
 reasoning kept to a single framing sentence only when the rule is genuinely non-obvious.
 
-## Decisions log
+## Durable artifacts
 
-`decisions/` holds an append-only record of non-trivial decisions made during reviews,
-skill changes, and maintenance — especially ones that resolve ambiguity, pick between
-alternatives, or set a precedent. See `decisions/README.md` for the file format.
+Two homes, mutually exclusive — pick the right one before writing.
 
-Always check existing decisions before proposing changes that might conflict.
+- `decisions/` — **decisions only**: rulings during reviews, skill changes, or
+  maintenance that resolve ambiguity, pick between alternatives, or set a
+  precedent future PRs should follow. Check existing decisions before proposing
+  changes that might conflict. Format: `decisions/README.md`.
+- `notes/` — everything else worth keeping that isn't a decision: research,
+  surveys, drafts, transcripts, exploratory write-ups, feature-request bodies,
+  context for future calls. No required template. Format: `notes/README.md`.
+
+Default for "this might be useful later" is `notes/`. Only use `decisions/` if
+you can name what was decided in one line.
 
 ## RTK — token-optimized command wrapper
 

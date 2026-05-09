@@ -53,9 +53,11 @@ When skill edits need to go upstream:
   in the PR description.
 - **Honor existing conventions** — if issue-creator, PR-creator, or similar skills are
   available in the session, follow their format and guidelines when creating issues or PRs.
-- **Check and record decisions** — before proposing changes, read `decisions/` for prior
-  rulings that might apply. If the PR resolves ambiguity or sets a precedent, add a
-  decision file (`decisions/YYYY-MM-DD-slug.md`).
+- **Honor the school's record-keeping** — if the school keeps a decisions log,
+  notes/research dir, or similar durable record, read prior entries for context
+  before proposing changes and add a new entry per the school's conventions when
+  the PR resolves ambiguity or sets a precedent. Don't assume any specific
+  directory exists — check what the school actually has.
 
 ## Writing good skill content
 
@@ -63,10 +65,12 @@ Anthropic's `skill-creator` skill is the authoritative reference for skill mecha
 (frontmatter, file layout, progressive disclosure, eval loops). The lessons below are
 school-specific — things that recur in reviews of PRs to this repo.
 
-0. **Check the school's house rules first.** Before authoring or editing any skill, read
-   the school repo's `CLAUDE.md` and `decisions/` for house-style overrides on top of
-   `skill-creator`. Each school may override skill-creator differently (tone, structure,
-   imperative-vs-why phrasing, etc.). House rules win over skill-creator defaults.
+0. **Check the school's house rules first.** Before authoring or editing any skill,
+   read the school repo's `CLAUDE.md` and any durable record-keeping the school
+   maintains (decisions log, notes, research dir — whatever exists) for house-style
+   overrides on top of `skill-creator`. Each school may override skill-creator
+   differently (tone, structure, imperative-vs-why phrasing, etc.). House rules
+   win over skill-creator defaults.
 
 1. **Generic by default.** Strip named repos, clients, deploy targets, and vendor names.
    Use placeholders (`site-web`, `site-cms`, `acme-*`). Project-specific context belongs in

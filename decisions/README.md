@@ -1,7 +1,12 @@
 # Decisions Log
 
-Append-only record of decisions made during reviews, skill changes, and maintenance.
-When conflicts arise from re-applied or overlapping changes, consult this log for context.
+Append-only record of **decisions** made during reviews, skill changes, and
+maintenance — entries that resolve ambiguity, pick between alternatives, or
+set a precedent future PRs should follow. When conflicts arise from re-applied
+or overlapping changes, consult this log for context.
+
+If your artifact is research, a survey, a draft, a transcript, or any kind of
+exploratory write-up — that's not a decision. Use `notes/` instead.
 
 ## Format
 
