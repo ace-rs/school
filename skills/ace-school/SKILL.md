@@ -44,7 +44,7 @@ When skill edits need to go upstream:
 ## Good school PR guidelines
 
 - **One skill or one coherent theme per PR.** Don't mix unrelated skill changes.
-- **Title**: imperative, scoped (e.g. "Add self-audit checklist to general-coding").
+- **Title**: imperative, scoped (e.g. "Clarify audit checklist in ace-audit").
 - **Body**: what changed, why, which sessions revealed the need.
 - **Keep skills generic** — no project-specific content. Skills must work across all projects
   that subscribe to the school.

@@ -28,9 +28,9 @@ commit`.
 
 ## `ace-audit` — workflow recovery
 
-Re-enters step 6 of `ace/workflow.md` when a diff landed without passing through review.
-Triggered by `/ace-audit` or any request to audit, review, or check work against skill
-compliance.
+Re-enters the audit step in `ace/workflow.md` when a diff landed without passing
+through review. Triggered by `/ace-audit` or any request to audit, review, or check
+work against skill compliance.
 
 ## `ace-realign` — rule re-attention or context repair
 
