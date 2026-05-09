@@ -109,11 +109,17 @@ no schema version. Add fields later only when a real need shows up.
 
 ## Passing larger payloads
 
-The line is for prose, not blobs. For code, diffs, logs, or any multi-line content:
-write a tmp file (`/tmp/<purpose>-<slug>.<ext>`, e.g. `/tmp/notes-for-xkz-problem.cue`)
-and reference the path in `body`. Receiver reads the file directly. Use descriptive
-filenames — the path is the only context the peer gets. Don't clean up tmp files
-automatically; let the OS handle it.
+Keep the whole line under ~500 characters. Some receivers (notably Claude Code's
+notification surface) truncate longer lines silently — the peer's listener gets
+the full bytes, but the agent reading them only sees the prefix. Treat 500 chars
+as a soft ceiling; below ~300 is safe everywhere.
+
+For anything that won't fit — code, diffs, logs, multi-line prose, or just a
+verbose explanation — write a tmp file (`/tmp/<purpose>-<slug>.<ext>`, e.g.
+`/tmp/notes-for-xkz-problem.cue`) and reference the path in `body`. Receiver
+reads the file directly. Use descriptive filenames — the path is the only
+context the peer gets. Don't clean up tmp files automatically; let the OS
+handle it.
 
 ## Other backends
 
