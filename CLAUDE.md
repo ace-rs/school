@@ -88,22 +88,9 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 ## Durable artifacts
 
-All under `docs/` — three peers, sorted by permanence:
-
-- `docs/notes/` — **impermanent.** Research, surveys, drafts, transcripts,
-  exploratory write-ups. *What we explored.*
-- `docs/decisions/` — **point-in-time.** Rulings that go against the obvious
-  default (mainstream practice, agent training data, prior convention) and
-  exist primarily to head off future re-litigation. If the answer was
-  obvious, just document the result in `docs/spec/` — don't write a
-  decision entry.
-- `docs/spec/` — **current understanding.** Forward-looking design specs,
-  RFCs, interface contracts. *What we intend to build.*
-
-Default for "this might be useful later" is `docs/notes/`. Move to
-`docs/decisions/` only if a future agent or reviewer would otherwise
-re-argue the choice; to `docs/spec/` only if it describes intended-to-build
-behavior.
+`docs/{notes,decisions,spec}/` — sorted by permanence (impermanent /
+point-in-time / current). Default to `notes/`. See `docs/README.md` and
+the per-dir READMEs for picker details.
 
 See `docs/README.md` and the per-dir READMEs for format details.
 

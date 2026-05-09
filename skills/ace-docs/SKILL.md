@@ -81,25 +81,14 @@ Don't run when:
    ```markdown
    ## Durable artifacts
 
-   All under `docs/` — three peers, sorted by permanence:
-
-   - `docs/notes/` — impermanent. Research, surveys, drafts, transcripts,
-     exploratory write-ups. *What we explored.* Disposable; edit or delete
-     freely.
-   - `docs/decisions/` — point-in-time. Rulings that go against the
-     obvious default (mainstream practice, agent training data, prior
-     convention) and exist primarily to head off future re-litigation.
-     If the answer was obvious, document the result in `docs/spec/`
-     instead — don't add a decision entry.
-   - `docs/spec/` — current understanding. Forward-looking design specs,
-     RFCs, interface contracts. *What we intend to build.* Updated in
-     place as understanding evolves.
-
-   Default for "this might be useful later" is `docs/notes/`. Move to
-   `docs/decisions/` only if a future agent or reviewer would otherwise
-   re-argue the choice; to `docs/spec/` only if it describes
-   intended-to-build behavior.
+   `docs/{notes,decisions,spec}/` — sorted by permanence (impermanent /
+   point-in-time / current). Default to `notes/`. See `docs/README.md`
+   and per-dir READMEs for picker details.
    ```
+
+   Keep this short — `CLAUDE.md`/`AGENTS.md` loads every session in every
+   agent. The detail lives in `docs/README.md` and the per-folder READMEs
+   already.
 
    Place this section near other "where things go" guidance — usually
    under a "Repo layout" or "Conventions" heading. If neither file
