@@ -1,0 +1,52 @@
+[
+  {
+    "name": "ack",
+    "prose": "Got it, thanks for letting me know.",
+    "dialect": "ACK"
+  },
+  {
+    "name": "ask-review",
+    "prose": "Hey Alice, could you take a look at the schema I've put in /tmp/x.sql? I'd like you to focus particularly on the indexes.",
+    "dialect": "ASK alice: review /tmp/x.sql, focus indexes"
+  },
+  {
+    "name": "wait",
+    "prose": "I'm still working on this — no progress to report yet, but I'll let you know when something changes.",
+    "dialect": "WAIT"
+  },
+  {
+    "name": "done-with-report",
+    "prose": "Alice, I've finished the task. I ran the tests and three of them are failing. The root cause looks like a stale fixture, and I've written a patch at /tmp/fix.diff for you to review.",
+    "dialect": "DONE alice:\n- ran tests, 3 fail\n- root cause: stale fixture\n- patch: /tmp/fix.diff"
+  },
+  {
+    "name": "stuck",
+    "prose": "I'm blocked on this. Migration 0042 keeps failing with a duplicate key error on the user_id column, and I'm not sure how you want me to handle deduplication.",
+    "dialect": "STUCK:\n- migration 0042 fails\n- error: duplicate key on user_id\n- need: confirm dedupe strategy"
+  },
+  {
+    "name": "file-pointer",
+    "prose": "I've written out the dump from the school workspace; you'll find it at /tmp/dump-school.txt when you're ready to look at it.",
+    "dialect": "FILE /tmp/dump-school.txt"
+  },
+  {
+    "name": "ctx-handoff",
+    "prose": "Just to give you some background before you dive in: we're refactoring the auth middleware because legal flagged the current session token storage as non-compliant. Scope is compliance only, not cleanup.",
+    "dialect": "CTX: auth middleware rewrite, legal/compliance only, not cleanup"
+  },
+  {
+    "name": "nack",
+    "prose": "I can't do that — the file you pointed me at doesn't exist on this side, so there's nothing for me to act on.",
+    "dialect": "NACK: file not found"
+  },
+  {
+    "name": "answer-with-finding",
+    "prose": "Yes, I checked the indexes you asked about. The composite on (tenant_id, created_at) is missing, and that's almost certainly why the dashboard query is slow. I'd add it before shipping.",
+    "dialect": "DONE alice:\n- checked indexes\n- missing: (tenant_id, created_at)\n- add before ship"
+  },
+  {
+    "name": "multi-step-status",
+    "prose": "Quick status update: I pulled the latest main branch, ran the full test suite, and saw two new failures in the billing module. They both trace back to a recent change in the tax calculation. I'm digging into the diff now and should have a fix in the next twenty minutes or so.",
+    "dialect": "WAIT:\n- pulled main, ran tests\n- 2 new fails in billing\n- cause: tax calc change\n- fix ETA 20m"
+  }
+]
