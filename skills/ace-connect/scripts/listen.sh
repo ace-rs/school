@@ -3,8 +3,9 @@ set -euo pipefail
 
 # listen.sh SLUG
 # Bind <dir>/<slug>.sock and emit one line per received message on stdout.
-# Exits 1 if a live listener already owns the slug. Wrapper supervises
-# socat so the trap can clean up <slug>.sock and <slug>.pid on exit.
+# Exits 1 if a live listener already owns the slug. Wrapper is the long-lived
+# process; socat runs one-shot per accepted connection so broken-pipe on
+# stdout (monitor surface closed) terminates the loop cleanly.
 
 if [[ $# -ne 1 ]]; then
   echo "usage: listen.sh SLUG" >&2
@@ -28,18 +29,11 @@ if [[ -f $pidfile ]]; then
   rm -f "$pidfile" "$sock"
 fi
 
-# No ,fork — parent socat proxies to stdout directly, so a broken stdout
-# pipe (harness reader gone) kills socat on the next message.
-socat "UNIX-LISTEN:$sock,unlink-early" - &
-socat_pid=$!
-echo "$socat_pid" > "$pidfile"
+echo "$$" > "$pidfile"
+trap 'pkill -P $$ 2>/dev/null; rm -f "$sock" "$pidfile"' EXIT
 
-cleanup() {
-  kill -TERM "$socat_pid" 2>/dev/null || true
-  rm -f "$sock" "$pidfile"
-}
-trap cleanup EXIT INT TERM
+echo "ace-connect listening: slug=$slug socket=$sock pid=$$" >&2
 
-echo "ace-connect listening: slug=$slug socket=$sock pid=$socat_pid" >&2
-
-wait "$socat_pid"
+# One socat per message. Re-bind race between iterations is in-spec:
+# send.sh exits 1 on unreachable peer, matching the documented retry path.
+while socat -u "UNIX-LISTEN:$sock,unlink-early" -; do :; done
