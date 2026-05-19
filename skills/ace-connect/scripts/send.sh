@@ -3,8 +3,7 @@ set -euo pipefail
 
 # send.sh FROM TO BODY
 # Deliver one ace-connect line. Strips tabs/CR/LF from BODY. Single attempt;
-# on connect failure, exit non-zero with a message. No retries — duplicate
-# semantics aren't settled yet.
+# exit 1 on failure with a one-line stderr message.
 
 if [[ $# -ne 3 ]]; then
   echo "usage: send.sh FROM TO BODY" >&2
@@ -26,9 +25,5 @@ if printf 'from=%s\tto=%s\tbody=%s\n' "$from" "$to" "$body" \
   exit 0
 fi
 
-if [[ -S $sock ]]; then
-  echo "send failed: $sock not accepting" >&2
-else
-  echo "send failed: no such socket: $sock" >&2
-fi
+echo "send failed: $sock unreachable" >&2
 exit 1
