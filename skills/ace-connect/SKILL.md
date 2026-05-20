@@ -18,7 +18,9 @@ fire-and-forget.
 ## Scripts
 
 - `scripts/listen.sh <slug>` — bind your inbox; exits 1 if a live listener already
-  owns slug. Run in monitor surface.
+  owns slug. Stream its stdout through your agent's live-notification surface
+  (e.g. a Monitor tool, if available) so each inbox line lands as it arrives —
+  not a backgrounded shell that buffers to a file.
 - `scripts/discover.sh` — list live listeners as `slug<TAB>pid<TAB>socket`.
 - `scripts/send.sh FROM TO BODY` — deliver one line; exit 1 on failure.
 
