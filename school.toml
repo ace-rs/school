@@ -3,3 +3,7 @@ name = "ACE Home"
 [[imports]]
 skill = "skill-creator"
 source = "anthropics/skills"
+
+[[imports]]
+skill = "find-skills"
+source = "vercel-labs/skills"
