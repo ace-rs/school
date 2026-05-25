@@ -31,6 +31,11 @@ contradicted learnings).
    - Facts about this codebase/project → append to project `CLAUDE.md`.
    Skip if nothing durable surfaced. Don't invent learnings.
 
+   Memory is **personal-only** — user role, preferences, individual feedback.
+   Project-shared state (task lists, roadmaps, pending work, decisions, specs)
+   belongs in repo files under `docs/` or the issue tracker, never in memory.
+   Memory does not survive to teammates or other agents on the same repo.
+
 3. **School proposals** — scan for school-bound work:
    - Skill edits already in working tree → load `ace-school` to commit/PR.
    - Skill gap, alignment regression, or new pattern worth capturing → load
