@@ -111,10 +111,24 @@ Criterion: context need, not line count.
 14. **Commit** — commit the work using the repository's existing commit conventions and
     message format.
 
-15. **Checkpoint** — update scratch files or tasks with what was done, what's next, and
-    any open questions. This is a lightweight save — just enough that the next `/ace` loop
-    or a surprise compaction doesn't lose the thread. For full session-ending persistence
-    (before `/clear` or ending a session), recommend `/ace-save` to the user.
+15. **Checkpoint** — persist progress before looping back to task discovery. Two modes:
+
+   - **Light (default)** — update scratch files or tasks with what was done, what's
+     next, and open questions. Just enough that the next loop or a surprise compaction
+     doesn't lose the thread. Then loop back to task discovery.
+
+   - **Full save + clear** — when the just-finished work was context-heavy, escalate.
+     Heaviness lives in the change *or* the conversation: many files touched, large
+     reads, isolated agents, a long planning/design discussion (even if the resulting
+     change was tiny), many turns, several tasks done this session, or a compaction
+     already fired. When any of these hold: load and run the `ace-save` skill
+     end-to-end — no approval gate, it's notes-only and reversible — then recommend the
+     user `/clear` and re-`/ace` for fresh context. Stop there; don't barrel into task
+     discovery in a bloated context. If the user declines `/clear`, fall back to looping
+     in-session.
+
+   Judgment call, not a token reading — you can't see the context gauge, so estimate
+   from what the task and session actually involved.
 
 ## Storage cascade
 
