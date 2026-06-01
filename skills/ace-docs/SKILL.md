@@ -28,6 +28,11 @@ readers know how durable any given file is supposed to be:
 Default for unfamiliar artifacts is `notes/`. Promote to `decisions/` or
 `spec/` only when the artifact's permanence shape clearly fits.
 
+When the substance is content-heavy or complex — multi-component flows,
+state machines, layered relationships — and a `/visualise` or similar skill
+is available, use it to produce an HTML visualisation *alongside* the
+markdown. The HTML supplements; it never replaces the markdown.
+
 ## When to run this skill
 
 Run when:
