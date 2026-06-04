@@ -45,27 +45,33 @@ Send and discover are backend-independent.
 
 1. Pick the slug for this workdir/backend (see below).
 2. Ask the user which autonomy mode to use (see "Autonomy mode" below). Mode
-   must be known *before* the listener starts — it gets baked into the
-   Monitor description so a post-`/clear` session still knows what to do
-   with incoming lines.
-3. Start `listen.sh <slug>` in the monitor surface. The Monitor invocation
-   must carry a description that re-surfaces alongside every notification —
-   this is the only context a post-`/clear` session has for incoming lines.
-   Use exactly:
+   must be known *before* the listener starts — it's the one session-specific
+   fact baked into the Monitor description; everything else the agent recovers
+   from this skill.
+3. Start `listen.sh <slug>` in the monitor surface. The Monitor description
+   re-surfaces with every notification, so keep it minimal — slug, mode, and a
+   pointer back to this skill, never the wire format (which would then reprint
+   on every line). Use exactly:
 
    ```
    ace-connect listener: slug=<slug> mode=<control|autonomous>.
-   Each line format: from=X<TAB>to=Y<TAB>body=Z.
-   If control: append to .inbox.log, surface verbatim, await user direction.
-   If autonomous: act per ace-connect rules; safe/reversible only without
-   approval.
+   Inbox line arriving — consult ace-connect skill to interpret format and act
+   per mode.
    ```
 
-4. If listen.sh exits 1, stop and tell the user: "slug `<slug>` is already
-   held by pid X — another agent is using this workdir, or a previous process
-   didn't shut down cleanly." Don't pick a different slug; the naming
-   convention is deterministic and a second slug would be invisible to peers
-   who expect the canonical one. Wait for the user to decide.
+4. If listen.sh exits 1, the slug is already bound — usually by **your own
+   listener surviving a `/clear`** (which wipes context, not the session, so
+   the prior Monitor keeps running and holds the slug). The duplicate exit 1
+   is expected. Diagnose before acting:
+   - Events still arriving on your slug, via a Monitor task you didn't start
+     this session? That listener is yours and live — you're already bound.
+     Don't kill or rebind; discard the failed Monitor, resume on the live
+     one, re-confirm mode (the old one's baked-in mode may differ).
+   - No events *and* `discover.sh` shows a different agent? Real conflict.
+     Stop and tell the user: "slug `<slug>` held by pid X — another agent
+     owns this workdir, or a prior process didn't shut down cleanly." Don't
+     pick a different slug (deterministic; a second is invisible to peers).
+     Wait for the user.
 5. Before the first send, run `discover.sh` to see live peers. Refresh any
    time the view feels stale.
 6. `send.sh` to deliver. Exit 1 means the peer is unreachable — re-run
@@ -81,10 +87,11 @@ directory; `<workdir>` is the workdir basename; backend is `claude`, `codex`,
 Always include parent so side-by-side checkouts (`bluepages/infra` and
 `sso/infra`) stay distinct. If parent itself collides, prepend another segment.
 
-**One slug per backend per workdir.** The naming is deterministic on purpose
-— peers discover you by predicting your slug, so it can't be improvised. If
-`listen.sh` reports the slug is already taken, surface it to the user; don't
-silently pick a different name.
+**One slug per backend per workdir.** The naming is deterministic on
+purpose — peers discover you by predicting your slug, so it can't be
+improvised. If `listen.sh` reports the slug is already taken, first rule
+out your own post-`/clear` listener (Flow step 4) before surfacing a
+conflict; never silently pick a different name.
 
 Slug is stable for the session.
 
@@ -181,9 +188,6 @@ STUCK:
 - need: confirm dedupe strategy
 FILE /tmp/dump-school.txt
 ```
-
-Reversibility: dialect is plain ASCII, human-readable in transcripts. No
-pretty-printer needed.
 
 ## Emergency reset
 
