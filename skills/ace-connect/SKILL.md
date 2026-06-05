@@ -17,6 +17,11 @@ fire-and-forget.
 
 ## Scripts
 
+Invoke every script by **absolute path** — prefix `scripts/` with this skill's
+base directory (injected when the skill loads). A bare relative path fails when
+the caller's cwd isn't the workdir, and the Monitor surface that runs
+`listen.sh` is exactly such a caller — a relative path there exits 127.
+
 - `scripts/listen.sh <slug>` — bind your inbox; exits 1 if a live listener already
   owns slug. Stream its stdout through your agent's live-notification surface
   (e.g. a Monitor tool, if available) so each inbox line lands as it arrives —
@@ -48,10 +53,11 @@ Send and discover are backend-independent.
    must be known *before* the listener starts — it's the one session-specific
    fact baked into the Monitor description; everything else the agent recovers
    from this skill.
-3. Start `listen.sh <slug>` in the monitor surface. The Monitor description
-   re-surfaces with every notification, so keep it minimal — slug, mode, and a
-   pointer back to this skill, never the wire format (which would then reprint
-   on every line). Use exactly:
+3. Start the listener — `<base-dir>/scripts/listen.sh <slug>`, absolute path
+   (see Scripts; a relative path here exits 127) — in the monitor surface. The
+   Monitor description re-surfaces with every notification, so keep it minimal —
+   slug, mode, and a pointer back to this skill, never the wire format (which
+   would then reprint on every line). Use exactly:
 
    ```
    ace-connect listener: slug=<slug> mode=<control|autonomous>.
