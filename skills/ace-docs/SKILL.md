@@ -1,121 +1,135 @@
 ---
 name: ace-docs
 description: >
-  Scaffold a durable-docs directory with three peers: spec/, decisions/, notes/.
-  TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should ADRs/specs
-  go", or before creating the first spec/decision/notes file in a repo with no
-  `docs/`. DO NOT TRIGGER for editing existing docs or writing user-facing
-  product/API docs.
+  Scaffold a durable-docs directory: usage docs (guides/, reference/) sorted by
+  type, plus a design record (spec/, decisions/, notes/) sorted by permanence.
+  TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should
+  ADRs/specs/guides/reference go", or before creating the first durable doc in a
+  repo with no `docs/`. DO NOT TRIGGER for editing existing docs or authoring the
+  prose inside individual docs — this scaffolds the structure, not the content.
 ---
 
 # ace-docs
 
-Scaffold a `docs/` directory with three peer sub-directories. The split
-exists to make **the permanence of an artifact explicit on disk**, so future
-readers know how durable any given file is supposed to be:
+Scaffold a `docs/` directory with two clusters of sub-directories. The clusters
+sort on *different axes on purpose* — that asymmetry is the design:
 
-- `docs/notes/` — **impermanent.** Sketches, surveys, transcripts, research
-  dumps, exploratory write-ups. *What we explored.* Today's notes may be
-  obsolete next week and that's fine.
-- `docs/decisions/` — **point-in-time, durable.** Rulings made on a specific
-  date for a specific question. *What we decided.* Each entry is frozen at
-  the moment it was made; a later reversal lives in a new decision that
-  supersedes the old one.
-- `docs/spec/` — **current understanding of intent.** Forward-looking design
-  specs, RFCs, interface contracts. *What we intend to build.* Updated in
-  place as understanding evolves; reflects the present, not history.
+**Usage** — outward-facing: how to use what this repo produces. Sorted by
+**type** (a how-to and a lookup table read differently and fail when mixed).
+Both living; edit in place.
 
-Default for unfamiliar artifacts is `notes/`. Promote to `decisions/` or
-`spec/` only when the artifact's permanence shape clearly fits.
+- `docs/guides/` — task-oriented how-to and getting-started. *How do I do X?*
+- `docs/reference/` — lookup facts: API, CLI flags, config keys, schemas,
+  glossaries, external links. *What exactly is X?* Scan, don't read.
 
-When the substance is content-heavy or complex — multi-component flows,
-state machines, layered relationships — and a `/visualise` or similar skill
-is available, use it to produce an HTML visualisation *alongside* the
-markdown. The HTML supplements; it never replaces the markdown.
+**Design record** — inward-facing: how and why this repo is built. Sorted by
+**permanence** (how long the claim stays current).
+
+- `docs/spec/` — design and architecture; intent and how-it-works. *What we
+  intend, and how the system fits together.* Living; updated in place.
+- `docs/decisions/` — dated ADRs. *What we decided, and why not the
+  alternative.* Frozen at the moment of decision; supersede, never edit.
+- `docs/notes/` — research, surveys, drafts, exploration. *What we explored.*
+  Disposable; dated.
+
+Routing when unsure: prose you read to *understand the system* → `spec/`; facts
+you scan to *look something up* → `reference/`; steps to *accomplish a task* →
+`guides/`; a *ruling* worth defending against re-litigation → `decisions/`;
+everything else → `notes/` (the default).
+
+Most repos use a subset — a library may need only `decisions/` + `notes/`; a
+tool with users adds `guides/` + `reference/`. An empty dir with a README is a
+valid signpost; that is the nudge. Don't manufacture content to fill a folder.
+
+The agent entry point is not a folder: the `CLAUDE.md` / `AGENTS.md` pointer
+(step 4) is the *schema document* that tells an agent how `docs/` is laid out.
+Keep it as the single index — no separate `llms.txt`.
+
+When content is complex — multi-component flows, state machines, layered
+relationships — and `/visualise` or similar is available, produce an HTML
+visualisation *alongside* the markdown. The HTML supplements; it never replaces.
 
 ## When to run this skill
 
 Run when:
 
-- A repo doesn't yet have a durable-docs convention and you're about to
-  create the first artifact (spec, decision, research dump).
+- A repo has no durable-docs convention and you're about to create the first
+  artifact — a guide, reference page, spec, decision, or research dump.
 - The user explicitly asks to scaffold the docs directory.
-- An existing project's docs are scattered (root-level `DECISIONS.md`,
-  ad-hoc `notes/` outside any container, `RFCs/` parallel to `docs/`,
-  etc.) and the user wants to consolidate.
+- An existing project's docs are scattered (root-level `DECISIONS.md`, ad-hoc
+  `notes/` outside any container, `RFCs/` parallel to `docs/`) and the user
+  wants to consolidate.
 
 Don't run when:
 
-- A `docs/` directory already exists with a different shape — adopting
-  this skill's shape there is a migration question, not a scaffold
-  question. Discuss with the user before restructuring.
-- The repo uses a different convention with a strong reason (e.g., a
-  framework that owns `docs/` for generated output). Suggest the shape
-  but defer to the existing structure.
+- A `docs/` directory already exists with a different shape — adopting this
+  shape there is a migration question, not a scaffold question. Discuss first.
+- The repo uses a different convention with a strong reason (e.g. a framework
+  that owns `docs/` for generated output). Suggest the shape but defer.
 
 ## Steps
 
-1. **Check what exists.** `ls docs/` if the directory exists. If any of
-   `spec/`, `decisions/`, `notes/` already live there, stop and discuss
-   with the user before overwriting.
+1. **Check what exists.** `ls docs/` if it exists. If any target sub-dir already
+   lives there, stop and discuss before overwriting.
 
-2. **Create the directory tree.**
+2. **Create the tree.**
 
    ```sh
-   mkdir -p docs/spec docs/decisions docs/notes
+   mkdir -p docs/guides docs/reference docs/spec docs/decisions docs/notes
    ```
 
-3. **Drop the four READMEs** from this skill's `templates/` directory:
+3. **Drop the six READMEs** from this skill's `templates/` directory:
 
    - `templates/root-README.md` → `docs/README.md`
+   - `templates/guides-README.md` → `docs/guides/README.md`
+   - `templates/reference-README.md` → `docs/reference/README.md`
    - `templates/spec-README.md` → `docs/spec/README.md`
    - `templates/decisions-README.md` → `docs/decisions/README.md`
    - `templates/notes-README.md` → `docs/notes/README.md`
 
-   Templates are intentionally short and project-agnostic. Copy verbatim
-   first; let the user customize after.
+   Templates are short and project-agnostic. Copy verbatim; let the user
+   customize after.
 
-4. **Wire up the harness instructions file.** Find whichever the project
-   uses — typically `CLAUDE.md`, `AGENTS.md`, or both — and add a section
-   pointing at `docs/`:
+4. **Wire up the harness instructions file** — `CLAUDE.md`, `AGENTS.md`, or
+   both. Add a short section pointing at `docs/`:
 
    ```markdown
    ## Durable artifacts
 
-   `docs/{notes,decisions,spec}/` — sorted by permanence (impermanent /
-   point-in-time / current). Default to `notes/`. See `docs/README.md`
-   and per-dir READMEs for picker details.
+   `docs/` — usage docs (`guides/`, `reference/`; sorted by type) and a design
+   record (`spec/`, `decisions/`, `notes/`; sorted by permanence). Default to
+   `notes/`. See `docs/README.md` and per-dir READMEs for routing.
    ```
 
-   Keep this short — `CLAUDE.md`/`AGENTS.md` loads every session in every
-   agent. The detail lives in `docs/README.md` and the per-folder READMEs
-   already.
+   This pointer is the schema document an agent reads to navigate `docs/`; keep
+   it short — the file loads every session, and the detail lives in the READMEs.
+   Place it near other "where things go" guidance (Repo layout / Conventions).
+   If neither file exists, ask which to create.
 
-   Place this section near other "where things go" guidance — usually
-   under a "Repo layout" or "Conventions" heading. If neither file
-   exists, ask the user which one to create.
-
-5. **Commit.** One commit, message like:
+5. **Commit.** One commit:
 
    ```
-   Scaffold docs/{spec,decisions,notes} for durable artifacts
+   Scaffold docs/ — usage + design-record clusters
 
-   Adds the three-peer doc structure so future specs, decisions, and
-   research have a clear home sorted by permanence. Each sub-dir has
-   its own README defining scope. CLAUDE.md (or AGENTS.md) updated to
-   point at it.
+   Two clusters: usage docs (guides/, reference/) sorted by type; the design
+   record (spec/, decisions/, notes/) sorted by permanence. Each sub-dir has a
+   README defining scope. CLAUDE.md (or AGENTS.md) points at it as the
+   schema/index.
    ```
 
 ## Gotchas
 
-- **Don't pre-fill any of the three dirs with example content.** Empty
-  directories with READMEs are clearer than "here's a sample decision
-  for you to delete".
-- **Don't put `docs/spec/` files in `YYYY-MM-DD-slug.md` form.** Specs
-  describe a thing, not a moment; use `<slug>.md` with a status header.
-  `decisions/` and `notes/` *do* use date-prefixed filenames because
-  the moment matters for those.
-- **Don't symlink to existing scattered docs.** Prefer moving them so
-  `git log --follow` keeps history. If the user wants to migrate
-  existing doc files in, that's a separate task — propose it explicitly
-  rather than folding into the scaffold.
+- **Don't pre-fill any dir with example content.** An empty dir + README beats a
+  sample to delete.
+- **Date-prefix filenames only in `decisions/` and `notes/`** — the moment
+  matters there. `guides/`, `reference/`, `spec/` use `<slug>.md`; they describe
+  a thing, not a moment.
+- **Keep `guides/` and `reference/` distinct.** A guide walks one task
+  start-to-finish; reference enumerates facts to scan. When a guide needs the
+  exhaustive list, link to `reference/` rather than inlining it.
+- **Don't symlink scattered docs.** Move them so `git log --follow` keeps
+  history. Migrating existing docs in is a separate task — propose it, don't
+  fold it into the scaffold.
+- **Auto-generated wikis (DeepWiki and similar) are a regenerable supplement**
+  over these human-curated docs — not a sixth folder here, and not a
+  replacement.

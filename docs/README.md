@@ -1,17 +1,23 @@
 # docs
 
-Durable artifacts about the project, sorted by **permanence** — the three
-sub-dirs differ in how long their claims should be considered current.
+Durable artifacts, in two clusters that sort on two different axes — on purpose.
 
-- [`notes/`](notes/) — **impermanent.** Research, surveys, drafts,
-  transcripts, exploratory write-ups. *What we explored.* Today's notes
-  may be obsolete next week.
-- [`decisions/`](decisions/) — **point-in-time.** Rulings made on a
-  specific date for a specific question. *What we decided.* Frozen at the
-  moment of decision; later reversals are new decisions that supersede.
-- [`spec/`](spec/) — **current understanding.** Forward-looking design
-  specs, RFCs, interface contracts. *What we intend to build.* Updated in
-  place as understanding evolves; reflects the present, not history.
+## Usage — how to use what this repo produces (sorted by type)
 
-Default for "this might be useful later" is `notes/`. Move to `decisions/`
-or `spec/` only when it actually fits one of those shapes.
+- [`guides/`](guides/) — task-oriented how-to and getting-started. *How do I do
+  X?*
+- [`reference/`](reference/) — lookup facts: API, CLI, config, schemas,
+  glossaries, links. *What exactly is X?*
+
+## Design record — how and why this repo is built (sorted by permanence)
+
+- [`spec/`](spec/) — design and architecture; intent and how-it-works. *What we
+  intend, and how it fits together.* Living.
+- [`decisions/`](decisions/) — dated ADRs. *What we decided, and why.* Frozen;
+  superseded by newer decisions, never edited.
+- [`notes/`](notes/) — research, drafts, exploration. *What we explored.*
+  Disposable.
+
+When unsure: understand-the-system prose → `spec/`; look-it-up facts →
+`reference/`; do-a-task steps → `guides/`; a defended ruling → `decisions/`;
+everything else → `notes/` (the default).

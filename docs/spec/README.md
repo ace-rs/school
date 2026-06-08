@@ -1,18 +1,17 @@
-# Specs
+# Spec & architecture
 
-**Current-understanding durable artifacts** — forward-looking design
-specifications, RFCs, protocol or interface contracts. Anything
-describing what the project intends to build or how a component is
-meant to behave. Updated in place as understanding evolves; the file
-should always reflect present intent, not history.
+**Current-understanding durable artifacts** — the design of the project and how
+it actually fits together: design specs, RFCs, interface contracts, and
+architecture / "how it works" overviews. Prose you read to *understand the
+system*. Updated in place as understanding evolves; always reflects present
+design, not history.
 
-If it's a ruling on a question that came up, that's a decision — use
-`../decisions/`. If it's research, exploration, or a draft, use
-`../notes/`.
+If it's a ruling on a question, that's a decision — `../decisions/`. If it's
+enumerable lookup detail (every flag, every config key, a schema table), that's
+`../reference/`. If it's research, exploration, or a draft, `../notes/`.
 
 ## Format
 
-One file per spec: `<slug>.md` (no date prefix — specs are about the
-thing, not the moment it was written). Add a status header (`draft`,
-`accepted`, `superseded`, `implemented`) so readers can tell at a glance
-whether the spec still describes current intent.
+One file per subject: `<slug>.md` (no date prefix — describes a thing, not the
+moment it was written). Add a status header (`draft`, `accepted`, `superseded`,
+`implemented`) so readers can tell whether it still describes current design.

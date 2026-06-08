@@ -45,7 +45,7 @@ Eight skills, all loaded by default for any school that imports this one:
 | `ace`            | Start or resume the ACE workflow at session boundaries           |
 | `ace-audit`      | Recover when a diff landed without passing through audit         |
 | `ace-connect`    | Local agent-to-agent bridge over unix sockets                    |
-| `ace-docs`       | Scaffold a `docs/{spec,decisions,notes}` directory in any repo   |
+| `ace-docs`       | Scaffold a `docs/` tree (usage + design record)                  |
 | `ace-realign`    | Re-anchor drifted attention; trace the prompt-chain cause        |
 | `ace-save`       | Persist session state before `/clear` or context switch          |
 | `ace-school`     | Manage school edits and PRs                                      |

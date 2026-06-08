@@ -5,9 +5,9 @@ transcripts, exploratory write-ups, feature-request bodies. Anything an
 agent or human produces that's worth preserving for context, but whose
 claims are not expected to remain current.
 
-If the artifact is a ruling on a question, it's a decision — use
-`../decisions/`. If it describes intended-to-build behavior, use
-`../spec/`.
+If the artifact is a ruling on a question, it's a decision — `../decisions/`.
+Design or architecture is `../spec/`; reference/lookup material is
+`../reference/`; a task walkthrough is `../guides/`.
 
 ## Format
 

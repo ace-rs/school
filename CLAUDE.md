@@ -47,8 +47,9 @@ overrides, MCP allow-list, and which skills to include or exclude.
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
 - [`RTK.md`](RTK.md) — RTK command catalogue (token-optimized shell wrapper)
-- `docs/` — durable artifacts about the project (see `docs/README.md` for the
-  three sub-homes: `docs/spec/`, `docs/decisions/`, `docs/notes/`)
+- `docs/` — durable artifacts about the project (see `docs/README.md`): usage
+  docs (`guides/`, `reference/`) and a design record (`spec/`, `decisions/`,
+  `notes/`)
 - `.claude/skills/` etc. — symlinks ACE manages; never edit manually (see `.gitignore`)
 
 ## Editing rules specific to this repo
@@ -88,11 +89,10 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 ## Durable artifacts
 
-`docs/{notes,decisions,spec}/` — sorted by permanence (impermanent /
-point-in-time / current). Default to `notes/`. See `docs/README.md` and
-the per-dir READMEs for picker details.
-
-See `docs/README.md` and the per-dir READMEs for format details.
+`docs/` — two clusters: **usage** (`guides/` how-to, `reference/` lookup; sorted
+by type) and the **design record** (`spec/`, `decisions/`, `notes/`; sorted by
+permanence). Default to `notes/`. See `docs/README.md` and the per-dir READMEs
+for routing and format.
 
 ## RTK — token-optimized command wrapper
 
