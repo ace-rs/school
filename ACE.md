@@ -1,47 +1,75 @@
 # ACE Skills
 
-ACE (Accelerated Coding Environment) is the session orchestration harness this school
-plugs into. The five skills below cover the full workflow lifecycle — starting, saving,
-recovering, realigning, and contributing back.
+ACE (Accelerated Coding Environment) is a session orchestration harness; using it
+normally means wiring up a *school* — a repo of shared skills and conventions a project
+subscribes to. This is that school, shipped by default: a batteries-included first school
+so ACE is useful out of the box instead of making you stand one up first.
 
-| Skill                                          | Role                                                                       |
-|------------------------------------------------|----------------------------------------------------------------------------|
-| [`ace`](skills/ace/SKILL.md)                   | Entry point — resume or start the workflow; surface the next task.         |
-| [`ace-save`](skills/ace-save/SKILL.md)         | Checkpoint session state before `/clear`, exit, or context switch.         |
-| [`ace-audit`](skills/ace-audit/SKILL.md)       | Recovery — re-enter the workflow's review step when a diff slipped.        |
-| [`ace-realign`](skills/ace-realign/SKILL.md)   | Force re-attention on a broken rule, or repair the context surface.        |
-| [`ace-school`](skills/ace-school/SKILL.md)     | Propose skill changes back to the school via PR.                           |
+What's bundled is the basic stuff any harness needs, nothing domain-specific — things
+like workflow nudging, session management, model prompting (`ace-realign`), and
+documentation. Each covers a moment a raw coding session handles badly: losing the thread
+across a `/clear`, work that skipped review, a rule that won't stick. Reach for them by
+the problem, not the mechanism; each section below leads with the situation it's for.
 
-## `ace` — workflow entry point
+| Skill         | Reach for it when                           |
+|---------------|---------------------------------------------|
+| `ace`         | moving the workflow forward a step          |
+| `ace-save`    | before a `/clear`, exit, or switch          |
+| `ace-audit`   | work landed unreviewed, or a quality pass   |
+| `ace-realign` | a rule keeps getting broken                 |
+| `ace-school`  | a fix should reach every project            |
+| `ace-connect` | two local agents need to talk               |
+| `ace-docs`    | durable artifacts are scattering            |
 
-Starts or resumes the ACE workflow. Loads at session start, after `/clear`, between tasks,
-or when the user signals continuation at a session boundary ("go", "continue", "next",
-"resume"). Stays silent when those cues refer to the in-flight edit or step instead of a
-session boundary.
+## `ace` — nudge the workflow forward
 
-## `ace-save` — session checkpoint
+ACE runs a defined workflow — plan, write, test, audit, and the rest. `ace` advances it
+one step: invoke it again and again and the agent walks the stages itself, so you don't
+hand-direct each phase ("now plan", "now test", "now write"). At a session boundary it
+also reads persisted state to resume mid-workflow instead of restarting. It's a nudge
+along the process, not a task-discovery tool — and it stays quiet when "go"/"continue"
+point at the in-flight step rather than the next one.
 
-Persists in-flight session state to durable storage so the next `/ace` resumes cleanly.
-Triggered by "save session", "checkpoint", "before I clear", "wrap up", or any signal that
-a `/clear` or exit is imminent. Writes session notes only — not a substitute for `git
-commit`.
+## `ace-save` — lock in state before you lose it
 
-## `ace-audit` — workflow recovery
+You're about to `/clear`, exit, or context-switch. The implicit fallback — session
+memory and compaction — is lossy and dies with the session, so anything that mattered can
+quietly vanish. `ace-save` is the deliberate alternative: a deterministic checkpoint to
+durable storage so the next session resumes from known-good state. Writes notes only; not
+a substitute for `git commit`.
 
-Re-enters the audit step in `ace/workflow.md` when a diff landed without passing
-through review. Triggered by `/ace-audit` or any request to audit, review, or check
-work against skill compliance.
+## `ace-audit` — re-audit for quality
 
-## `ace-realign` — rule re-attention or context repair
+Either a diff landed without going through `/ace`'s audit (ad-hoc edits, late skill loads,
+drift), or a large body of work just landed and you want a deliberate quality pass over
+it. `ace-audit` re-runs the audit against the relevant coding skills — catching structural
+problems while a rewrite is still cheap.
 
-Two modes. **"Realign"** identifies a broken rule and repeats it at the start or end of
-every message until the session ends or the user says stop. **"Realign fix"** traces the
-prompt-chain cause of a wrong action and edits the right context surface (project
-CLAUDE.md, user CLAUDE.md, memory, in-repo docs, or a skill) so the failure doesn't recur
-for future sessions or other agents.
+## `ace-realign` — make a broken rule stick
 
-## `ace-school` — contribute back
+The agent keeps violating a rule and restating it isn't working. `ace-realign` either
+forces re-attention now (repeats the broken rule every message until you stop) or traces
+the prompt-chain cause and repairs the right context surface — CLAUDE.md, memory, a skill
+— so the failure doesn't recur for future sessions or other agents.
 
-Proposing skill changes, creating PRs to the school repo, understanding school structure.
-Triggered when the user wants to propose changes, create a school PR, run `ace diff`, or
-asks about school structure/workflow.
+## `ace-school` — make a fix outlive this repo
+
+You learned or fixed something that shouldn't die locally — a tooling fact, a better
+pattern, a skill gap every subscriber would hit. `ace-school` proposes the change back to
+the shared school via PR so it reaches every project that imports it, instead of rotting
+in one repo or one machine's memory.
+
+## `ace-connect` — let two local agents talk
+
+You've got two agents on the same machine (say Claude Code and Codex) and you're relaying
+messages between terminals by hand. `ace-connect` gives them a unix-socket bridge to
+message each other directly — fire-and-forget, single-user trust boundary, no auth or
+persistence. Not for intra-session, MCP, or cross-machine messaging.
+
+## `ace-docs` — give durable artifacts a home
+
+Research dumps, decisions, specs, usage docs, and references pile up with nowhere to live,
+so they scatter or rot. `ace-docs` scaffolds a `docs/` tree that nudges clean organization
+— usage docs (`guides/`, `reference/`) by type, a design record (`spec/`, `decisions/`,
+`notes/`) by permanence — and wires `CLAUDE.md`/`AGENTS.md` to point at it so humans and
+agents both find it.
