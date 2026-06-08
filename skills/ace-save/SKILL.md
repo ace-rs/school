@@ -15,6 +15,12 @@ argument-hint: "[notes or context to preserve]"
 Print `## ace-save` as the first line.
 
 Save session state so the next `/ace` resumes cleanly.
+
+This is a deliberate, deterministic save point — beyond the implicit session
+memory and compaction you'd otherwise rely on (lossy, and gone once the session
+ends). ace-save explicitly persists to durable storage that survives `/clear`,
+exit, and context switches.
+
 Read `workflow.md` in the `ace` skill directory for the storage cascade.
 
 Do not touch code. At every target you write, also drop stale entries (completed
