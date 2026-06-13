@@ -13,6 +13,7 @@ the problem, not the mechanism; each section below leads with the situation it's
 
 | Skill         | Reach for it when                           |
 |---------------|---------------------------------------------|
+| `ace-init`    | first-time onboarding of a repo into ACE    |
 | `ace`         | moving the workflow forward a step          |
 | `ace-save`    | before a `/clear`, exit, or switch          |
 | `ace-audit`   | work landed unreviewed, or a quality pass   |
@@ -20,6 +21,14 @@ the problem, not the mechanism; each section below leads with the situation it's
 | `ace-school`  | a fix should reach every project            |
 | `ace-connect` | two local agents need to talk               |
 | `ace-docs`    | durable artifacts are scattering            |
+
+## `ace-init` — onboard a repo into ACE
+
+A repo just adopted ACE, but nothing is tuned to it yet: the instructions file is generic,
+every bundled skill is active, and each session rediscovers the codebase from scratch.
+`ace-init` is the cold-start counterpart to `ace` — study the repo once, narrow the
+skills, refresh the instructions file, and (on approval) seed durable docs or a spec run.
+Run it when adopting ACE, then hand off to the workflow.
 
 ## `ace` — nudge the workflow forward
 
