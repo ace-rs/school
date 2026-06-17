@@ -46,7 +46,6 @@ overrides, MCP allow-list, and which skills to include or exclude.
 - `skills/<name>/SKILL.md` — each skill is a directory with a `SKILL.md` frontmatter file
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
-- [`RTK.md`](RTK.md) — RTK command catalogue (token-optimized shell wrapper)
 - `docs/` — durable artifacts about the project (see `docs/README.md`): usage
   docs (`guides/`, `reference/`) and a design record (`spec/`, `decisions/`,
   `notes/`)
@@ -94,12 +93,9 @@ by type) and the **design record** (`spec/`, `decisions/`, `notes/`; sorted by
 permanence). Default to `notes/`. See `docs/README.md` and the per-dir READMEs
 for routing and format.
 
-## RTK — token-optimized command wrapper
+## Command-output compaction — lowfat
 
-This repo uses [RTK](https://github.com/rtk-ai/rtk) ("Rust Token Killer") to compact
-noisy command output. **Always prefix shell commands with `rtk`** — `rtk git status`,
-`rtk cargo build`, `rtk gh pr view`, etc. RTK falls back to passthrough when no filter
-matches, so it's always safe to use.
-
-See [`RTK.md`](RTK.md) for the full command catalogue and savings table.
-Project-local filters live in [`.rtk/filters.toml`](.rtk/filters.toml).
+Noisy command output is compacted by [lowfat](https://github.com/zdk/lowfat), wired as a
+user-scope rewrite hook — no manual prefix, it rewrites transparently and passes through
+when no filter matches. Nothing to wire per-repo here: this school is markdown and config,
+with no build/test toolchain to filter. Use the `lowfat-pantry` skill to manage filters.

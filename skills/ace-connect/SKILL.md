@@ -29,10 +29,10 @@ the caller's cwd isn't the workdir, and the Monitor surface that runs
 - `scripts/discover.sh` — list live listeners as `slug<TAB>pid<TAB>socket`.
 - `scripts/send.sh FROM TO BODY` — deliver one line; exit 1 on failure.
 
-**Run these scripts without an `rtk` wrapper.** RTK filters can swallow
-`discover.sh` output and make a populated dir look empty. The scripts produce
-the exact bytes downstream parsers expect; don't pipe them through anything
-lossy.
+**Run these scripts through no output filter or compactor** (lowfat, or any
+similar wrapper). A filter can swallow `discover.sh` output and make a populated
+dir look empty. The scripts produce the exact bytes downstream parsers expect;
+don't pipe them through anything lossy.
 
 ## Backends
 

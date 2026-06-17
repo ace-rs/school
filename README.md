@@ -54,8 +54,6 @@ Eight skills, all loaded by default for any school that imports this one:
 Top-level docs:
 
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills, in order
-- [`RTK.md`](RTK.md) — RTK ("Rust Token Killer") command catalogue for
-  compacting noisy tool output
 - [`CLAUDE.md`](CLAUDE.md) — house style when editing this school itself
 - [`docs/`](docs/) — durable artifacts (specs, decisions, notes)
 

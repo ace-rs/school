@@ -18,7 +18,7 @@ Concretely, this school exists to ship:
   workflow orchestration, session checkpoints, recovery, alignment fixes,
   school-PR mechanics, and local agent-to-agent messaging.
 - Documentation a new ACE user can read end-to-end in fifteen minutes
-  (`README.md`, `ACE.md`, `RTK.md`).
+  (`README.md`, `ACE.md`).
 
 That's the whole charter.
 
@@ -50,8 +50,7 @@ and broadly applicable; downstream schools carry the opinions.
 - `skill-creator/` — Anthropic's authoritative skill-authoring skill
 
 Top-level docs: `README.md` (entry point), `ACE.md` (workflow overview),
-`RTK.md` (token-optimized shell wrapper guide), `CLAUDE.md` (house style
-when editing this school itself).
+`CLAUDE.md` (house style when editing this school itself).
 
 ## Composition
 
