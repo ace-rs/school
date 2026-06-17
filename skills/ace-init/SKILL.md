@@ -87,21 +87,23 @@ study (e.g. "drop `frontend-design` — no UI here"). `ace skills` lists what's 
 
 ### 4. Plan durable docs
 
-From the study, decide what's worth persisting — architecture, domain model, non-obvious
-design history. If there's enough, the plan scaffolds `docs/` and adds a project overview
-to `docs/spec/` — how the system fits together — plus the instructions-file pointer
-(step 2). If there's little to document, note "no docs" in the plan — an empty docs tree
-is noise.
+From the study, decide whether durable docs are warranted — architecture, a domain model,
+or non-obvious design history worth persisting. If so, the plan notes that `docs/` should
+be scaffolded via `ace-docs` (which owns the tree shape and routing) with a project
+overview in `docs/spec/` as the seed doc. Don't scaffold here — defer it to `ace-docs` at
+the point that first doc is written (the Phase 2 spec run, or whenever a doc is needed), so
+a tree that never gets filled is never created. If there's little to document, note
+"no docs" in the plan.
 
 That overview is the high-level cut; the detailed specs come in Phase 2.
 
 ### 5. Confirm and apply
 
 Once the scan is done, finalize the plan file and present it as a whole — findings plus
-every proposed change. On approval, apply it in one batch: edit the instructions file,
-write the skills config, scaffold `docs/` and the overview. Report what landed and remove
-the plan file. If a Phase 2 spec run is warranted, flag it in the plan as a recommended
-follow-up; don't start it here.
+every proposed change. On approval, apply it in one batch: edit the instructions file and
+write the skills config. Report what landed and remove the plan file. If durable docs are
+warranted, flag the `ace-docs` scaffold and (if applicable) a Phase 2 spec run as
+recommended follow-ups; don't start either here.
 
 ## Phase 2 — Full spec run
 
@@ -135,7 +137,7 @@ decision worth pinning → `docs/decisions/` as a dated ADR; exhaustive enumerat
 config key, every endpoint) → `docs/reference/`.
 
 Run each spec through the normal `ace` planning phases (`/ace` → Specs → Draft Plan);
-scaffold `docs/` first (step 4). If a full run is too big for now, write the
+scaffold `docs/` first via `ace-docs`. If a full run is too big for now, write the
 highest-priority spec as a seed and stop.
 
 ## Close
