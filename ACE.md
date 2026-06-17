@@ -56,10 +56,9 @@ problems while a rewrite is still cheap.
 
 ## `ace-realign` — make a broken rule stick
 
-The agent keeps violating a rule and restating it isn't working. `ace-realign` either
-forces re-attention now (repeats the broken rule every message until you stop) or traces
-the prompt-chain cause and repairs the right context surface — CLAUDE.md, memory, a skill
-— so the failure doesn't recur for future sessions or other agents.
+The agent keeps violating a rule and restating it isn't working. `ace-realign` forces
+re-attention now — it repeats the broken rule at the start or end of every message until
+you tell it to stop, keeping the rule in working context every turn.
 
 ## `ace-school` — make a fix outlive this repo
 
