@@ -11,6 +11,8 @@ description: >
 
 # ace-docs
 
+Print `## ace-docs` as the first line.
+
 Scaffold a `docs/` directory with two clusters of sub-directories. The clusters
 sort on *different axes on purpose* — that asymmetry is the design:
 

@@ -10,6 +10,8 @@ description: >
 
 # ACE School Management
 
+Print `## ace-school` as the first line.
+
 ## What is an ACE school?
 
 A school is a git repo containing skills, conventions, and session prompts shared across
