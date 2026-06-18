@@ -43,6 +43,17 @@ one substitution: every "Stop. Wait for approval" gate is replaced by the
 envelope. Forward motion is the default, not approval. Honor `$ARGUMENTS` as the
 focus for the run if given; otherwise discover work via the storage cascade.
 
+## Long runs — protect context
+
+An unattended run can go for hours; context is the scarce resource. On harnesses
+that support it:
+
+- **Turn auto-compact on.** A nightshift run will outlast a single context window;
+  without it the run dies mid-work when context fills.
+- **Spawn subagents for the work.** Delegate investigation, search, and
+  self-contained edits to subagents and keep only their conclusions. The driver's
+  context stays clean and the loop runs longer before compaction.
+
 ## Don't block — log it
 
 When work genuinely needs a human — ambiguous spec, a judgment call you can't
