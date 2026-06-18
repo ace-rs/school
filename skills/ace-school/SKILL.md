@@ -17,11 +17,78 @@ Print `## ace-school` as the first line.
 A school is a git repo containing skills, conventions, and session prompts shared across
 projects. Structure:
 
-- `school.toml` — school metadata, session prompt, imports, services, MCP servers
-- `skills/` — skill directories, each with a `SKILL.md`
+- `school.toml` — school metadata (schema below)
+- `skills/<name>/SKILL.md` — one directory per skill
+- `CLAUDE.md`, `docs/` — house rules and durable record
 
-Projects subscribe via `ace setup`, which clones the school into a local cache
-(`~/.cache/ace/…`) and symlinks `skills/` into the project.
+Projects subscribe via `ace setup`, which clones the school into ACE's data dir (find it
+with `ace paths school`; typically `~/.local/share/ace/…`, **not** the cache) and symlinks
+`skills/` into the project.
+
+## `school.toml` schema
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `name` | string | School display name (required) |
+| `backend` | string | Default backend; built-in or a `[[backends]]` name |
+| `session_prompt` | string | Text prepended to every subscriber session |
+| `env` | map | Env vars exported into each session shell |
+| `[[mcp]]` | array | MCP servers: `name`, `url`, `headers`, `instructions` |
+| `[[projects]]` | array | Project metadata: `name`, `repo`, `description`, `env` |
+| `[[imports]]` | array | Upstream schools to inherit from (see below) |
+| `[[backends]]` | array | Custom backend decls: `name`, `kind`, `cmd`, `env` |
+
+All fields but `name` are optional and dropped from output when empty.
+
+## Imports & inheritance
+
+A school composes others via `[[imports]]`. Each decl:
+
+| Field | Notes |
+|-------|-------|
+| `source` | `owner/repo` or URL of the upstream school |
+| `skills` | patterns to pull; `"*"` takes the whole school |
+| `skill` | backcompat singular alias for `skills`; folded in on load, never re-emitted |
+| `exclude_skills` | patterns to subtract; also suppresses collision warnings |
+| `include_experimental` / `include_system` | admit those tiers (default off) |
+| `include_internal` | admit `internal: true` skills via glob (explicit names bypass) |
+
+At least one of `skills`/`skill` must be set. Across decls, **first-wins**: an earlier
+decl claims an identity; a later decl matching the same one warns as a collision (silence
+it by listing the pattern in the winner's `exclude_skills`).
+
+Imported skills are **copied**, not symlinked, from the import cache
+(`~/.cache/ace/imports/`) into the school's `skills/`; re-fetch with `ace school pull`.
+(Contrast: a subscribing *project* gets symlinks to its school's `skills/` — a different
+mechanism.)
+
+## Skills have no alias
+
+A skill's only invocation handle is its **directory identity** (path/basename) — e.g.
+`ace-afk` or `ace/ace-afk`. The frontmatter `name:` is display-only; ACE never matches on
+it, and the parser reads only `name` and `description` (any other frontmatter key is
+ignored). `/foo` resolves to `skills/foo/`, full stop. A second invocation name means a
+second directory, not a frontmatter field.
+
+## `ace` CLI — school-relevant commands
+
+| Command | Purpose |
+|---------|---------|
+| `ace setup <school>` | Subscribe a project: clone school + wire it in |
+| `ace diff` | Show uncommitted changes in the school clone |
+| `ace paths [key]` | Resolved paths (`school`, `cache`, `project`, …) |
+| `ace import <owner/repo>` | Import skills from another school (`--skill`, `--all`) |
+| `ace school init` | Scaffold a new school |
+| `ace school pull` | Re-fetch imports (alias: `update`) |
+| `ace school skills` | List a school's skills |
+| `ace school validate` | Check school config (alias: `check`) |
+| `ace skills` | List/curate active skills (alias: `ls`; `--all`, `--names`) |
+| `ace explain <skill>` | Show how a skill resolves (provenance + trace) |
+| `ace config` | Print/get/set config keys |
+| `ace mcp` | Manage MCP server registrations |
+| `ace fmt` | Pretty-print/clean ace.toml & school.toml (alias: `format`) |
+
+Run clone-scoped commands from `cd $(ace paths school)`.
 
 ## Editing skills
 
