@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docs review</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+  <!--
+    Reader-journey nav — order by how a human reads in, NOT by docs/ folders.
+    Each link swaps a fragment from pages/ into #content. Curate by hand.
+  -->
+  <nav id="sidebar">
+    <strong>Docs</strong>
+    <a href="pages/overview.html"
+       hx-get="pages/overview.html" hx-target="#content" hx-push-url="true">Overview</a>
+    <!-- add more synthesized pages here -->
+  </nav>
+
+  <main id="content" hx-get="pages/overview.html" hx-trigger="load">
+    <!-- Fragments load here. Loading overview.html on first paint. -->
+  </main>
+</body>
+</html>
