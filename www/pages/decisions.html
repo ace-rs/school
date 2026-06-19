@@ -1,0 +1,76 @@
+<!-- derived from: docs/decisions/2026-03-26-ace-consolidation.md, docs/decisions/2026-03-26-clear-over-compact.md, docs/decisions/2026-04-21-polish-commit-separation.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, docs/decisions/2026-06-13-ace-init-onboarding-shape.md, docs/decisions/2026-06-18-no-skill-alias-no-stub.md @ ed860ef -->
+<article>
+  <h1>Why it's shaped this way</h1>
+  <p class="lede">
+    The rulings behind the structure, newest insight first. Each is a frozen decision —
+    superseded by a later one, never quietly edited. The dated originals live under
+    <code>docs/decisions/</code>.
+  </p>
+
+  <h2>Skills get no alias, and no stub-skill workaround</h2>
+  <p class="meta">2026-06-18</p>
+  <p>
+    A skill's only invocation handle is its directory identity. The source matches only on
+    path/basename — the frontmatter <code>name:</code> is display-only — so an
+    <code>alias:</code> field would be silently ignored. Rather than fake a second name with
+    a thin stub skill that forwards to the real one (banned indirection: two directories,
+    double the maintenance, a redirect hiding the real skill), evocative second names live
+    purely as description trigger words. A genuine second invocation earns its own real
+    skill, or nothing.
+  </p>
+
+  <h2>ace-init: batched, explicit, self-contained onboarding</h2>
+  <p class="meta">2026-06-13</p>
+  <p>
+    Onboarding runs in two phases. Phase 1 skims the repo and collects every proposed change
+    — instructions file, skills selection, docs decision — into <em>one</em> plan applied in
+    a single approved batch, instead of ACE's usual per-write gate turning onboarding into a
+    start-stop slog. Phase 2 (optional, gated) is a spec run that <em>distills</em> existing
+    code into explainers. Three deliberate refusals: no dependency on a harness-native
+    <code>/init</code> (it ties the skill to one harness and re-runs the heavy scan), no
+    auto-fire (would collide with <code>/ace</code>'s session-start orientation), and only
+    loose coupling to the <code>ace learn</code> CLI.
+  </p>
+
+  <h2>Docs taxonomy: two-axis hybrid</h2>
+  <p class="meta">2026-06-07</p>
+  <p>
+    Five folders in two clusters — usage sorted by type, the design record sorted by
+    permanence — because each axis predicts how you handle the file. Rejected: permanence-only
+    (misses the type/audience axis), full four-quadrant Diátaxis (too heavy; standalone
+    tutorials are rare and quadrants blur), a <code>human/</code> vs <code>llm/</code> split
+    (duplicates and rots), and <code>llms.txt</code> (the durable part is just a curated
+    markdown index, already served by <code>docs/README.md</code> + the <code>CLAUDE.md</code>
+    pointer). See <a href="pages/architecture.html" hx-get="pages/architecture.html"
+    hx-target="#content" hx-push-url="true">Architecture</a> for the resulting shape.
+  </p>
+
+  <h2>Polish commits stay separate from the feature commit</h2>
+  <p class="meta">2026-04-21 · PR #33</p>
+  <p>
+    Post-audit fixes never get <code>--amend</code>-ed into the commit they polish. Amending
+    hides what originally landed versus what review corrected — future readers can't tell
+    "feature as designed" from "fix we caught." The review trail is only useful when those
+    stay separately addressable. The rule lives in <code>general-coding</code> (cross-project
+    scope); the workflow and audit skills defer to it rather than restating it.
+  </p>
+
+  <h2>Prefer <code>/clear</code> over <code>/compact</code></h2>
+  <p class="meta">2026-03-26</p>
+  <p>
+    Always <code>ace-save</code> then <code>/clear</code>; never <code>/compact</code>.
+    Compaction spends significant tokens on a lossy summary that's redundant once state is
+    persisted to durable storage, where <code>/clear</code> gives a full reset at zero token
+    cost. Hook-based enforcement was investigated and rejected — it's Claude Code-only and
+    can't block the compact — so portable doc-level guidance wins.
+  </p>
+
+  <h2>Consolidate the three-skill loop into <code>ace</code> + <code>ace-save</code></h2>
+  <p class="meta">2026-03-26</p>
+  <p>
+    The old recall → go → compact → recall cycle loaded ~228 lines of mostly-duplicated
+    skill text per turn. Collapsing to two skills plus a shared <code>workflow.md</code>
+    (loaded once) cut that ~63%, eliminated forced per-task compaction, and put the shared
+    rules — storage cascade, edit protocol, self-audit, commit discipline — in one place.
+  </p>
+</article>

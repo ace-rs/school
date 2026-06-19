@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACE Home — review</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+  <!-- Reader-journey nav: what is this → what's in it → how it's built → why. -->
+  <nav id="sidebar">
+    <strong>ACE Home</strong>
+    <a href="pages/overview.html"
+       hx-get="pages/overview.html" hx-target="#content" hx-push-url="true">Overview</a>
+    <a href="pages/skills.html"
+       hx-get="pages/skills.html" hx-target="#content" hx-push-url="true">The skills</a>
+    <a href="pages/architecture.html"
+       hx-get="pages/architecture.html" hx-target="#content" hx-push-url="true">Architecture &amp; design</a>
+    <a href="pages/decisions.html"
+       hx-get="pages/decisions.html" hx-target="#content" hx-push-url="true">Why it's shaped this way</a>
+  </nav>
+
+  <main id="content" hx-get="pages/overview.html" hx-trigger="load">
+    <!-- Fragments load here; overview on first paint. -->
+  </main>
+</body>
+</html>

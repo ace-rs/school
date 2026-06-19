@@ -1,0 +1,85 @@
+<!-- derived from: ACE.md, README.md @ ed860ef -->
+<article>
+  <h1>The skills</h1>
+  <p class="lede">
+    Eight skills, all loaded by default for any school that imports ACE Home. None are
+    domain-specific — each covers a moment a raw coding session handles badly. Reach for
+    them by the problem, not the mechanism.
+  </p>
+
+  <table class="skills">
+    <thead>
+      <tr><th>Skill</th><th>Reach for it when…</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>ace-init</code></td><td>first-time onboarding of a repo into ACE</td></tr>
+      <tr><td><code>ace</code></td><td>moving the workflow forward a step</td></tr>
+      <tr><td><code>ace-save</code></td><td>before a <code>/clear</code>, exit, or switch</td></tr>
+      <tr><td><code>ace-audit</code></td><td>work landed unreviewed, or you want a quality pass</td></tr>
+      <tr><td><code>ace-realign</code></td><td>a rule keeps getting broken</td></tr>
+      <tr><td><code>ace-school</code></td><td>a fix should reach every project</td></tr>
+      <tr><td><code>ace-connect</code></td><td>two local agents need to talk</td></tr>
+      <tr><td><code>ace-docs</code></td><td>durable artifacts are scattering</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Onboarding &amp; the workflow loop</h2>
+  <p>
+    <strong><code>ace-init</code></strong> is the cold-start: a repo just adopted ACE but
+    nothing is tuned to it. It studies the repo once, narrows the active skills, refreshes
+    the instructions file, and — on approval — seeds durable docs or a spec run. Run it on
+    adoption, then hand off to the workflow.
+  </p>
+  <p>
+    <strong><code>ace</code></strong> advances the defined workflow — plan, write, test,
+    audit — one step at a time. Invoke it again and again and the agent walks the stages
+    itself, so you don't hand-direct each phase. At a session boundary it reads persisted
+    state to resume mid-workflow instead of restarting.
+  </p>
+
+  <h2>Not losing work</h2>
+  <p>
+    <strong><code>ace-save</code></strong> is the deliberate checkpoint before you
+    <code>/clear</code>, exit, or context-switch. Session memory and compaction are lossy
+    and die with the session; ace-save writes to durable storage so the next session
+    resumes from known-good state. (Notes only — not a substitute for <code>git commit</code>.)
+  </p>
+  <p>
+    <strong><code>ace-audit</code></strong> re-runs the audit against the relevant coding
+    skills when a diff landed without passing through review, or when a large body of work
+    just landed and you want a deliberate quality pass — catching structural problems while
+    a rewrite is still cheap.
+  </p>
+
+  <h2>Making things stick &amp; spread</h2>
+  <p>
+    <strong><code>ace-realign</code></strong> forces re-attention when the agent keeps
+    violating a rule and restating it isn't working: it repeats the broken rule at the
+    start or end of every message until you say stop.
+  </p>
+  <p>
+    <strong><code>ace-school</code></strong> proposes a fix back to the shared school via
+    PR, so something you learned reaches every project that imports it instead of rotting
+    in one repo or one machine's memory.
+  </p>
+
+  <h2>Plumbing</h2>
+  <p>
+    <strong><code>ace-connect</code></strong> gives two agents on the same machine (say
+    Claude Code and Codex) a unix-socket bridge to message each other directly —
+    fire-and-forget, single-user trust boundary. Not for intra-session, MCP, or
+    cross-machine messaging.
+  </p>
+  <p>
+    <strong><code>ace-docs</code></strong> scaffolds a <code>docs/</code> tree that nudges
+    clean organization, and builds a downstream review site from it (this page is its
+    output). See <a href="pages/architecture.html" hx-get="pages/architecture.html"
+    hx-target="#content" hx-push-url="true">Architecture &amp; design</a> for the taxonomy.
+  </p>
+
+  <p class="note">
+    <code>skill-creator</code> — Anthropic's authoritative skill-authoring skill — is also
+    bundled, vendored via <code>[[imports]]</code> so the canonical workflow loads the
+    moment anyone authors or revises a skill.
+  </p>
+</article>

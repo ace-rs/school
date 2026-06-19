@@ -1,0 +1,81 @@
+<!-- derived from: docs/spec/baseline-school.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, README.md @ ed860ef -->
+<article>
+  <h1>Architecture &amp; design</h1>
+  <p class="lede">
+    Two ideas carry the whole school: <strong>layering</strong> (the baseline stays small;
+    opinions live downstream) and a <strong>two-axis docs taxonomy</strong> (the design
+    record this site is built from).
+  </p>
+
+  <h2>The charter — and its edges</h2>
+  <p>ACE Home exists to ship exactly three things:</p>
+  <ul>
+    <li>The official Anthropic <code>skill-creator</code>, vendored via <code>[[imports]]</code>.</li>
+    <li>A small set of <code>ace-*</code> helper skills that drive the harness itself.</li>
+    <li>Docs a new ACE user can read end-to-end in fifteen minutes.</li>
+  </ul>
+  <p>It deliberately does <strong>not</strong> ship:</p>
+  <ul>
+    <li>Language- or framework-specific coding conventions (Rust, Go, Python, frontend…).</li>
+    <li>Project-, team-, or org-specific rules (deploy targets, vendor names, thresholds).</li>
+    <li>Opinionated tool choices beyond the harness layer (CI vendor, package manager,
+      formatter).</li>
+  </ul>
+  <p>
+    Those belong in <em>your</em> school. Keeping them out is what lets one baseline apply
+    broadly.
+  </p>
+
+  <h2>Composition</h2>
+  <p>Downstream schools inherit everything ACE Home ships with a wildcard import:</p>
+  <pre><code># downstream school.toml
+[[imports]]
+skill = "*"
+source = "ace-rs/school"</code></pre>
+  <p>
+    A project can exclude individual skills via <code>ace.toml: exclude_skills</code>, or
+    shadow one by declaring a skill of the same name locally. Config layers
+    <strong>user → project → school</strong>, so anything set per-project overrides the
+    user default, which overrides the school's own <code>school.toml</code>.
+  </p>
+
+  <h2>The docs taxonomy this site is built from</h2>
+  <p>
+    The <code>docs/</code> tree splits into two clusters that sort on <em>different axes on
+    purpose</em> — because each axis predicts how you actually handle the file:
+  </p>
+  <table class="axes">
+    <thead>
+      <tr><th>Cluster</th><th>Sorted by</th><th>Folders</th><th>Handling</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Usage</td><td>type</td>
+        <td><code>guides/</code>, <code>reference/</code></td>
+        <td>both living; edit in place</td>
+      </tr>
+      <tr>
+        <td>Design record</td><td>permanence</td>
+        <td><code>spec/</code>, <code>decisions/</code>, <code>notes/</code></td>
+        <td>update / freeze-and-date / discard</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    Forcing one axis across both is what makes <code>reference/</code> feel wrong next to
+    <code>notes/</code>. <code>CLAUDE.md</code>/<code>AGENTS.md</code> is the agent index —
+    no <code>llms.txt</code>, no <code>human/</code> vs <code>llm/</code> split.
+  </p>
+
+  <h2>This site is downstream</h2>
+  <p>
+    The <code>docs/</code> tree is the source of truth; <code>www/</code> (these pages) is a
+    one-way, human-facing rewrite synthesized from it. Where <code>docs/</code> sorts for
+    maintainers, the site sorts for readers — collapsing several sources into one page,
+    leading with concepts, dropping the disposable. Edit the docs, regenerate the page;
+    never the reverse.
+  </p>
+
+  <p class="next">Next: <a href="pages/decisions.html" hx-get="pages/decisions.html"
+     hx-target="#content" hx-push-url="true">why it's shaped this way →</a></p>
+</article>

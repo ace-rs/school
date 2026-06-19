@@ -1,0 +1,54 @@
+<!-- derived from: README.md, ACE.md, docs/spec/baseline-school.md @ ed860ef -->
+<article>
+  <h1>ACE Home</h1>
+  <p class="lede">
+    The baseline <strong>school</strong> for ACE — the foundation every other school
+    inherits from by default.
+  </p>
+
+  <p>
+    ACE is a thin coding harness on top of Claude Code, Codex, OpenCode, and friends. It
+    wires shared skills, conventions, MCP servers, and session prompts into every project
+    so your AI sessions all start from the same ground. A <em>school</em> is how that
+    shared ground is packaged and distributed: a git repo a project subscribes to with
+    <code>ace setup &lt;school&gt;</code>.
+  </p>
+
+  <h2>What a school can ship</h2>
+  <ul>
+    <li><strong>Skills</strong> — progressively-disclosed instruction bundles the AI loads
+      on trigger.</li>
+    <li><strong>Session prompt</strong> — text prepended to every session.</li>
+    <li><strong>MCP servers</strong> — remote endpoints wired into every subscriber.</li>
+    <li><strong>Backend declarations</strong> — pre-rolled invocations of <code>claude</code>,
+      <code>codex</code>, <code>opencode</code>, selectable with <code>ace -b &lt;name&gt;</code>.</li>
+    <li><strong>Imports</strong> — other schools to inherit from; schools compose.</li>
+    <li><strong>Conventions</strong> — house-style rules and durable docs read during work.</li>
+  </ul>
+
+  <h2>What ACE Home is for</h2>
+  <p>
+    ACE Home is the <em>baseline</em>: it makes a freshly-installed ACE useful out of the
+    box, without forcing opinions that only fit one team or domain. It ships the small set
+    of <code>ace-*</code> skills that drive the harness itself, the official Anthropic
+    <code>skill-creator</code>, and documentation a new user can read end-to-end in fifteen
+    minutes. Anything language-, team-, or project-specific belongs in <em>your</em> school,
+    which imports this one and adds what your team actually needs. That layering is the
+    point — ACE Home stays small and broadly applicable; downstream schools carry the
+    opinions.
+  </p>
+
+  <h2>Quick start</h2>
+  <p>In an existing project:</p>
+  <pre><code>ace setup ace-rs/school
+ace</code></pre>
+  <p>
+    <code>ace setup</code> clones the school into a local cache, symlinks <code>skills/</code>
+    into the project, and writes <code>ace.toml</code>. <code>ace</code> launches the
+    configured backend (Claude Code by default) with the school's skills, session prompt,
+    and MCP servers wired in.
+  </p>
+
+  <p class="next">Next: <a href="pages/skills.html" hx-get="pages/skills.html"
+     hx-target="#content" hx-push-url="true">the skills →</a></p>
+</article>

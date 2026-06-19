@@ -194,9 +194,12 @@ catch staleness for you.
 
 ### Gotchas
 
-- **Don't commit a live `www/` to a school repo.** A school ships the *capability*
-  (templates + these instructions), not a built site. Dogfood it, then revert the
-  generated `www/` before committing.
+- **Commit `www/` — it's a durable artifact, not throwaway.** Derived from `docs/` is not
+  the same as ephemeral: the deploy step reads `www/` from committed history (`git subtree
+  split --prefix www HEAD`), so an uncommitted site can't be published at all. Commit it
+  alongside `scripts/docs-site-deploy.sh` and regenerate on drift (see Provenance). This
+  holds even when the repo is itself a school — a school's `www/` does not propagate to
+  importers (`[[imports]]` pulls skills, not top-level folders).
 - **Fragments render chrome-less on direct load.** Pages under `www/pages/` are partials
   swapped into the shell by htmx; reach them from `index.html`, not by their own URL. Fine
   for an internal review site.
