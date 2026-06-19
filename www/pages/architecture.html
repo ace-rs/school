@@ -7,7 +7,7 @@
     record this site is built from).
   </p>
 
-  <h2>The charter — and its edges</h2>
+  <h2 class="section">The charter — and its edges</h2>
   <p>ACE Home exists to ship exactly three things:</p>
   <ul>
     <li>The official Anthropic <code>skill-creator</code>, vendored via <code>[[imports]]</code>.</li>
@@ -26,12 +26,22 @@
     broadly.
   </p>
 
-  <h2>Composition</h2>
+  <h2 class="section">Composition</h2>
+  <figure class="figure figure--teal" role="img" aria-label="downstream school imports ACE Home">
+    <svg viewBox="0 0 680 70" aria-hidden="true">
+      <rect x="1" y="18" width="210" height="40"/>
+      <text x="106" y="42" text-anchor="middle">your school</text>
+      <path class="fill" d="M211 32 L229 38 L211 44 Z"/>
+      <text x="320" y="30" text-anchor="middle">[[imports]] skill = "*"</text>
+      <rect x="430" y="18" width="210" height="40"/>
+      <text x="535" y="42" text-anchor="middle">ace-rs/school</text>
+    </svg>
+  </figure>
   <p>Downstream schools inherit everything ACE Home ships with a wildcard import:</p>
-  <pre><code># downstream school.toml
+  <div class="code-block"><span class="comment"># downstream school.toml</span>
 [[imports]]
-skill = "*"
-source = "ace-rs/school"</code></pre>
+<span class="key">skill</span> = "*"
+<span class="key">source</span> = "ace-rs/school"</div>
   <p>
     A project can exclude individual skills via <code>ace.toml: exclude_skills</code>, or
     shadow one by declaring a skill of the same name locally. Config layers
@@ -39,7 +49,7 @@ source = "ace-rs/school"</code></pre>
     user default, which overrides the school's own <code>school.toml</code>.
   </p>
 
-  <h2>The docs taxonomy this site is built from</h2>
+  <h2 class="section">The docs taxonomy this site is built from</h2>
   <p>
     The <code>docs/</code> tree splits into two clusters that sort on <em>different axes on
     purpose</em> — because each axis predicts how you actually handle the file:
@@ -67,7 +77,7 @@ source = "ace-rs/school"</code></pre>
     no <code>llms.txt</code>, no <code>human/</code> vs <code>llm/</code> split.
   </p>
 
-  <h2>This site is downstream</h2>
+  <h2 class="section">This site is downstream</h2>
   <p>
     The <code>docs/</code> tree is the source of truth; <code>www/</code> (these pages) is a
     one-way, human-facing rewrite synthesized from it. Where <code>docs/</code> sorts for

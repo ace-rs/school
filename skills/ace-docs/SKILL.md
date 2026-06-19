@@ -160,8 +160,14 @@ disposable, embed visualisations. If a page reads as a 1:1 port of one source fi
 skipped the job.
 
 **Stack — zero build.** Authored HTML fragments in `www/pages/`, a shared `index.html`
-shell, htmx for navigation, `www/assets/style.css` for readability. No static-site
-generator, no markdown-rendering component — author every page by hand; nothing compiles.
+shell, htmx for navigation, `www/assets/style.css` for the look. No static-site generator,
+no markdown-rendering component — author every page by hand; nothing compiles.
+
+**Components.** The stylesheet ships an ace-native terminal design language (dark, Space
+Grotesk/Mono, strict accent roles) and a small component vocabulary — notes, panels,
+compare columns, stats, steps, tags, trees, schematic figures. Read
+[`references/components.md`](references/components.md) before authoring pages; use those
+classes rather than inventing per-page styles.
 
 **Provenance + freshness.** Head each page with the sources it derives from and the commit
 they were read at:
