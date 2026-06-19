@@ -7,11 +7,17 @@ prose alone reads flat; skip it when prose is enough.
 ## Design language
 
 Flat, warm, editorial surfaces with auto light/dark (the `/visualise` aesthetic). One
-accent — **electric cyan** — used sparingly for links, active nav, figures, and focus
-rings; everything else is neutral grays. Fonts: Space Grotesk (sans, headings and body),
-Space Mono (mono, code and labels), loaded in `index.html` with system fallbacks. No
-emoji; let whitespace and the lone accent carry emphasis. Use the component classes below
-rather than per-element inline styles.
+accent — used sparingly for headings, links, active nav, figures, and focus rings;
+everything else is neutral grays. Fonts: Space Grotesk (sans, headings and body), Space
+Mono (mono, code and labels), loaded in `index.html` with system fallbacks. No emoji; let
+whitespace and the lone accent carry emphasis. Use the component classes below rather than
+per-element inline styles.
+
+**Pick the accent first.** Electric cyan is only the default. If the project has a brand
+color — a site stylesheet, design tokens, a logo — adopt it instead; otherwise keep cyan.
+Set it once in the `--accent` tokens at the top of `style.css`: `--accent` is the
+text-legible tone (darken it for light backgrounds), `--accent-bright` the vivid version
+for fills, figures, and focus rings. One accent only.
 
 ## Page skeleton
 

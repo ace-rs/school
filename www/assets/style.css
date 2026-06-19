@@ -10,8 +10,9 @@
   --border: rgba(44, 44, 42, 0.15);
   --border-strong: rgba(44, 44, 42, 0.30);
 
-  /* electric cyan accent. --accent is the legible text tone (deeper on light);
-     --accent-bright is the electric #00cdcd for fills, figures, focus rings. */
+  /* Accent — electric cyan by default; swap both to the project's brand color if it
+     has one. --accent is the text-legible tone (deeper on light); --accent-bright is
+     the vivid version for fills, figures, focus rings. */
   --accent: #0b8c99;
   --accent-bright: #00cdcd;
   --accent-soft: #d6f5f7;
