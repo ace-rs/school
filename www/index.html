@@ -8,21 +8,29 @@
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
-  <!-- Reader-journey nav: what is this → what's in it → how it's built → why. -->
+  <!-- Reader-journey nav: what is this → what's in it → how it's built → why.
+       Relative hx-get, no hx-push-url — keeps links working under any base path. -->
   <nav id="sidebar">
     <strong>ACE Home</strong>
-    <a href="pages/overview.html"
-       hx-get="pages/overview.html" hx-target="#content" hx-push-url="true">Overview</a>
-    <a href="pages/skills.html"
-       hx-get="pages/skills.html" hx-target="#content" hx-push-url="true">The skills</a>
-    <a href="pages/architecture.html"
-       hx-get="pages/architecture.html" hx-target="#content" hx-push-url="true">Architecture &amp; design</a>
-    <a href="pages/decisions.html"
-       hx-get="pages/decisions.html" hx-target="#content" hx-push-url="true">Why it's shaped this way</a>
+    <a href="pages/overview.html" hx-get="pages/overview.html" hx-target="#content">Overview</a>
+    <a href="pages/skills.html" hx-get="pages/skills.html" hx-target="#content">The skills</a>
+    <a href="pages/architecture.html" hx-get="pages/architecture.html" hx-target="#content">Architecture &amp; design</a>
+    <a href="pages/decisions.html" hx-get="pages/decisions.html" hx-target="#content">Why it's shaped this way</a>
   </nav>
 
   <main id="content" hx-get="pages/overview.html" hx-trigger="load">
     <!-- Fragments load here; overview on first paint. -->
   </main>
+
+  <script>
+    // Highlight the nav entry matching the loaded fragment (sidebar or in-page link).
+    document.body.addEventListener('htmx:afterSettle', function (evt) {
+      var url = (evt.detail && evt.detail.xhr && evt.detail.xhr.responseURL) || '';
+      document.querySelectorAll('#sidebar a').forEach(function (a) {
+        var target = a.getAttribute('hx-get');
+        a.classList.toggle('active', !!target && url.indexOf(target) !== -1);
+      });
+    });
+  </script>
 </body>
 </html>

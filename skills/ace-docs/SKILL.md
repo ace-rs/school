@@ -17,8 +17,12 @@ description: >
 
 Print `## ace-docs` as the first line.
 
+This skill has two modes over one source of truth, `docs/`: **scaffold** the tree
+(default), and **build the `www/` review site** from it (its own section below). Both use
+the `docs/` structure below.
+
 Scaffold a `docs/` directory with two clusters of sub-directories. The clusters sort on
-*different axes on purpose* — that asymmetry is the design:
+*different axes on purpose*:
 
 **Usage** — outward-facing: how to use what this repo produces. Sorted by **type** (a
 how-to and a lookup table read differently and fail when mixed). Both living; edit in
@@ -44,8 +48,8 @@ to *look something up* → `reference/`; steps to *accomplish a task* → `guide
 (the default).
 
 Most repos use a subset — a library may need only `decisions/` + `notes/`; a tool with
-users adds `guides/` + `reference/`. An empty dir with a README is a valid signpost; that
-is the nudge. Don't manufacture content to fill a folder.
+users adds `guides/` + `reference/`. An empty dir with a README is a valid signpost. Don't
+manufacture content to fill a folder.
 
 The agent entry point is not a folder: the `CLAUDE.md` / `AGENTS.md` pointer (step 4) is
 the *schema document* that tells an agent how `docs/` is laid out. Keep it as the single
@@ -53,9 +57,12 @@ index — no separate `llms.txt`.
 
 When content is complex — multi-component flows, state machines, layered relationships —
 and `/visualise` or similar is available, produce an HTML visualisation *alongside* the
-markdown. The HTML supplements; it never replaces.
+markdown. The HTML supplements; it never replaces. Such visualisations live with their
+source in `docs/`; the `www/` site (below) is where they reach readers.
 
-## When to run this skill
+## Scaffold the `docs/` tree
+
+### When to run
 
 Run when:
 
@@ -72,7 +79,7 @@ Don't run when:
 - The repo uses a different convention with a strong reason (e.g. a framework that owns
   `docs/` for generated output). Suggest the shape but defer.
 
-## Steps
+### Steps
 
 1. **Check what exists.** `ls docs/` if it exists. If any target sub-dir already lives
    there, stop and discuss before overwriting.
@@ -121,7 +128,7 @@ Don't run when:
    schema/index.
    ```
 
-## Gotchas
+### Gotchas
 
 - **Don't pre-fill any dir with example content.** An empty dir + README beats a sample to
   delete.
@@ -136,11 +143,11 @@ Don't run when:
 - **Auto-generated wikis (DeepWiki and similar) are a regenerable supplement** over these
   human-curated docs — not a sixth folder here, and not a replacement.
 
-## The `www/` review site
+## Build the `www/` review site
 
-An optional second mode: a human-facing review site under top-level `www/`, synthesized
-from `docs/`. Run it when the user asks to build/preview/publish the docs site, visualize
-the design record, or host docs on GitHub Pages.
+A human-facing review site under top-level `www/`, synthesized from `docs/`. Run it when
+the user asks to build/preview/publish the docs site, visualize the design record, or host
+docs on GitHub Pages.
 
 **Derived, never source.** `docs/` is truth; `www/` is downstream. One-way only — edit
 `docs/`, regenerate `www/`; never treat a site page as authoritative. A page edited in
@@ -150,12 +157,11 @@ place to change meaning is a bug.
 (permanence, type); `www/` sorts for *readers* (topic, journey). Do the remap: collapse
 several notes + a spec + a decision into one clean page, lead with concepts, drop the
 disposable, embed visualisations. If a page reads as a 1:1 port of one source file, you
-skipped the job — that's the whole reason `www/` exists instead of pointing people at
-`docs/`.
+skipped the job.
 
 **Stack — zero build.** Authored HTML fragments in `www/pages/`, a shared `index.html`
 shell, htmx for navigation, `www/assets/style.css` for readability. No static-site
-generator, no markdown-rendering component. The agent writes the pages; nothing compiles.
+generator, no markdown-rendering component — author every page by hand; nothing compiles.
 
 **Provenance + freshness.** Head each page with the sources it derives from and the commit
 they were read at:
@@ -171,7 +177,8 @@ catch staleness for you.
 
 ### Steps
 
-1. **Scaffold from templates:**
+1. **Scaffold from templates** — first run only. If `www/` already exists, skip this and
+   regenerate pages in place; re-copying clobbers hand-wired nav and styling.
    - `templates/www-index.html` → `www/index.html`
    - `templates/www-style.css` → `www/assets/style.css`
    - `templates/www-README.md` → `www/README.md`
@@ -188,20 +195,25 @@ catch staleness for you.
    required: htmx fetches fragments over HTTP, so opening `index.html` via `file://`
    fails.
 
-5. **Deploy** with `scripts/docs-site-deploy.sh`, which pushes `www/` to the `gh-pages`
+5. **Commit** `www/` (and `scripts/docs-site-deploy.sh` on first run). Deploy reads the
+   site from committed history, so an uncommitted `www/` can't be published.
+
+6. **Deploy** with `scripts/docs-site-deploy.sh`, which pushes `www/` to the `gh-pages`
    branch via `git subtree split` (remote `gh`). One-time: enable Pages → `gh-pages` in
    repo settings. No GitHub Actions — the branch hosts directly.
 
 ### Gotchas
 
-- **Commit `www/` — it's a durable artifact, not throwaway.** Derived from `docs/` is not
-  the same as ephemeral: the deploy step reads `www/` from committed history (`git subtree
-  split --prefix www HEAD`), so an uncommitted site can't be published at all. Commit it
-  alongside `scripts/docs-site-deploy.sh` and regenerate on drift (see Provenance). This
-  holds even when the repo is itself a school — a school's `www/` does not propagate to
-  importers (`[[imports]]` pulls skills, not top-level folders).
-- **Fragments render chrome-less on direct load.** Pages under `www/pages/` are partials
-  swapped into the shell by htmx; reach them from `index.html`, not by their own URL. Fine
-  for an internal review site.
-- **Regenerate on source drift** — see Provenance above. Stale-but-confident is the
-  failure mode this mode is most prone to.
+- **`www/` is a durable artifact — commit it, don't treat it as throwaway.** Derived from
+  `docs/` is not the same as ephemeral; commit the site (step 5) and regenerate it on
+  drift (see Provenance). This holds even when the repo is itself a school — a school's
+  `www/` does not propagate to importers (`[[imports]]` pulls skills, not top-level
+  folders).
+- **Keep fragment links relative and don't push URLs.** htmx swaps `www/pages/*.html`
+  partials into the shell. Use `hx-get="pages/x.html"` with no `hx-push-url`: relative
+  links resolve against the unchanging site root, so the site works under any base path (a
+  gh-pages project lives at `/<repo>/`). Pushing the fragment path rebases the next
+  relative link and every later nav 404s. The tradeoff is a single-URL site — no deep
+  links or back-button history, which is fine for a review surface.
+- **Regenerate on source drift.** See Provenance. The trap is a page that's stale but
+  still reads confidently — regenerate it in the same edit that changes the source.
