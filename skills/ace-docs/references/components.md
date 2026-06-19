@@ -1,25 +1,17 @@
 # www component vocabulary
 
-Reusable page parts for the `www/` review site, in the ace terminal idiom. All are plain
-HTML using classes from `www/assets/style.css` — no framework, no per-element inline
-styles. Reach for one when prose alone reads flat; skip it when prose is enough.
+Reusable page parts for the `www/` review site. All are plain HTML using classes from
+`www/assets/style.css` — no framework, no per-element inline styles. Reach for one when
+prose alone reads flat; skip it when prose is enough.
 
 ## Design language
 
-Dark terminal surface. Two typefaces, five accent colors — each color has **one job**,
-keep them in lane:
-
-| Token      | Role               | Where                               |
-| ---------- | ------------------ | ----------------------------------- |
-| `--teal`   | structure          | `h2`/`h3`, table headers, labels    |
-| `--action` | clickable (gold)   | links, nav                          |
-| `--orange` | active / primary   | `h1`, active nav, figures, emphasis |
-| `--cyan`   | system / brand     | site title, focus ring              |
-| `--link`   | code tokens (blue) | prompts/keys, list markers          |
-
-Fonts: Space Grotesk (sans), Space Mono (mono) — loaded in `index.html`, with system
-fallbacks. Idioms: `> ` list bullets, `//` and `01 · ` section markers, left-barred notes,
-schematic line-figures. No emoji; let type and color carry tone.
+Flat, warm, editorial surfaces with auto light/dark (the `/visualise` aesthetic). One
+accent — **electric cyan** — used sparingly for links, active nav, figures, and focus
+rings; everything else is neutral grays. Fonts: Space Grotesk (sans, headings and body),
+Space Mono (mono, code and labels), loaded in `index.html` with system fallbacks. No
+emoji; let whitespace and the lone accent carry emphasis. Use the component classes below
+rather than per-element inline styles.
 
 ## Page skeleton
 
@@ -31,20 +23,17 @@ then sections. End with a `.next` pointer where a journey continues.
 <article>
   <h1>Page title</h1>
   <p class="lede">One or two sentences that frame the page for a reader.</p>
-  <h2 class="section">First section</h2>
+  <h2>First section</h2>
   <p>…</p>
   <p class="next">Next: <a href="pages/y.html" hx-get="pages/y.html"
      hx-target="#content">where this goes →</a></p>
 </article>
 ```
 
-`<h2 class="section">` auto-numbers (`01 · `); a plain heading doesn't. Use numbering when
-the sections are a sequence, plain headings when they're peers.
-
 ## Note / callout
 
-A left-barred well for an aside, caveat, or system remark. Default teal; `--warn` (orange)
-for cautions, `--system` (cyan) for tooling/automation notes.
+A left-barred well for an aside or caveat. Default accent (cyan) bar; `--warn` (amber) for
+cautions.
 
 ```html
 <p class="note">An aside that supplements the main prose.</p>
@@ -65,7 +54,7 @@ A raised card grouping a sub-topic that deserves its own frame. Don't nest panel
 ## Compare
 
 Side-by-side columns for two options or a before/after. Mark the recommended side
-`is-pick` (teal border). Two columns; collapse to one on narrow screens automatically.
+`is-pick` (accent border). Two columns; collapse to one on narrow screens automatically.
 
 ```html
 <div class="compare">
@@ -87,8 +76,8 @@ A row of headline numbers. Auto-fits; keep to 2–4.
 
 ## Steps
 
-A numbered mono sequence for an ordered procedure (commands, a workflow). For unordered
-points use a normal `<ul>` (renders with `> ` bullets).
+A numbered sequence for an ordered procedure (commands, a workflow). For unordered points
+use a normal `<ul>`.
 
 ```html
 <ol class="steps">
@@ -127,10 +116,10 @@ Commands or config. Wrap prompts and keys in `.prompt` or `.key` (blue) and asid
 
 ## Figure
 
-A schematic line-diagram drawn before the prose, terminal-style. Author the `<svg>`
-literally; `aria-hidden` it and let the prose carry meaning. Strokes inherit the figure
-color (orange default, with `--teal` and `--cyan` variants) via `currentColor` — never
-hardcode fills. Keep it schematic: a box is a `rect`, an arrow a `path`; 4–5 nodes max.
+A schematic line-diagram drawn before the prose. Author the `<svg>` literally;
+`aria-hidden` it and let the prose carry meaning. Strokes inherit the accent (cyan) via
+`currentColor` — never hardcode fills. Keep it schematic: a box is a `rect`, an arrow a
+`path`; 4–5 nodes max.
 
 ```html
 <figure class="figure" role="img" aria-label="school imports flow">

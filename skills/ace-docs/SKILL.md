@@ -163,8 +163,8 @@ skipped the job.
 shell, htmx for navigation, `www/assets/style.css` for the look. No static-site generator,
 no markdown-rendering component — author every page by hand; nothing compiles.
 
-**Components.** The stylesheet ships an ace-native terminal design language (dark, Space
-Grotesk/Mono, strict accent roles) and a small component vocabulary — notes, panels,
+**Components.** The stylesheet ships a flat `/visualise` -style design (light/dark, Space
+Grotesk/Mono, an electric-cyan accent) and a small component vocabulary — notes, panels,
 compare columns, stats, steps, tags, trees, schematic figures. Read
 [`references/components.md`](references/components.md) before authoring pages; use those
 classes rather than inventing per-page styles.
