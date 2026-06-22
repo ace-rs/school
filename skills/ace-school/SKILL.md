@@ -92,36 +92,38 @@ Run clone-scoped commands from `cd $(ace paths school)`.
 
 ## Editing skills
 
-Skill files in the project are symlinks into the school cache. Edits go directly to the cache —
-this is intentional. The school cache is a real git working copy.
+Skill files in the project are symlinks into the school cache. Edits go directly to the
+cache — this is intentional. The school cache is a real git working copy.
 
 ## Proposing changes
 
 When skill edits need to go upstream:
 
 1. Run `ace diff` to review changes.
-2. Summarize findings — combine the diff output with your own context about what was changed
-   and why during this session. Present the summary to the user and wait for explicit approval
-   before proceeding.
+2. Summarize findings — combine the diff output with your own context about what was
+   changed and why during this session. Present the summary to the user and wait for
+   explicit approval before proceeding.
 3. `cd $(ace paths school)` to enter the school cache directory.
 4. `git checkout -b ace/{short-description}` — create a feature branch.
 5. Stage and commit with a descriptive message.
 6. `git push -u origin {branch}` — push to the school remote.
 7. Create a PR to the school repo. Use GitHub MCP if available.
-8. Do **NOT** reset the cache to main — that destroys uncommitted work across all branches.
+8. Do **NOT** reset the cache to main — that destroys uncommitted work across all
+   branches.
 
 ## Good school PR guidelines
 
 - **One skill or one coherent theme per PR.** Don't mix unrelated skill changes.
 - **Title**: imperative, scoped (e.g. "Clarify audit checklist in ace-audit").
 - **Body**: what changed, why, which sessions revealed the need.
-- **Keep skills generic** — no project-specific content. Skills must work across all projects
-  that subscribe to the school.
-- **Watch for conflicts** — skill instructions can interact with project `CLAUDE.md` and with
-  each other. If a skill contradicts another skill or common project conventions, call it out
-  in the PR description.
+- **Keep skills generic** — no project-specific content. Skills must work across all
+  projects that subscribe to the school.
+- **Watch for conflicts** — skill instructions can interact with project `CLAUDE.md` and
+  with each other. If a skill contradicts another skill or common project conventions,
+  call it out in the PR description.
 - **Honor existing conventions** — if issue-creator, PR-creator, or similar skills are
-  available in the session, follow their format and guidelines when creating issues or PRs.
+  available in the session, follow their format and guidelines when creating issues or
+  PRs.
 - **Honor the school's record-keeping** — if the school keeps a decisions log,
   notes/research dir, or similar durable record, read prior entries for context
   before proposing changes and add a new entry per the school's conventions when
@@ -142,8 +144,8 @@ school-specific — things that recur in reviews of PRs to this repo.
    win over skill-creator defaults.
 
 1. **Generic by default.** Strip named repos, clients, deploy targets, and vendor names.
-   Use placeholders (`site-web`, `site-cms`, `acme-*`). Project-specific context belongs in
-   a downstream `CLAUDE.md`, not in a skill that ships to every subscriber.
+   Use placeholders (`site-web`, `site-cms`, `acme-*`). Project-specific context belongs
+   in a downstream `CLAUDE.md`, not in a skill that ships to every subscriber.
 
 2. **Keep concrete examples — just rename them.** LLMs anchor better on examples than on
    pure abstract rules. Don't delete a code block to "make it generic"; swap the names.
