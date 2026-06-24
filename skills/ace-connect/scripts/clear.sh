@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # clear.sh
-# Terminate all listeners on this host and remove all socket/pid files.
+# Terminate all engines on this host and remove all socket/pid files.
 # Affects every agent sharing the messages dir. Use sparingly.
 
 dir=${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages

@@ -1,7 +1,7 @@
 # ace-connect — Codex backend (experimental)
 
 Read `../SKILL.md` first for the shared contract (socket dir, slug, wire format,
-out-of-scope). This file covers Codex-specific listen/send wiring.
+out-of-scope). This file covers Codex-specific start (receive) and send wiring.
 
 **Status: experimental.** There are two distinct Codex cases:
 
@@ -10,8 +10,8 @@ out-of-scope). This file covers Codex-specific listen/send wiring.
 - Codex CLI `app-server` + remote TUI sessions, where a sidecar speaks the
   app-server JSON-RPC protocol.
 
-Detached background listeners do not notify a Codex tool-harness agent — output
-from a long-running PTY listener only surfaces after an explicit `write_stdin`
+Detached background receivers do not notify a Codex tool-harness agent — output
+from a long-running PTY receiver only surfaces after an explicit `write_stdin`
 poll. The working tool-harness pattern is a blocking one-shot receive, process
 the returned line, then re-arm.
 

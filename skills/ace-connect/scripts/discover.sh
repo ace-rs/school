@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # discover.sh
-# List live listeners in the messages dir as tab-separated:
+# List live engines in the messages dir as tab-separated:
 #   <slug>\t<pid>\t<socket-path>
 # Sweeps stale .sock/.pid pairs as a side effect.
 

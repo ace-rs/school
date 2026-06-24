@@ -1,7 +1,7 @@
 # ace-connect — OpenCode backend
 
 Read `../SKILL.md` first for the shared contract (socket dir, slug, wire format,
-out-of-scope). This file covers OpenCode-specific listen/send wiring.
+out-of-scope). This file covers OpenCode-specific start (receive) and send wiring.
 
 ## Architecture
 
@@ -16,7 +16,7 @@ External processes can post to the same server's REST API. A message posted to t
 session the TUI is attached to surfaces inside that TUI — both agent and human see
 it. That is the injection point ace-connect rides on.
 
-## Listening (inbound bridge)
+## Starting the engine (inbound bridge)
 
 Goal: incoming lines on `<dir>/<slug>.sock` become user messages in the TUI's current
 session.
