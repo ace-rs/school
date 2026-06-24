@@ -15,7 +15,7 @@ mandatory start-to-finish sequence.
 - **Fresh session, clean tree?** → start at task discovery.
 - **Just committed?** → you're at checkpoint, then loop back to task discovery.
 - **A Monitor you didn't start this session is still running?** → likely an ace-connect
-  listener that outlived a `/clear` (context wiped, Monitor and slug survive). Load
+  engine that outlived a `/clear` (context wiped, Monitor and slug survive). Load
   `ace-connect` to recover its wire format and mode before touching `.inbox.log`.
 
 ## Task discovery
