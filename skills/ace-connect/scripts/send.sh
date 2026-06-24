@@ -20,6 +20,13 @@ body=${body//$'\r'/ }
 dir=${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages
 sock=$dir/$to.sock
 
+# Backstop: if our own engine isn't running, any reply to us bounces. Warn,
+# don't block — one-way sends (CTX/DONE/FILE) are still valid without an inbox.
+frompid=$dir/$from.pid
+if [[ ! -f $frompid ]] || ! kill -0 "$(cat "$frompid" 2>/dev/null || echo -1)" 2>/dev/null; then
+  echo "warning: engine for from=$from not started; replies will bounce — start it with start.sh $from" >&2
+fi
+
 if printf 'from=%s\tto=%s\tbody=%s\n' "$from" "$to" "$body" \
      | socat - "UNIX-CONNECT:$sock" 2>/dev/null; then
   exit 0
