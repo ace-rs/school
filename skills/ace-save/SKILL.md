@@ -21,10 +21,14 @@ memory and compaction you'd otherwise rely on (lossy, and gone once the session
 ends). ace-save explicitly persists to durable storage that survives `/clear`,
 exit, and context switches.
 
-Read `workflow.md` in the `ace` skill directory for the storage cascade.
+Persist to the **storage cascade** (`ace/workflow.md`, the `## Storage cascade`
+section). Keep the survey cheap: check `git status` plus the one or two stores
+actually in use — don't sweep every tier, and don't hit a task-tracker API
+unless tasks clearly live there.
 
-Do not touch code. At every target you write, also drop stale entries (completed
-tasks, superseded prefs, resolved questions, contradicted learnings).
+Do not touch code. Only at a target you're already writing this run, prune stale
+entries you notice while there (completed tasks, superseded prefs, resolved
+questions, contradicted learnings) — don't open stores just to sweep.
 
 ## 1. Resume breadcrumb
 
@@ -41,9 +45,10 @@ Include `$ARGUMENTS` if provided.
 A learning that outlived the task goes to exactly one place, by **who it
 serves** — checked top-down, stop at the first fit:
 - **Every project that loads a skill** (generic tooling/language fact the skill
-  covers) → amend that skill via `ace-school`; file with `issue-creator` if the
-  fix isn't obvious. Never memory — there it dies with your machine instead of
-  reaching the skill's subscribers.
+  covers) → record it in the breadcrumb as a pending school change (which skill,
+  what to add) for `ace-school` to propose later. Don't run the branch/push/PR
+  flow inline during a save. Never memory — there it dies with your machine
+  instead of reaching the skill's subscribers.
 - **This repo's team** (decisions, specs, shared patterns) → `docs/` or the
   issue tracker. Never memory — it doesn't reach teammates or other agents.
 - **You, everywhere** (how Claude should behave for you, your preferences) →
@@ -51,8 +56,9 @@ serves** — checked top-down, stop at the first fit:
 - **This repo only** (a fact specific to this codebase) → project `CLAUDE.md`.
 
 Also sweep for school-bound artifacts that aren't learnings: skill edits already
-in the working tree (→ `ace-school` to commit/PR) and non-trivial design calls
-(→ the school's decisions log if it keeps one).
+in the working tree (→ note in the breadcrumb for `ace-school` to propose later;
+don't branch/push/PR during a save) and non-trivial design calls (→ the school's
+decisions log if it keeps one).
 
 Skip anything that doesn't apply; don't invent learnings.
 
