@@ -155,7 +155,7 @@ self_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 send_script="$self_dir/send.sh"
 
 # One-shot accept loop — same rebind-gap behavior as every other ace-connect
-# listener. Re-bind after each accepted message.
+# engine. Re-bind after each accepted message.
 while :; do
   rm -f "$sock"
   if ! line=$(socat -u "UNIX-LISTEN:$sock,unlink-early" - 2>/dev/null); then
