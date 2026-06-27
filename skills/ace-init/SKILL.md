@@ -101,9 +101,12 @@ That overview is the high-level cut; the detailed specs come in Phase 2.
 
 Once the scan is done, finalize the plan file and present it as a whole — findings plus
 every proposed change. On approval, apply it in one batch: edit the instructions file and
-write the skills config. Report what landed and remove the plan file. If durable docs are
-warranted, flag the `ace-docs` scaffold and (if applicable) a Phase 2 spec run as
-recommended follow-ups; don't start either here.
+write the skills config, then run `ace link` so the newly selected skills are symlinked into
+the harness's skill folder. On harnesses that auto-reload skills from the filesystem (Claude,
+codex, opencode), they go live in the running session immediately — no relaunch needed; on a
+harness that doesn't, tell the user to relaunch to pick them up. Report what landed and remove
+the plan file. If durable docs are warranted, flag the `ace-docs` scaffold and (if applicable)
+a Phase 2 spec run as recommended follow-ups; don't start either here.
 
 ## Phase 2 — Full spec run
 
