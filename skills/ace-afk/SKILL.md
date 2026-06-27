@@ -36,12 +36,30 @@ attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
 A boundary you'd have to cross to make progress is a blocker. Log it, don't cross
 it.
 
+## Pre-flight — before the unattended loop engages
+
+Run this while the human is still reachable. It front-loads every decision so the
+unattended body needs none. This phase is the *only* sanctioned asking window.
+
+1. **Restate the understood end-goal.** "Understood: <goal>." Include the definition of
+   *done* — the real deliverable in the real target (the repo actually changed, the thing
+   actually live), never a /tmp render or staged plumbing. If the goal is ambiguous, this is
+   the moment to ask.
+2. **Clear blockers — go HARD.** Surface and resolve every fork, missing input, and decision
+   now, while the human can answer. This is where all the asking is spent; the body gets
+   none. Apply **Earn the blocker** before flagging anything as needing the human.
+3. **Establish the decision-basis.** State the philosophy the run resolves forks against,
+   derived from the repo's CLAUDE.md + the goal. This is what makes "no questions after Go"
+   safe rather than reckless: the body resolves forks against the basis and records the
+   choice, instead of stopping to ask.
+4. **State the AFK plan, then wait for explicit "Go."** Go is the last gate. After it: no
+   questions, no go-gate — drive the loop to the envelope.
+
 ## Run the loop
 
-Read `workflow.md` in the `ace` skill directory and drive it autonomously, with
-one substitution: every "Stop. Wait for approval" gate is replaced by the
-envelope. Forward motion is the default, not approval. Honor `$ARGUMENTS` as the
-focus for the run if given; otherwise discover work via the storage cascade.
+After Go, read `workflow-afk.md` in this skill's directory and drive it autonomously to
+the envelope below. It is the ace workflow with every propose/confirm gate already removed —
+no stop-to-ask, no stop-to-plan. Honor `$ARGUMENTS` as the focus if given.
 
 ## Long runs — protect context
 
@@ -50,9 +68,12 @@ that support it:
 
 - **Turn auto-compact on.** A nightshift run will outlast a single context window;
   without it the run dies mid-work when context fills.
-- **Spawn subagents for the work.** Delegate investigation, search, and
-  self-contained edits to subagents and keep only their conclusions. The driver's
-  context stays clean and the loop runs longer before compaction.
+- **Delegate to subagents by default.** This is the default operating mode, not an
+  optimization: push every edit, search, and research step to a subagent and keep only
+  its summary. The point is the *driver's* context — the main session runs the afk loop
+  and must stay thin, or it compacts mid-run and loses the thread. The reason is context
+  churn, not throughput, so even a single sequential task goes to a subagent. Spawning for
+  speed and parallelism is still encouraged on top of this.
 
 ## Don't block — log it
 
@@ -60,6 +81,16 @@ When work genuinely needs a human — ambiguous spec, a judgment call you can't
 safely default, or an envelope boundary — append a blocker to the handoff report
 (below), then pick up the next unblocked work. Never stall the run on one blocked
 item.
+
+**Earn the blocker.** Before logging any blocker for a missing input — example, fixture,
+dependency, test target — earn it first: fetch a public sample, download a real package,
+write a dummy/stub, build the minimal scaffolding yourself. Only a resource you genuinely
+cannot obtain or build is a real blocker.
+
+**Keep making progress.** A finished goal or a clean checkpoint is where you pick up the next
+thing, not where you stop and report-and-ask. While there's work you can start inside the
+envelope and state rules — no unresolved decision, no unearnable blocker — start it and keep
+going. Resolve discretionary forks by the decision-basis, record the choice, drive on.
 
 ## Stop conditions
 
@@ -72,8 +103,9 @@ One file at the repo root (same convention as `ace-connect`'s `.inbox.log`) — 
 human's morning read. Two parts:
 
 - **Blockers** — appended live as they arise. Each entry records enough to unblock
-  in one read: **what** (task and where it stopped), **why it needs a human** (the
-  specific decision or boundary), and **what you'd do** (recommended resolution, so
-  a one-word reply unblocks it).
+  in one read: **what** (task and where it stopped), **why it can't be self-unblocked**
+  (the decision-basis doesn't resolve it, no prior discussion settles it, and the input
+  can't be earned — it genuinely needs the human), and **what you'd do** (recommended
+  resolution, so a one-word reply unblocks it).
 - **Summary** — written when the run ends: what landed (commits, tasks done) and
   what's still queued. Don't re-list blockers here; they're already above.
