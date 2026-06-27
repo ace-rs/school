@@ -4,9 +4,12 @@ description: >
   Force re-attention on a rule you keep breaking — repeat it verbatim at the start
   or end of every message until the session ends or the user says stop. TRIGGER on
   "realign" when the user calls out a broken rule that already lives in a loaded
-  surface (CLAUDE.md, a skill, an explicit earlier instruction). DO NOT TRIGGER for
-  first-time rule capture with no prior violation, or when the user merely disagrees
-  with an output rather than citing a broken rule.
+  surface (CLAUDE.md, a skill, an explicit earlier instruction). ALSO AUTO-TRIGGER
+  without being asked: on the second violation of the same Law (a rule a loaded
+  surface designates a Law) within a session, self-engage on that Law. DO NOT TRIGGER
+  for first-time rule capture with no prior violation, when the user merely disagrees
+  with an output rather than citing a broken rule, or — on the auto path — for
+  watch-trends or a Law's first violation.
 ---
 
 # Realignment Protocol
@@ -22,6 +25,19 @@ This works only when the rule already lives in a surface that loads automaticall
 it isn't written down anywhere future sessions will see it, repetition won't help the
 next session — edit the surface instead (project CLAUDE.md, user CLAUDE.md, a skill, or
 in-repo docs).
+
+## Auto-trigger on Laws (no invocation needed)
+
+Some rules are designated **Laws** in a loaded surface — a CLAUDE.md may mark a Laws set
+with global, per-repo, or session scope. Laws bind harder than ordinary instructions.
+
+Each turn, self-audit your last action against the active Law set. On the **second**
+violation of the **same Law** within a session, **arm this protocol immediately on that
+Law** (run the steps below) — do not wait for the user to say "realign", do not make them
+re-state the frustration. The first violation: fix it and move on, no arming.
+
+Only **Laws** auto-arm. Watch-trends are self-monitored, never armed. Honor scope: a
+session Law arms only within its phase, a per-repo Law only in its repo.
 
 When triggered:
 
