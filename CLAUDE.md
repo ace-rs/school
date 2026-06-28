@@ -41,8 +41,8 @@ overrides, MCP allow-list, and which skills to include or exclude.
 ## Repo layout
 
 - `school.toml` — school metadata (name, session prompt, env vars, MCP servers, imports)
-- `ace.toml` — points this project at itself (`school = "."`) so the school can be
-  developed using its own skills
+- `ace.toml` — sets `school = "prod9/school"`, so the dev session runs on a stable personal
+  editing school rather than this repo's own in-flux skills
 - `skills/<name>/SKILL.md` — each skill is a directory with a `SKILL.md` frontmatter file
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
@@ -53,8 +53,10 @@ overrides, MCP allow-list, and which skills to include or exclude.
 
 ## Editing rules specific to this repo
 
-- Because `ace.toml` sets `school = "."`, the `skills/` directory IS the school clone —
-  edits land directly in the repo (no symlink indirection like in downstream projects).
+- The session's loaded skills come from the `prod9/school` editing school (per `ace.toml`),
+  **not** this repo — so editing a `skills/<name>/SKILL.md` here does not change the skill the
+  harness already has loaded. To test an edit, read the local `SKILL.md` and follow it
+  directly; the `prod9` copy is an older mirror and won't reflect upstream changes.
 - Skills must stay **generic**. No project-specific content. Anything authored here will
   ship to every downstream school that imports this one.
 - One skill (or one coherent theme) per commit / PR. See `skills/ace-school/SKILL.md` for
