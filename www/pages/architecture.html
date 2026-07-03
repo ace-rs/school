@@ -1,4 +1,4 @@
-<!-- derived from: docs/spec/baseline-school.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, README.md @ ed860ef -->
+<!-- derived from: docs/spec/baseline-school.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, README.md @ c55ba54 -->
 <article>
   <h1>Architecture &amp; design</h1>
   <p class="lede">
@@ -10,7 +10,8 @@
   <h2>The charter — and its edges</h2>
   <p>ACE Home exists to ship exactly three things:</p>
   <ul>
-    <li>The official Anthropic <code>skill-creator</code>, vendored via <code>[[imports]]</code>.</li>
+    <li>Anthropic's skill-authoring skills — <code>skill-creator</code>, vendored via
+      <code>[[imports]]</code>, and its companion <code>skill-reviewer</code>.</li>
     <li>A small set of <code>ace-*</code> helper skills that drive the harness itself.</li>
     <li>Docs a new ACE user can read end-to-end in fifteen minutes.</li>
   </ul>
