@@ -31,14 +31,14 @@ needs to behave consistently across projects. A school can ship:
   work.
 
 ACE Home is the *baseline*: it ships the small set of skills required to make
-ACE itself useful, plus the official Anthropic `skill-creator` for anyone
-authoring their own skills. Anything team- or project-specific belongs in
-your school, not here. See [`docs/spec/baseline-school.md`](docs/spec/baseline-school.md)
+ACE itself useful, plus a pair of skill-authoring aids — Anthropic's
+`skill-creator` for writing skills and `skill-reviewer` for reviewing them.
+Anything team- or project-specific belongs in your school, not here. See [`docs/spec/baseline-school.md`](docs/spec/baseline-school.md)
 for the full charter.
 
 ## What lives here
 
-Eight skills, all loaded by default for any school that imports this one:
+Nine skills, all loaded by default for any school that imports this one:
 
 | Skill            | What it does                                                     |
 | ---------------- | ---------------------------------------------------------------- |
@@ -50,6 +50,7 @@ Eight skills, all loaded by default for any school that imports this one:
 | `ace-save`       | Persist session state before `/clear` or context switch          |
 | `ace-school`     | Manage school edits and PRs                                      |
 | `skill-creator`  | Anthropic's authoritative skill-authoring skill                  |
+| `skill-reviewer` | Review a skill for quality and triggering accuracy               |
 
 Top-level docs:
 

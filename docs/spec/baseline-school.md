@@ -11,9 +11,11 @@ opinions that only fit one team or domain.
 
 Concretely, this school exists to ship:
 
-- The official Anthropic `skill-creator` skill (vendored via `[[imports]]`),
-  so anyone authoring or revising skills has the canonical workflow loaded
-  the moment they need it.
+- Two skill-authoring skills: Anthropic's `skill-creator` (vendored via
+  `[[imports]]` from `anthropics/skills`) for writing skills, and
+  `skill-reviewer` for reviewing them. `skill-reviewer` is adapted from
+  Anthropic's plugin-dev `skill-reviewer` agent and maintained here, because
+  Anthropic ships it as a plugin agent rather than an importable skill.
 - A small set of `ace-*` helper skills that drive the harness itself:
   workflow orchestration, session checkpoints, recovery, alignment fixes,
   school-PR mechanics, and local agent-to-agent messaging.
@@ -42,12 +44,17 @@ and broadly applicable; downstream schools carry the opinions.
 `skills/`:
 
 - `ace/` — start/resume the ACE workflow at session boundaries
+- `ace-afk/` — unattended autonomous mode (nightshift), inside a safety envelope
 - `ace-audit/` — recover when a diff landed without passing through audit
 - `ace-connect/` — local agent-to-agent bridge over unix sockets
+- `ace-docs/` — scaffold a durable-docs tree and its downstream review site
+- `ace-init/` — one-time onboarding of a repo into ACE
 - `ace-realign/` — protocol for re-anchoring drifted attention
 - `ace-save/` — persist session state before `/clear` or context switch
 - `ace-school/` — manage school edits and PRs
 - `skill-creator/` — Anthropic's authoritative skill-authoring skill
+- `skill-reviewer/` — review a skill for quality and triggering (adapted from
+  Anthropic's skill-reviewer agent)
 
 Top-level docs: `README.md` (entry point), `ACE.md` (workflow overview),
 `CLAUDE.md` (house style when editing this school itself).
