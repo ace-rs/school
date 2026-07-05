@@ -15,6 +15,7 @@ the problem, not the mechanism; each section below leads with the situation it's
 |---------------|---------------------------------------------|
 | `ace-init`    | first-time onboarding of a repo into ACE    |
 | `ace`         | moving the workflow forward a step          |
+| `ace-afk`     | running unattended, no one watching         |
 | `ace-save`    | before a `/clear`, exit, or switch          |
 | `ace-audit`   | work landed unreviewed, or a quality pass   |
 | `ace-realign` | a rule keeps getting broken                 |
@@ -38,6 +39,15 @@ hand-direct each phase ("now plan", "now test", "now write"). At a session bound
 also reads persisted state to resume mid-workflow instead of restarting. It's a nudge
 along the process, not a task-discovery tool — and it stays quiet when "go"/"continue"
 point at the in-flight step rather than the next one.
+
+## `ace-afk` — run unattended, overnight
+
+You're stepping away and want work to keep moving with no one watching. The hazard isn't
+idle time — it's an agent taking an irreversible action off a bad assumption while you're
+gone. `ace-afk` is the nightshift: it drives the workflow forward inside a strict safety
+envelope, logging blockers to resume later instead of waiting on them, and stopping short
+of anything destructive or outward-facing. Hand it a bounded task and a clear stopping
+condition, not open-ended latitude.
 
 ## `ace-save` — lock in state before you lose it
 
