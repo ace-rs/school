@@ -38,14 +38,16 @@ for the full charter.
 
 ## What lives here
 
-Nine skills, all loaded by default for any school that imports this one:
+Eleven skills, all loaded by default for any school that imports this one:
 
 | Skill            | What it does                                                     |
 | ---------------- | ---------------------------------------------------------------- |
 | `ace`            | Start or resume the ACE workflow at session boundaries           |
+| `ace-afk`        | Unattended autonomous mode inside a safety envelope              |
 | `ace-audit`      | Recover when a diff landed without passing through audit         |
 | `ace-connect`    | Local agent-to-agent bridge over unix sockets                    |
 | `ace-docs`       | Scaffold a `docs/` tree (usage + design record)                  |
+| `ace-init`       | One-time onboarding of a repo into ACE                           |
 | `ace-realign`    | Re-anchor drifted attention; trace the prompt-chain cause        |
 | `ace-save`       | Persist session state before `/clear` or context switch          |
 | `ace-school`     | Manage school edits and PRs                                      |
