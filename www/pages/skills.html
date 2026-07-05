@@ -1,8 +1,8 @@
-<!-- derived from: ACE.md, README.md @ c55ba54 -->
+<!-- derived from: ACE.md, README.md @ 0a230f3 -->
 <article>
   <h1>The skills</h1>
   <p class="lede">
-    Eight skills, all loaded by default for any school that imports ACE Home. None are
+    Nine skills, all loaded by default for any school that imports ACE Home. None are
     domain-specific — each covers a moment a raw coding session handles badly. Reach for
     them by the problem, not the mechanism.
   </p>
@@ -14,6 +14,7 @@
     <tbody>
       <tr><td><code>ace-init</code></td><td>first-time onboarding of a repo into ACE</td></tr>
       <tr><td><code>ace</code></td><td>moving the workflow forward a step</td></tr>
+      <tr><td><code>ace-afk</code></td><td>running unattended, no one watching</td></tr>
       <tr><td><code>ace-save</code></td><td>before a <code>/clear</code>, exit, or switch</td></tr>
       <tr><td><code>ace-audit</code></td><td>work landed unreviewed, or you want a quality pass</td></tr>
       <tr><td><code>ace-realign</code></td><td>a rule keeps getting broken</td></tr>
@@ -35,6 +36,13 @@
     audit — one step at a time. Invoke it again and again and the agent walks the stages
     itself, so you don't hand-direct each phase. At a session boundary it reads persisted
     state to resume mid-workflow instead of restarting.
+  </p>
+  <p>
+    <strong><code>ace-afk</code></strong> is the unattended counterpart — the nightshift.
+    It drives the workflow forward with no one watching, inside a strict safety envelope:
+    reversible work proceeds, blockers get logged to resume later rather than waited on, and
+    anything destructive or outward-facing stops for you. Hand it a bounded task and a clear
+    stopping condition.
   </p>
 
   <h2>Not losing work</h2>
