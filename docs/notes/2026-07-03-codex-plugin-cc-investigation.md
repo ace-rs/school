@@ -49,6 +49,11 @@ to the ace-connect bridge and doesn't need to touch the skill.
 
 ## Follow-up not yet done
 
+**Resolved 2026-07-07** — see
+[`2026-07-07-codex-app-server-bridge-redesign.md`](2026-07-07-codex-app-server-bridge-redesign.md):
+all three questions answered against real source and validated live. The rest of this
+section is left as originally written.
+
 `plugins/codex/scripts/` almost certainly contains a working Node client
 for the app-server protocol. It could answer the "Open Questions" at the
 bottom of `skills/ace-connect/references/codex.md`:
