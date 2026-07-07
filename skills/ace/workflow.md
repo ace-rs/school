@@ -108,10 +108,12 @@ isolated agents, one per non-overlapping file group. Criterion: context need, no
    - **Full save + clear** — when the just-finished work was context-heavy, escalate.
      Heaviness lives in the change *or* the conversation: many files touched, large reads,
      isolated agents, a long planning/design discussion (even if the change was tiny), many
-     turns, several tasks this session, or a compaction already fired. Then load and run
-     `ace-save` end-to-end (no gate — notes-only, reversible), and recommend the user
-     `/clear` and re-`/ace` for fresh context. Stop there; don't barrel into task discovery
-     in a bloated context. If the user declines `/clear`, fall back to looping in-session.
+     turns, several tasks this session, or a compaction already fired. On any of these, run
+     `ace-save` **immediately and without asking** — don't offer it as a choice, don't wait
+     for approval (it's notes-only and reversible). Only *after* the save, recommend the user
+     `/clear` and re-`/ace` for fresh context — that, and only that, is theirs to call. Stop
+     there; don't barrel into task discovery in a bloated context. If the user declines
+     `/clear`, fall back to looping in-session.
 
    Judgment call, not a gauge reading — you can't see the context meter, so estimate from
    what the task and session actually involved.
