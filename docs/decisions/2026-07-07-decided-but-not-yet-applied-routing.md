@@ -1,7 +1,7 @@
 # Route decided-but-not-yet-applied rulings to the spec, not just notes
 
 - **Date:** 2026-07-07
-- **PR:** (pending)
+- **PR:** #1
 - **Status:** accepted
 
 ## Decision
