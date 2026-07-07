@@ -51,6 +51,26 @@ Most repos use a subset — a library may need only `decisions/` + `notes/`; a t
 users adds `guides/` + `reference/`. An empty dir with a README is a valid signpost. Don't
 manufacture content to fill a folder.
 
+### Decided-but-not-yet-applied — the tier handoff
+
+A decision routinely outruns the code: decided, agreed, but not yet implemented. Route it
+right or it gets re-litigated from scratch each time someone reconstructs the design from
+the trustworthy sources — spec + code.
+
+- **The spec is the living source of truth; the ADR is the frozen why.** `spec/` holds the
+  up-to-date *what*, `decisions/` holds the point-in-time *why*. A reader learns how the
+  system works from `spec/`, not `decisions/`. If they must consult `decisions/` to know
+  current state, the spec has failed its job.
+- **A decision that changes or retires existing behavior updates the spec in the same
+  stroke — even before the code lands.** Mark the affected section as intended/target and
+  point to the ADR; never leave the spec teaching the superseded design. A ruling to retire
+  something still present fits no tier that describes applied reality — spec is its home,
+  flagged as intended.
+- **Never let a ruling live only in a resume/handoff note.** Resume notes are transient;
+  they do not survive the next resume handoff, and a decision captured only there
+  evaporates. Promote it immediately to `decisions/` (the frozen why) *and* reflect it in
+  `spec/` (the current/intended what).
+
 The agent entry point is not a folder: the `CLAUDE.md` / `AGENTS.md` pointer (step 4) is
 the *schema document* that tells an agent how `docs/` is laid out. Keep it as the single
 index — no separate `llms.txt`.
