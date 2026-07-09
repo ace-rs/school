@@ -66,6 +66,14 @@ Codex can split into server + TUI client similar to OpenCode:
 
 Multiple clients can speak to one app-server. TUI is one client, the
 ace-connect bridge is another, both talking JSON-RPC about the same thread.
+The server holds a per-thread subscriber set and fans every thread event out
+to all connections, so a **non-owning client sees events from turns it did not
+start** — the basis for a bridge that observes what the human does.
+
+A from-scratch redesign of the bridge (drop the stale assumptions below, use
+`turn/steer`, relay real replies) is recorded in
+`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`. The sections
+below still describe what `codex-app-bridge.sh` does **today**, not that target.
 
 ## Interactive TUI launcher
 
@@ -107,7 +115,7 @@ and falls back to `thread/start` when none exists. If the app-server already
 has a stale loaded thread from a prior session, the bridge claims it without
 prompting; pass `--thread-id` to be explicit or restart the app-server first.
 
-## Protocol Discovery
+## Protocol reference
 
 Generate the schema before extending the bridge:
 
@@ -117,17 +125,64 @@ codex app-server generate-json-schema --experimental --out /tmp/codex-protocol
 
 Combined schema lives at
 `/tmp/codex-protocol/codex_app_server_protocol.v2.schemas.json` (~430 defs).
-The bridge currently uses `initialize`, `initialized`, `thread/loaded/list`,
-`thread/start`, `turn/start`. Notable methods we don't yet use:
-`turn/steer` (mid-turn input injection), `thread/injectItems` (model-visible
-history append), `turn/interrupt`, `ThreadStatusChangedNotification` (push
-event when a thread becomes idle), `fs/watch`, the hook system
-(`preToolUse`, `postToolUse`, `stop`, `sessionStart`, `userPromptSubmit`).
+Wire dialect is JSON-RPC **without** a `jsonrpc` field; all v2 params are
+`camelCase`. v1 survives as the handshake plus legacy approval/config types
+(v1 `conversationId`; v2 `threadId`); everything thread/turn-shaped is v2.
+Experimental methods/fields gate per-item behind `capabilities.experimentalApi
+= true` in `initialize`.
 
-## Open Questions
+Recommended stable surface for the bridge:
 
-1. How to identify the currently attached TUI thread when multiple are loaded.
-2. Whether the same thread can accept input concurrently from TUI and bridge
-   without state corruption.
-3. Whether `turn/steer` is a better fit than `turn/start` for ace-connect
-   injection (no need to wait for idle).
+```
+initialize → thread/loaded/list → thread/resume {threadId}
+  → receive notifications → turn/start | turn/steer {expectedTurnId} | turn/interrupt
+```
+
+- `thread/loaded/list` — thread ids live in memory now; best "what is the TUI
+  running" probe. There is no `thread/current`.
+- `thread/resume {threadId}` — attaches **and subscribes**, streaming history
+  then live events. **Requires an on-disk rollout**; a never-run thread (zero
+  turns) has none and cannot be resumed.
+- `turn/start {threadId, input}` — spins a fresh turn when idle; on a thread
+  with an active turn it **merges into it** (unguarded mid-turn injection).
+- `turn/steer {threadId, input, expectedTurnId}` — `expectedTurnId` is
+  required and non-empty; the id comes only from a `turn/started` notification
+  (so steer depends on `thread/resume` succeeding). Thread-scoped: a second
+  client can steer the TUI's turn.
+- `turn/interrupt {threadId, turnId}`, `thread/inject_items` (model-visible
+  history append without a turn), `thread/unsubscribe`.
+
+Full findings — file:line refs, transport internals, live-validation log — in
+`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`.
+
+## Resolved questions
+
+1. **Identify the TUI's thread among many loaded** — `thread/loaded/list`
+   intersected with a metadata filter (`cwd` + `ThreadStatus`). "Active" is a
+   per-thread status (`NotLoaded | Idle | SystemError | Active`), not a
+   server-global selection.
+2. **Concurrent input without corruption** — the server serializes per thread
+   and rejects unsafe injection with a typed error rather than corrupting
+   state: `ActiveTurnNotSteerable {turnKind: review|compact}` when the active
+   turn is a `/review` or manual `/compact` (the only non-steerable kinds).
+   No plugin-style broker needed — the shared `--listen` socket makes
+   serialization the server's job.
+3. **`turn/steer` vs `turn/start`** — steer is strictly safer: it fails loudly
+   (`ExpectedTurnMismatch`) instead of racing blind, and needs no wait for
+   idle. Cost: it is gated on `thread/resume` (rollout) plus a known active
+   `turnId`. Use `turn/steer` when a turn is live, `turn/start` when idle.
+
+## Open items
+
+Carried forward from the redesign note (§6); each still a decision, not settled
+here:
+
+- **Reply-back contract** — relay codex's `item/agentMessage` + `turn/completed`
+  to the original sender over the ace-connect bus, with completion inference
+  (subagent turns make `turn/completed` unreliable).
+- **Sandbox/approval derivation** — cwd + sandbox come from the *server's*
+  launch, not the TUI's flags; every injected peer turn inherits the human's
+  powers. Derive the posture from ace-connect control-vs-autonomous mode.
+- **Live `turn/steer` validation** — not yet exercised against a thread
+  mid-turn (the test thread had no active turn and no rollout). Validate before
+  documenting steer as the primary path.
