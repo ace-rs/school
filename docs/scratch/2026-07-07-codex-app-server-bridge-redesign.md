@@ -254,8 +254,9 @@ carries the security posture).
 
 ## 6. Open items / next steps
 
-- Fold the redesign into `skills/ace-connect/references/codex.md` (replace the "Open
-  Questions" + "Protocol Discovery" sections with the answers above).
+- ~~Fold the redesign into `skills/ace-connect/references/codex.md` (replace the "Open
+  Questions" + "Protocol Discovery" sections with the answers above).~~ Done 2026-07-09
+  (commit `1db1550`): Protocol reference + Resolved questions + Open items.
 - Decide the reply-back contract: relay codex's `item/agentMessage` to the original sender
   over the ace-connect bus (dialect verbs), with completion inference (§2).
 - Decide sandbox/approval derivation from ace-connect control-vs-autonomous mode, given the
