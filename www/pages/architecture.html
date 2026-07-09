@@ -1,9 +1,9 @@
-<!-- derived from: docs/spec/baseline-school.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, README.md @ c55ba54 -->
+<!-- derived from: docs/spec/baseline-school.md, docs/decisions/2026-07-09-docs-taxonomy-single-axis-gradient.md, README.md @ 585d344 -->
 <article>
   <h1>Architecture &amp; design</h1>
   <p class="lede">
     Two ideas carry the whole school: <strong>layering</strong> (the baseline stays small;
-    opinions live downstream) and a <strong>two-axis docs taxonomy</strong> (the design
+    opinions live downstream) and a <strong>single-gate docs taxonomy</strong> (the design
     record this site is built from).
   </p>
 
@@ -52,30 +52,32 @@
 
   <h2>The docs taxonomy this site is built from</h2>
   <p>
-    The <code>docs/</code> tree splits into two clusters that sort on <em>different axes on
-    purpose</em> — because each axis predicts how you actually handle the file:
+    The <code>docs/</code> tree routes on <em>one</em> axis — the question an artifact
+    answers — with placement forced by predicate-named folders and a first-match gate, not
+    by after-the-fact judgment. Permanence isn't a second axis; it falls out of the folder.
   </p>
   <table class="axes">
     <thead>
-      <tr><th>Cluster</th><th>Sorted by</th><th>Folders</th><th>Handling</th></tr>
+      <tr><th>Folder</th><th>Answers</th><th>Handling</th></tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Usage</td><td>type</td>
-        <td><code>guides/</code>, <code>reference/</code></td>
-        <td>both living; edit in place</td>
-      </tr>
-      <tr>
-        <td>Design record</td><td>permanence</td>
-        <td><code>spec/</code>, <code>decisions/</code>, <code>notes/</code></td>
-        <td>update / freeze-and-date / discard</td>
-      </tr>
+      <tr><td><code>guides/</code></td><td>how do I do X? (use or operate)</td>
+        <td>living</td></tr>
+      <tr><td><code>vendor/</code></td><td>what does <em>their</em> thing do?</td>
+        <td>living; link-first</td></tr>
+      <tr><td><code>spec/</code></td><td>how is <em>ours</em> built, and its surface?</td>
+        <td>living</td></tr>
+      <tr><td><code>decisions/</code></td><td>what did we rule, and why not?</td>
+        <td>frozen; dated</td></tr>
+      <tr><td><code>scratch/</code></td><td>what are we still working out?</td>
+        <td>disposable; residual</td></tr>
     </tbody>
   </table>
   <p>
-    Forcing one axis across both is what makes <code>reference/</code> feel wrong next to
-    <code>notes/</code>. <code>CLAUDE.md</code>/<code>AGENTS.md</code> is the agent index —
-    no <code>llms.txt</code>, no <code>human/</code> vs <code>llm/</code> split.
+    <code>scratch/</code> sits behind a toll — each file names why it isn't spec or a
+    decision — so nothing lands there by default.
+    <code>CLAUDE.md</code>/<code>AGENTS.md</code> is the agent index — no
+    <code>llms.txt</code>, no <code>human/</code> vs <code>llm/</code> split.
   </p>
 
   <h2>This site is downstream</h2>

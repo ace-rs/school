@@ -1,4 +1,4 @@
-<!-- derived from: docs/decisions/2026-03-26-ace-consolidation.md, docs/decisions/2026-03-26-clear-over-compact.md, docs/decisions/2026-04-21-polish-commit-separation.md, docs/decisions/2026-06-07-docs-taxonomy-two-axis.md, docs/decisions/2026-06-13-ace-init-onboarding-shape.md, docs/decisions/2026-06-18-no-skill-alias-no-stub.md @ ed860ef -->
+<!-- derived from: docs/decisions/2026-03-26-ace-consolidation.md, docs/decisions/2026-03-26-clear-over-compact.md, docs/decisions/2026-04-21-polish-commit-separation.md, docs/decisions/2026-07-09-docs-taxonomy-single-axis-gradient.md, docs/decisions/2026-06-13-ace-init-onboarding-shape.md, docs/decisions/2026-06-18-no-skill-alias-no-stub.md @ 585d344 -->
 <article>
   <h1>Why it's shaped this way</h1>
   <p class="lede">
@@ -32,16 +32,20 @@
     loose coupling to the <code>ace learn</code> CLI.
   </p>
 
-  <h2>Docs taxonomy: two-axis hybrid</h2>
-  <p class="meta">2026-06-07</p>
+  <h2>Docs taxonomy: one gate, forced by construction</h2>
+  <p class="meta">2026-07-09 · supersedes the 2026-06-07 two-axis model</p>
   <p>
-    Five folders in two clusters — usage sorted by type, the design record sorted by
-    permanence — because each axis predicts how you handle the file. Rejected: permanence-only
-    (misses the type/audience axis), full four-quadrant Diátaxis (too heavy; standalone
-    tutorials are rare and quadrants blur), a <code>human/</code> vs <code>llm/</code> split
-    (duplicates and rots), and <code>llms.txt</code> (the durable part is just a curated
-    markdown index, already served by <code>docs/README.md</code> + the <code>CLAUDE.md</code>
-    pointer). See <a href="pages/architecture.html" hx-get="pages/architecture.html"
+    Five folders routed on a single axis — the question an artifact answers — filed by a
+    first-match gate rather than after-the-fact judgment: <code>guides/</code> (how-to, use
+    or operate), <code>vendor/</code> (third-party reference), <code>spec/</code> (our design
+    + surface), <code>decisions/</code> (dated rulings), <code>scratch/</code> (residual
+    exploration). The earlier two-axis model double-counted — permanence never varies within
+    a folder, so it's a property, not a sorting axis — which let everything drain to the soft
+    default. The fix is by construction: predicate folder names and a toll on
+    <code>scratch/</code> (each file names why it isn't spec or a decision), so nothing lands
+    there by default. Still rejected: a <code>human/</code> vs <code>llm/</code> split
+    (duplicates and rots) and <code>llms.txt</code> (a curated markdown index already serves
+    it). See <a href="pages/architecture.html" hx-get="pages/architecture.html"
     hx-target="#content">Architecture</a> for the resulting shape.
   </p>
 
