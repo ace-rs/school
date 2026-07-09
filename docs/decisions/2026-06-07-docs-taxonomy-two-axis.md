@@ -2,7 +2,7 @@
 
 - **Date:** 2026-06-07
 - **PR:** manual
-- **Status:** accepted
+- **Status:** superseded by [2026-07-09-docs-taxonomy-single-axis-gradient](2026-07-09-docs-taxonomy-single-axis-gradient.md)
 
 ## Decision
 

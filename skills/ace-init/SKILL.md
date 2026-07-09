@@ -135,9 +135,9 @@ shapes and invariants, error and edge-case handling, and the *why* behind non-ob
 choices. Reverse-spec against the implementation. Reconcile each claim and flag
 divergences (spec says X, code does Y) instead of papering over them.
 
-**Route by permanence.** Per `ace-docs`: how-it-works and intent → `docs/spec/`; a
-decision worth pinning → `docs/decisions/` as a dated ADR; exhaustive enumerations (every
-config key, every endpoint) → `docs/reference/`.
+**Route by the gate.** Per `ace-docs`: how-it-works, intent, and our own exact surface
+(every config key, every endpoint) → `docs/spec/`; a decision worth pinning →
+`docs/decisions/` as a dated ADR; third-party lookup we lean on → `docs/vendor/`.
 
 Run each spec through the normal `ace` planning phases (`/ace` → Specs → Draft Plan);
 scaffold `docs/` first via `ace-docs`. If a full run is too big for now, write the

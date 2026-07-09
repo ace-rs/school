@@ -46,9 +46,8 @@ overrides, MCP allow-list, and which skills to include or exclude.
 - `skills/<name>/SKILL.md` — each skill is a directory with a `SKILL.md` frontmatter file
   describing when it triggers
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills
-- `docs/` — durable artifacts about the project (see `docs/README.md`): usage
-  docs (`guides/`, `reference/`) and a design record (`spec/`, `decisions/`,
-  `notes/`)
+- `docs/` — durable artifacts about the project (see `docs/README.md`): filed by a
+  routing gate across `guides/`, `vendor/`, `spec/`, `decisions/`, `scratch/`
 - `.claude/skills/` etc. — symlinks ACE manages; never edit manually (see `.gitignore`)
 
 ## Editing rules specific to this repo
@@ -90,10 +89,11 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 ## Durable artifacts
 
-`docs/` — two clusters: **usage** (`guides/` how-to, `reference/` lookup; sorted
-by type) and the **design record** (`spec/`, `decisions/`, `notes/`; sorted by
-permanence). Default to `notes/`. See `docs/README.md` and the per-dir READMEs
-for routing and format.
+`docs/` — file by the routing gate in `docs/README.md`, first match wins: a ruling →
+`decisions/`; third-party lookup → `vendor/`; a how-to → `guides/`; our own
+design/surface → `spec/`; unsettled exploration → `scratch/` (residual, opened with a
+"not spec/decision because ___" line). Nothing defaults to `scratch/`. See the per-dir
+READMEs for each folder's test and format.
 
 ## Command-output compaction — lowfat
 

@@ -1,9 +1,9 @@
 ---
 name: ace-docs
 description: >
-  Scaffold a durable-docs directory: usage docs (guides/, reference/) sorted by
-  type, plus a design record (spec/, decisions/, notes/) sorted by permanence.
-  Also builds the downstream `www/` review site — a human-facing, editorialized
+  Scaffold a durable-docs directory routed by a single gate — guides/ (how-to),
+  vendor/ (third-party reference), spec/ (our design + surface), decisions/ (dated
+  rulings), scratch/ (residual exploration). Also builds the downstream `www/` review site — a human-facing, editorialized
   presentation synthesized from the docs, previewed locally and published to
   gh-pages. TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should
   ADRs/specs/guides/reference go", before creating the first durable doc in a repo
@@ -21,31 +21,36 @@ This skill has two modes over one source of truth, `docs/`: **scaffold** the tre
 (default), and **build the `www/` review site** from it (its own section below). Both use
 the `docs/` structure below.
 
-Scaffold a `docs/` directory with two clusters of sub-directories. The clusters sort on
-*different axes on purpose*:
+Scaffold a `docs/` directory of five folders, each named as a **predicate** — the name is
+the test, so filing is a match, not a judgment call:
 
-**Usage** — outward-facing: how to use what this repo produces. Sorted by **type** (a
-how-to and a lookup table read differently and fail when mixed). Both living; edit in
-place.
-
-- `docs/guides/` — task-oriented how-to and getting-started. *How do I do X?*
-- `docs/reference/` — lookup facts: API, CLI flags, config keys, schemas, glossaries,
-  external links. *What exactly is X?* Scan, don't read.
-
-**Design record** — inward-facing: how and why this repo is built. Sorted by
-**permanence** (how long the claim stays current).
-
-- `docs/spec/` — design and architecture; intent and how-it-works. *What we intend, and
-  how the system fits together.* Living; updated in place.
-- `docs/decisions/` — dated ADRs. *What we decided, and why not the alternative.* Frozen
+- `docs/guides/` — task-oriented how-to, start to finish. *How do I do X?* — using the
+  product or operating the repo. Living; edit in place.
+- `docs/vendor/` — third-party lookup you keep reaching for: a framework's commands, an
+  external API/CLI. *What exactly does their thing do?* Link-first; mark provenance. Living.
+- `docs/spec/` — design, architecture, how-it-works, and our own exact surface (our flags,
+  config, API). *How our system is built and meant to work.* Living; edit in place.
+- `docs/decisions/` — dated rulings. *What we decided, and why not the alternative.* Frozen
   at the moment of decision; supersede, never edit.
-- `docs/notes/` — research, surveys, drafts, exploration. *What we explored.* Disposable;
-  dated.
+- `docs/scratch/` — unsettled exploration: research, surveys, drafts. *What we're still
+  working out.* The residual home; disposable; dated.
 
-Routing when unsure: prose you read to *understand the system* → `spec/`; facts you scan
-to *look something up* → `reference/`; steps to *accomplish a task* → `guides/`; a
-*ruling* worth defending against re-litigation → `decisions/`; everything else → `notes/`
-(the default).
+**Route by the gate, not by vibe.** One axis — the question the artifact answers. Walk it
+top to bottom and file at the first yes; the bottom charges a toll, so nothing lands in
+`scratch/` by default:
+
+1. A ruling you'd defend if reopened? → `decisions/`
+2. Third-party facts you keep to look up? → `vendor/` (link-first, mark provenance)
+3. A how-to — using the product *or* operating the repo? → `guides/` (script repeatable
+   operations; the guide holds the judgment a script can't)
+4. How our system is built or meant to work, including its own config/CLI surface? →
+   `spec/`
+5. None of the above — genuinely unsettled exploration → `scratch/`, opened with a
+   one-line "not spec/decision because ___."
+
+Permanence is not a sorting axis — it falls out of the answer: `guides`/`vendor`/`spec` are
+living, `decisions` frozen, `scratch` disposable. Don't reason about it; read it off the
+folder.
 
 **Decided-but-not-yet-applied.** A decision often outruns the code — agreed but not yet
 implemented. Route it or it gets re-litigated each time someone reconstructs the design
@@ -57,8 +62,8 @@ spec teaching the superseded design. Never strand a ruling in a resume/handoff n
 don't survive the next handoff. Promote it to `decisions/` and reflect it in `spec/`
 immediately.
 
-Most repos use a subset — a library may need only `decisions/` + `notes/`; a tool with
-users adds `guides/` + `reference/`. An empty dir with a README is a valid signpost. Don't
+Most repos use a subset — a library may need only `decisions/` + `scratch/`; a tool with
+users adds `guides/` + `vendor/`. An empty dir with a README is a valid signpost. Don't
 manufacture content to fill a folder.
 
 The agent entry point is not a folder: the `CLAUDE.md` / `AGENTS.md` pointer (step 4) is
@@ -97,17 +102,17 @@ Don't run when:
 2. **Create the tree.**
 
    ```sh
-   mkdir -p docs/guides docs/reference docs/spec docs/decisions docs/notes
+   mkdir -p docs/guides docs/vendor docs/spec docs/decisions docs/scratch
    ```
 
 3. **Drop the six READMEs** from this skill's `templates/` directory:
 
    - `templates/root-README.md` → `docs/README.md`
    - `templates/guides-README.md` → `docs/guides/README.md`
-   - `templates/reference-README.md` → `docs/reference/README.md`
+   - `templates/vendor-README.md` → `docs/vendor/README.md`
    - `templates/spec-README.md` → `docs/spec/README.md`
    - `templates/decisions-README.md` → `docs/decisions/README.md`
-   - `templates/notes-README.md` → `docs/notes/README.md`
+   - `templates/scratch-README.md` → `docs/scratch/README.md`
 
    Templates are short and project-agnostic. Copy verbatim; let the user customize after.
 
@@ -117,9 +122,10 @@ Don't run when:
    ```markdown
    ## Durable artifacts
 
-   `docs/` — usage docs (`guides/`, `reference/`; sorted by type) and a design
-   record (`spec/`, `decisions/`, `notes/`; sorted by permanence). Default to
-   `notes/`. See `docs/README.md` and per-dir READMEs for routing.
+   `docs/` — file by the routing gate in `docs/README.md`: a ruling → `decisions/`;
+   third-party lookup → `vendor/`; a how-to → `guides/`; our own design/surface →
+   `spec/`; unsettled exploration → `scratch/` (last resort, opened with a
+   "not spec/decision because ___" line). Nothing defaults to `scratch/`.
    ```
 
    This pointer is the schema document an agent reads to navigate `docs/`; keep it short —
@@ -130,23 +136,28 @@ Don't run when:
 5. **Commit.** One commit:
 
    ```
-   Scaffold docs/ — usage + design-record clusters
+   Scaffold docs/ — single-gate routing
 
-   Two clusters: usage docs (guides/, reference/) sorted by type; the design
-   record (spec/, decisions/, notes/) sorted by permanence. Each sub-dir has a
-   README defining scope. CLAUDE.md (or AGENTS.md) points at it as the
-   schema/index.
+   Five folders routed by one gate: guides/ (how-to), vendor/ (third-party
+   reference), spec/ (our design + surface), decisions/ (dated rulings), scratch/
+   (residual exploration). Each sub-dir has a README defining its test. CLAUDE.md
+   (or AGENTS.md) points at it as the schema/index.
    ```
 
 ### Gotchas
 
 - **Don't pre-fill any dir with example content.** An empty dir + README beats a sample to
   delete.
-- **Date-prefix filenames only in** `decisions/` and `notes/` — the moment matters there.
-  `guides/`, `reference/`, `spec/` use `<slug>.md`; they describe a thing, not a moment.
-- **Keep `guides/` and `reference/` distinct.** A guide walks one task start-to-finish;
-  reference enumerates facts to scan. When a guide needs the exhaustive list, link to
-  `reference/` rather than inlining it.
+- **Date-prefix filenames only in** `decisions/` and `scratch/` — the moment matters there.
+  `guides/`, `vendor/`, `spec/` use `<slug>.md`; they describe a thing, not a moment.
+- **Script repeatable operations, don't narrate them.** An operational guide an agent
+  re-runs by hand is a latent mistake — encode the steps in `scripts/*.sh` and let the
+  guide hold the invocation plus the judgment a script can't.
+- **`vendor/` is link-first.** Cache the slice you reuse plus a provenance marker, never
+  mirror a whole external API — the copy rots when upstream ships.
+- **`scratch/` is residual, not default.** Reachable only by failing every gate above it;
+  each file opens with a one-line "not spec/decision because ___." A file that lands there
+  without that line is misfiled.
 - **Don't symlink scattered docs.** Move them so `git log --follow` keeps history.
   Migrating existing docs in is a separate task — propose it, don't fold it into the
   scaffold.
@@ -201,7 +212,7 @@ catch staleness for you.
    - `templates/docs-site-deploy.sh` → `scripts/docs-site-deploy.sh` (`chmod +x`)
 
 2. **Synthesize pages** into `www/pages/` from the relevant `docs/`. Default to
-   `spec/ guides/ reference/ decisions/`; treat `notes/` as exploratory — pull a note in
+   `spec/ guides/ vendor/ decisions/`; treat `scratch/` as exploratory — pull one in
    only when it carries reader value. Every page gets a provenance header.
 
 3. **Wire the nav** in `www/index.html` by reader journey, not by `docs/` folders.

@@ -39,6 +39,8 @@ a mandatory start-to-finish sequence.
 
 5. **Draft plan** — explore the space: alternatives, trade-offs, edge cases. List every
    change (spec updates first, then tests, then code), file by file, stating what changes.
+   For any durable doc this task produces, name its target `docs/` folder now by walking
+   the routing gate in `docs/README.md` — decide placement at plan time, not when filing.
    If ambiguous, ask. If too large, propose a breakdown first. Identify which skills to load.
 
 6. **Simplify plan** — cut anything unnecessary; prefer deletions; merge combinable steps.
