@@ -1,5 +1,61 @@
 # Codex app-server bridge — protocol findings + live validation + redesign
 
+## Status — 2026-07-12: reactive-only, settled
+
+The forward truth for this track lives here. **§1–§9 below are the dated research
+log** — mine them for protocol facts (durable and correct), but every "next steps" /
+"pending changes" / "deferred" list inside them is **closed**, resolved by this
+status. Don't act on those older agendas.
+
+**Decision: reactive-only.** A codex on the bus answers peer messages; it does not
+drive its own agenda. That deletes the "autonomous-swarm driver" outright — a
+reactive codex needs no turn-injection loop, so there is nothing to build there.
+
+**Receive contract — one-shot per peer message, no persistent driver:**
+
+    initialize → thread/loaded/list → turn/start {threadId, input} → confirm turn/started → close
+
+The `app-server` runs the agent loop itself; the bridge only injects. No draining,
+no `turn/completed` tracking, no event scraping, no `thread/resume`/subscription on
+the live path. Headless-no-human variant: if `thread/loaded/list` is empty, create a
+thread first (`thread/start`), remember its id, reuse it for later messages — still
+one-shot per message, still no loop.
+
+**Reply-back = codex's own `send.sh` call, symmetric with Claude.** Claude's bridge
+never scrapes Claude's output to reply — the agent calls `send.sh` itself and the
+reply lands async on the sender's socket. Codex mirrors it exactly: `turn/start`
+delivers, codex does the work, codex shells out to `send.sh`, the reply arrives on
+the bus. The bridge does **not** subscribe-and-relay. Precondition (the real
+constraint, not draining): `send.sh` reachable on PATH inside the app-server's
+sandbox, and codex instructed via the ace-connect dialect to reply that way.
+
+**Dead — do not revisit or resurrect:**
+
+- the **autonomous / self-directed driver** — reactive-only removes the need;
+- **reply-back by bridge subscribe/relay** of `item/agentMessage` + `turn/completed`
+  — wrong model; codex self-replies;
+- the validated **Node** rigs `codex-bridge.mjs` / `pty-inject-daemon.mjs` (§8) — no
+  Node, rejected; findings kept, code not promoted;
+- the **PTY-inject** track and **plain-codex** injection (§8.2–8.3) — never launch a
+  plain codex for ace-connect; exposure is chosen at launch via `--listen`.
+
+**Open — genuinely undecided:**
+
+- **Sandbox/approval posture from ace-connect mode.** The server's launch owns
+  cwd + sandbox (§4.3, §8.1); every injected peer turn inherits it. control →
+  read-only; autonomous → workspace-write in-tree + carve-outs. Wire it into how
+  `codex.sh` launches the app-server. This is the one real blocker.
+- **Does codex reliably honor the dialect and call `send.sh`?** Unverified. If it
+  drops replies, that is a dialect/prompt fix — not a reason to reintroduce scraping.
+
+**Remaining edits to land, no new code beyond wiring:** sandbox posture into
+`codex.sh`'s app-server launch per mode; `codex-app-bridge.sh` drop the
+subscribe/relay reply path (keep get-thread + `turn/start`). Rig cleanup (outside
+tree, per-path go): `~/Documents/ace-rs/codex-live-test/` + shallow clones
+`~/Documents/ace-rs/{codex,codex-plugin-cc}`.
+
+---
+
 Continuation of [`2026-07-03-codex-plugin-cc-investigation.md`](2026-07-03-codex-plugin-cc-investigation.md)'s
 "Follow-up not yet done". That note asked: fetch the codex-plugin-cc client, compare its
 thread-selection / turn-injection against `skills/ace-connect/scripts/codex-app-bridge.sh`,
@@ -257,14 +313,8 @@ carries the security posture).
 - ~~Fold the redesign into `skills/ace-connect/references/codex.md` (replace the "Open
   Questions" + "Protocol Discovery" sections with the answers above).~~ Done 2026-07-09
   (commit `1db1550`): Protocol reference + Resolved questions + Open items.
-- Decide the reply-back contract: relay codex's `item/agentMessage` to the original sender
-  over the ace-connect bus (dialect verbs), with completion inference (§2).
-- Decide sandbox/approval derivation from ace-connect control-vs-autonomous mode, given the
-  server-launch-owns-it constraint (§4.3) — including the security note that peer turns
-  inherit the human's powers.
-- `turn/steer` was **not** exercised live (the pristine test thread had no active turn and
-  no rollout). Validate steer against a thread mid-turn before documenting it as the primary
-  path.
+- The remaining items here (reply-back contract, sandbox derivation, `turn/steer`
+  validation) are **closed** — see the Status section at the top of this note.
 
 ## 7. Repro artifacts
 
@@ -286,7 +336,8 @@ inject into a **plain, already-running** codex that must never be restarted.
 ### 8.1 App-server bridge — built + validated (resolves items #2, #4; #3 proposed)
 
 Wrote a from-scratch Node bridge, `~/Documents/ace-rs/codex-live-test/codex-bridge.mjs`
-(rig-local, **needs promotion into `skills/ace-connect/scripts/`**). One long-running
+(rig-local Node rig; **rejected — no Node, not promoted**; findings below are kept).
+One long-running
 process: WS client to `codex app-server --listen ws://…` + a **persistent Node
 `net.Server`** unix inbox (zero rebind gap — strictly better than `start.sh`'s
 one-`socat`-per-message). No `websocat` (Node ≥21 built-in `WebSocket`), no daemon.
@@ -336,7 +387,8 @@ The one input surface a plain codex exposes is its **PTY**. A **persistent daemo
 turns each ace-connect line into PTY input (`tmux send-keys`) is interactive and re-arm-free
 — the loop lives in the daemon, codex just receives user turns.
 
-`~/Documents/ace-rs/codex-live-test/pty-inject-daemon.mjs` (rig-local, **needs promotion**).
+`~/Documents/ace-rs/codex-live-test/pty-inject-daemon.mjs` (rig-local Node rig;
+**rejected — PTY track dead, not promoted**).
 **Proven live** against a plain running codex: two messages injected back-to-back, no
 re-arm, no restart, no socket — codex answered them as normal chat turns.
 
@@ -349,80 +401,18 @@ Open refinements (not re-arm — serialization/robustness):
   bracketed paste. Single-user, low collision.
 - Requires codex in a controllable terminal (tmux / `expect` / `reptyr`).
 
-### 8.4 Design shape that fell out
-
-Two supported codex receivers, pick by whether we control launch:
-- **We launch codex** → `--listen` app-server split + `codex-bridge.mjs` (clean protocol,
-  turn/steer, structured reply-back). The tool-harness one-shot `socat` receive in the
-  current `references/codex.md` is the **wrong primitive** (blocking, re-arm) — demote it.
-- **Plain codex already running, never restart** → `pty-inject-daemon.mjs` (PTY transport).
-
-### 8.5 Pending school changes (for `ace-school` to propose)
-
-- Promote `codex-bridge.mjs` + `pty-inject-daemon.mjs` into `skills/ace-connect/scripts/`
-  (Node, no `websocat`); retire the `websocat` bash bridge (`codex-app-bridge.sh`) it
-  replaces, and rewire `codex.sh`.
-- Rewrite `references/codex.md`: demote the tool-harness one-shot; document the two receivers
-  (app-server bridge + PTY daemon); record the launch-time-exposure finding, `turn/steer`
-  validated, reply-back mechanism, the pristine-thread/rollout coupling, and server-owns-
-  sandbox.
-
-### 8.6 Next steps
-
-1. **Decide item #3** — sandbox/approval posture from ace-connect control-vs-autonomous mode
-   (control → read-only; autonomous → workspace-write inside tree + safety carve-outs). The
-   one blocker before consolidation.
-2. Tighten `pty-inject-daemon.mjs` (serialize + reply-back) and re-demo airtight.
-3. Promote both scripts into the skill + rewrite `references/codex.md` (§8.5) via `ace-school`.
-
-### 8.7 Aside (user-facing, not durable)
-
-`~/.codex/config.toml` stores the **GitHub PAT in plaintext** (`mcp_servers.github`); it
-surfaced in-session — user to rotate.
-
 ---
 
-## 9. Direction 2026-07-12 — consolidate to one path (EXECUTED)
+## 9. Prune to one path — EXECUTED 2026-07-12
 
-**Done 2026-07-12** — ruling in `docs/decisions/2026-07-12-codex-single-listen-path.md`.
-Prune + fold applied to `references/codex.md`, `SKILL.md`, and `scripts/codex.sh`
-(derived slug + per-slug rendezvous file, fixed port rejected under the swarm
-constraint). The plan below is the historical record of that work.
+Ruling: `docs/decisions/2026-07-12-codex-single-listen-path.md`. Applied to
+`references/codex.md`, `SKILL.md`, `scripts/codex.sh` (commit `768b957`): one
+receiver (`codex.sh` → `codex app-server --listen` + `codex-app-bridge.sh` +
+`codex --remote`), ephemeral port + per-slug rendezvous file, the tool-harness
+one-shot `socat` receive and the PTY track dropped. Node rejected ("i hate
+node.js") — the §8 Node rigs are not promoted.
 
+Forward direction is the **Status** section at the top of this note, not here.
 
-User called the exploration done ("I give up"): **lock in the `--listen` path, delete every
-other alternative** so future sessions aren't confused by dead tracks. Then, on the bridge
-fork, **rejected Node.js outright** ("i hate node.js") — so the validated `codex-bridge.mjs`
-/ `pty-inject-daemon.mjs` rig scripts are **not** promoted; §8.5's "promote the Node scripts"
-plan is dead.
-
-Resolved this session:
-
-- **One supported receiver** = `codex.sh` → `codex app-server --listen` + the existing
-  `codex-app-bridge.sh` (websocat/jq/socat bash) + `codex --remote`. Prune-only; no new code.
-- **Drop** the tool-harness one-shot `socat` receive and the PTY-daemon track entirely.
-- **Non-Node replacement** that folds the redesign wins (proper thread-select, `turn/steer`,
-  reply-back) is **deferred** — bash+websocat+jq vs Rust still open; carries item #3 (sandbox
-  posture from ace-connect mode).
-
-Concrete prune plan (agreed, **not executed** — user wants to review the approach deeply
-first before any edits):
-
-- `skills/ace-connect/references/codex.md` — cut "two distinct cases" intro + detached-
-  receiver para; delete **Tool-Harness Receive** (one-shot socat) + trivial **Tool-Harness
-  Send**; keep app-server arch + `codex.sh` launcher + manual 3-terminal + protocol ref +
-  resolved questions; drop "superseded, see redesign" hedging → short **Known limitations**
-  (no reply-back; peer turns inherit human powers; steer not wired) + pointer to deferred
-  replacement; trim "Open items" agenda.
-- `skills/ace-connect/SKILL.md` L55–56 — add `socat` to dep list; else fine.
-- This note — kept as historical record (now cited as provenance by the pending decision).
-- New `docs/decisions/2026-07-12-codex-single-listen-path.md` — the ruling once executed.
-- **Rig cleanup (outside tree, needs per-path go):** `~/Documents/ace-rs/codex-live-test/`
-  and shallow clones `~/Documents/ace-rs/{codex,codex-plugin-cc}`.
-
-**Next `/ace` on this track:** prune executed (see §9, commit `768b957`). The remaining
-work is the deferred **non-Node bridge replacement** — the autonomous-swarm driver (a
-codex with no human TUI needs something to inject turns and run the loop), reply-back, and
-sandbox posture derived from ace-connect control-vs-autonomous mode. bash+websocat+jq vs
-Rust still open. Rig cleanup (clones + `codex-live-test/`, outside the tree) still needs a
-per-path go.
+(Aside, non-durable: `~/.codex/config.toml` stored the GitHub PAT in plaintext —
+user to rotate.)

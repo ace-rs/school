@@ -143,20 +143,22 @@ Full findings — file:line refs, transport internals, live-validation log — i
    idle. Cost: it is gated on `thread/resume` (rollout) plus a known active
    `turnId`. Use `turn/steer` when a turn is live, `turn/start` when idle.
 
-## Known limitations
+## Reply-back and reactive scope
 
-- **No reply-back.** The bridge relays peer messages *into* the thread but does
-  not yet relay codex's `item/agentMessage` / `turn/completed` back out to the
-  sender over the ace-connect bus.
-- **Peer turns inherit the human's powers.** cwd + sandbox come from the
-  server's launch; an injected peer turn runs with them. Deriving the posture
-  from ace-connect control-vs-autonomous mode is unbuilt.
-- **`turn/steer` not live-validated** mid-turn (the test thread had no active
-  turn and no rollout). Validate before relying on steer as the primary path.
-- **No autonomous driver.** The bridge *observes* a human-driven TUI thread. A
-  swarm member with no human TUI needs something to inject turns and run the
-  agent loop — unbuilt. The deferred non-Node bridge replacement
-  (`docs/scratch/2026-07-07-…redesign.md`) is where that lands.
+- **Reply-back is codex's own `send.sh` call**, symmetric with Claude: `turn/start`
+  delivers the peer message, codex does the work, codex shells out to `send.sh` to
+  reply, and the reply lands async on the sender's socket. The bridge does **not**
+  subscribe-and-relay codex's output. Precondition: `send.sh` on PATH inside the
+  app-server's sandbox, and codex instructed via the dialect to reply that way.
+- **Reactive-only.** A codex on the bus answers peer messages; it does not drive its
+  own agenda. So the live path is just get-thread + `turn/start` when idle — no
+  `thread/resume`/subscription, no `turn/steer`. Those stay in the protocol reference
+  above as available primitives, but the reactive bridge doesn't use them.
+- **Open — peer turns inherit the human's powers.** cwd + sandbox come from the
+  server's launch; an injected peer turn runs with them. Deriving the posture from
+  ace-connect control-vs-autonomous mode (control → read-only; autonomous →
+  workspace-write in-tree + carve-outs), wired into `codex.sh`'s launch, is the one
+  unbuilt piece.
 
 ## Debug: manual attach
 

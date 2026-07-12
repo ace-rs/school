@@ -36,6 +36,11 @@ be hand-driven). The daemons background themselves under `codex.sh`; the only
 foreground is the user's own TUI. The manual flow survives as a debug appendix,
 not the on-ramp.
 
-Deferred, not decided here: the autonomous-swarm **driver** (a codex with no
-human TUI still needs something to inject turns), reply-back, and sandbox posture
-per ace-connect mode. These are the deferred non-Node bridge replacement's scope.
+Settled shortly after this ruling (see the Status section of
+`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`): **reactive-only**.
+A codex on the bus answers peer messages and does not drive its own agenda, so
+there is no autonomous-swarm driver to build. Receive is one-shot per message
+(`turn/start`, confirm `turn/started`, done — the app-server runs the agent loop
+itself); reply-back is codex's own `send.sh` call, symmetric with Claude, not a
+bridge relay. The one piece still open is the sandbox/approval posture per
+ace-connect mode (the server launch owns cwd + sandbox), wired into `codex.sh`.
