@@ -143,7 +143,13 @@ Full findings — file:line refs, transport internals, live-validation log — i
    idle. Cost: it is gated on `thread/resume` (rollout) plus a known active
    `turnId`. Use `turn/steer` when a turn is live, `turn/start` when idle.
 
-## Reply-back and reactive scope
+## Receiving, reply-back, and reactive scope
+
+**The injected turn carries the skill pointer.** The bridge's `turn/start` wraps the
+peer body with the same pointer Claude's Monitor line uses — *arrived via ace-connect;
+load the skill, read `references/dialect.md`, act per mode.* The human's codex reads
+it, interprets the rules, and acts. This is the codex analogue of `start.sh`'s Monitor
+description: transport + pointer, no scripted rule logic.
 
 - **Reply-back is codex's own `send.sh` call**, symmetric with Claude: `turn/start`
   delivers the peer message, codex does the work, codex shells out to `send.sh` to
@@ -154,11 +160,13 @@ Full findings — file:line refs, transport internals, live-validation log — i
   own agenda. So the live path is just get-thread + `turn/start` when idle — no
   `thread/resume`/subscription, no `turn/steer`. Those stay in the protocol reference
   above as available primitives, but the reactive bridge doesn't use them.
-- **Open — peer turns inherit the human's powers.** cwd + sandbox come from the
-  server's launch; an injected peer turn runs with them. Deriving the posture from
-  ace-connect control-vs-autonomous mode (control → read-only; autonomous →
-  workspace-write in-tree + carve-outs), wired into `codex.sh`'s launch, is the one
-  unbuilt piece.
+- **Sandbox posture is not scripted.** cwd + sandbox come from the server's launch and
+  every peer turn inherits them, so launch the app-server at a sensible permissive
+  ceiling (`workspace-write` — in-tree room, out-of-tree writes and network blocked as
+  a free backstop). Do **not** map ace-connect mode to sandbox flags: a human is always
+  at the TUI, and codex applies the control-vs-autonomous and autonomous-safety rules by
+  reading this skill and prompting that human. The sandbox is a floor, not the policy
+  engine.
 
 ## Debug: manual attach
 

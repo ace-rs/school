@@ -42,5 +42,8 @@ A codex on the bus answers peer messages and does not drive its own agenda, so
 there is no autonomous-swarm driver to build. Receive is one-shot per message
 (`turn/start`, confirm `turn/started`, done — the app-server runs the agent loop
 itself); reply-back is codex's own `send.sh` call, symmetric with Claude, not a
-bridge relay. The one piece still open is the sandbox/approval posture per
-ace-connect mode (the server launch owns cwd + sandbox), wired into `codex.sh`.
+bridge relay. Sandbox posture is **not** a scripted mode→flag mapping: `codex.sh`
+launches at a permissive ceiling (`workspace-write`) and the model — with a human
+always at the TUI — applies ace-connect's mode/safety rules by reading the skill,
+not the sandbox. See
+`docs/decisions/2026-07-12-ace-connect-rules-are-model-interpreted.md`.

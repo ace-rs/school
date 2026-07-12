@@ -48,6 +48,17 @@ don't pipe them through anything lossy.
 
 ## Backends
 
+**A backend's only job is transport.** It delivers each inbound message to the
+agent's surface *paired with a pointer to this skill*, and it carries sends. The
+rules here — mode selection, autonomous-safety, dialect — are **interpreted by the
+model** at that surface, where a human is always present to approve; they are never
+encoded into the backend, the sandbox, or a script. `start.sh` shows the whole
+pattern for Claude: it is `socat` plus the Monitor line that re-surfaces
+`load ace-connect … act per mode` on every notification. A new backend reproduces
+that pointer on its own receive surface (e.g. a wrapper around the injected turn) —
+it does **not** reimplement the rules. If you find yourself scripting mode→sandbox
+logic or a turn-driving loop, stop: the model does that by reading this skill.
+
 Scripts above assume Claude Code. For other backends, load
 `references/<backend>.md` first — it overrides the start (receive-side) recipe:
 

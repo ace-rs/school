@@ -9,7 +9,11 @@ status. Don't act on those older agendas.
 
 **Decision: reactive-only.** A codex on the bus answers peer messages; it does not
 drive its own agenda. That deletes the "autonomous-swarm driver" outright — a
-reactive codex needs no turn-injection loop, so there is nothing to build there.
+reactive codex needs no turn-injection loop, so there is nothing to build there. And
+ace-connect's rules are **model-interpreted, never coded against**: the receive surface
+hands codex the "load ace-connect, act per mode" pointer, a human is always at the TUI,
+and the frontier model does the rest. Reach for a script or a mode→sandbox-flag mapping
+and you have made the wrong assumption.
 
 **Receive contract — one-shot per peer message, no persistent driver:**
 
@@ -17,9 +21,9 @@ reactive codex needs no turn-injection loop, so there is nothing to build there.
 
 The `app-server` runs the agent loop itself; the bridge only injects. No draining,
 no `turn/completed` tracking, no event scraping, no `thread/resume`/subscription on
-the live path. Headless-no-human variant: if `thread/loaded/list` is empty, create a
-thread first (`thread/start`), remember its id, reuse it for later messages — still
-one-shot per message, still no loop.
+the live path. A human is always at the codex TUI (there is **no** headless variant);
+the `turn/start` wrapper carries the "load ace-connect, act per mode" pointer, exactly
+as Claude's Monitor line does, and the model interprets the rules from there.
 
 **Reply-back = codex's own `send.sh` call, symmetric with Claude.** Claude's bridge
 never scrapes Claude's output to reply — the agent calls `send.sh` itself and the
@@ -39,19 +43,25 @@ sandbox, and codex instructed via the ace-connect dialect to reply that way.
 - the **PTY-inject** track and **plain-codex** injection (§8.2–8.3) — never launch a
   plain codex for ace-connect; exposure is chosen at launch via `--listen`.
 
-**Open — genuinely undecided:**
+**Open — genuinely open:**
 
-- **Sandbox/approval posture from ace-connect mode.** The server's launch owns
-  cwd + sandbox (§4.3, §8.1); every injected peer turn inherits it. control →
-  read-only; autonomous → workspace-write in-tree + carve-outs. Wire it into how
-  `codex.sh` launches the app-server. This is the one real blocker.
-- **Does codex reliably honor the dialect and call `send.sh`?** Unverified. If it
-  drops replies, that is a dialect/prompt fix — not a reason to reintroduce scraping.
+- **Does codex reliably honor the dialect and call `send.sh`?** Unverified — a test,
+  not a decision. If it drops replies, that is a dialect/prompt fix, not a reason to
+  reintroduce scraping.
 
-**Remaining edits to land, no new code beyond wiring:** sandbox posture into
-`codex.sh`'s app-server launch per mode; `codex-app-bridge.sh` drop the
-subscribe/relay reply path (keep get-thread + `turn/start`). Rig cleanup (outside
-tree, per-path go): `~/Documents/ace-rs/codex-live-test/` + shallow clones
+**Not a decision — sandbox posture.** cwd + sandbox come from the server's launch and
+every peer turn inherits them (§4.3, §8.1), so `codex.sh` launches at a permissive
+ceiling (`workspace-write`: in-tree room, out-of-tree writes + network blocked as a free
+backstop). It does **not** map ace-connect mode to sandbox flags — a human is always at
+the TUI and codex applies the mode/safety rules by reading the skill and prompting that
+human. The sandbox is a floor, not the policy engine. (Earlier framed as "the one
+blocker"; that was the bad assumption — there is no headless, no-human codex.)
+
+**Remaining edits to land, no new code beyond wiring:** `codex.sh` launches the
+app-server at a permissive ceiling (`workspace-write`); the `turn/start` wrapper carries
+the ace-connect pointer; `codex-app-bridge.sh` drops the subscribe/relay reply path
+(keep get-thread + `turn/start`). Rig cleanup (outside tree, per-path go):
+`~/Documents/ace-rs/codex-live-test/` + shallow clones
 `~/Documents/ace-rs/{codex,codex-plugin-cc}`.
 
 ---
@@ -226,8 +236,9 @@ Assumptions a redesign should drop:
   cannot serialize or reply. Use `turn/started`/`turn/completed`.
 - **Port scrape from log** — fragile; keep, but it is the only option (no daemon, §4).
 - **Bridge writes no `.pid`** — invisible to `discover.sh`. Emit one.
-- **Hardcoded `approvalPolicy:never, sandbox:workspace-write`** — must derive from
-  ace-connect mode, and note §4: the *server launch* is what actually decides this.
+- **Hardcoded `approvalPolicy:never, sandbox:workspace-write`** — set at the *server
+  launch* (§4), not in `thread/start`. Keep it a permissive ceiling; do **not** map it
+  to ace-connect mode (see Status — the model + human govern policy, not the sandbox).
 - **Reply is a blind "delivered to thread N"** on the ack — no real answer flows back.
   Subscribe and relay `item/agentMessage` + `turn/completed`.
 
@@ -300,7 +311,7 @@ above shape the rest.
 | Reply to peer | blind "delivered" on ack                       | subscribe, relay `item/agentMessage` + `turn/completed` back over the bus    |
 | Arbitration   | none                                            | none — server serializes per-thread (no plugin-style broker needed)          |
 | Discovery     | writes no `.pid`                               | emit `$slug.pid` for `discover.sh`                                            |
-| cwd/sandbox   | hardcoded in `thread/start`                     | **set at server launch** (cwd + `-c sandbox_mode`/`approval_policy`); derive from ace-connect mode |
+| cwd/sandbox   | hardcoded in `thread/start`                     | **set at server launch** (cwd + `-c sandbox_mode`/`approval_policy`), permissive ceiling — not mapped to mode (see Status) |
 
 Net: **simpler than the plugin** (no broker — the shared socket makes serialization the
 server's job) but **not** as simple as a daemon-based design (no daemon; the server launch
