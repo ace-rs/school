@@ -379,5 +379,42 @@ Two supported codex receivers, pick by whether we control launch:
 
 `~/.codex/config.toml` stores the **GitHub PAT in plaintext** (`mcp_servers.github`); it
 surfaced in-session — user to rotate.
+
+---
+
+## 9. Direction 2026-07-12 — consolidate to one path (PARKED, not yet executed)
+
+User called the exploration done ("I give up"): **lock in the `--listen` path, delete every
+other alternative** so future sessions aren't confused by dead tracks. Then, on the bridge
+fork, **rejected Node.js outright** ("i hate node.js") — so the validated `codex-bridge.mjs`
+/ `pty-inject-daemon.mjs` rig scripts are **not** promoted; §8.5's "promote the Node scripts"
+plan is dead.
+
+Resolved this session:
+
+- **One supported receiver** = `codex.sh` → `codex app-server --listen` + the existing
+  `codex-app-bridge.sh` (websocat/jq/socat bash) + `codex --remote`. Prune-only; no new code.
+- **Drop** the tool-harness one-shot `socat` receive and the PTY-daemon track entirely.
+- **Non-Node replacement** that folds the redesign wins (proper thread-select, `turn/steer`,
+  reply-back) is **deferred** — bash+websocat+jq vs Rust still open; carries item #3 (sandbox
+  posture from ace-connect mode).
+
+Concrete prune plan (agreed, **not executed** — user wants to review the approach deeply
+first before any edits):
+
+- `skills/ace-connect/references/codex.md` — cut "two distinct cases" intro + detached-
+  receiver para; delete **Tool-Harness Receive** (one-shot socat) + trivial **Tool-Harness
+  Send**; keep app-server arch + `codex.sh` launcher + manual 3-terminal + protocol ref +
+  resolved questions; drop "superseded, see redesign" hedging → short **Known limitations**
+  (no reply-back; peer turns inherit human powers; steer not wired) + pointer to deferred
+  replacement; trim "Open items" agenda.
+- `skills/ace-connect/SKILL.md` L55–56 — add `socat` to dep list; else fine.
+- This note — kept as historical record (now cited as provenance by the pending decision).
+- New `docs/decisions/2026-07-12-codex-single-listen-path.md` — the ruling once executed.
+- **Rig cleanup (outside tree, needs per-path go):** `~/Documents/ace-rs/codex-live-test/`
+  and shallow clones `~/Documents/ace-rs/{codex,codex-plugin-cc}`.
+
+**Next `/ace` on this track:** wait for the user's deep-review verdict on the prune plan
+above; do not edit `references/codex.md` until they close it out.
 </content>
 </invoke>
