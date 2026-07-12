@@ -9,16 +9,17 @@ set -euo pipefail
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 bridge_script="$script_dir/codex-app-bridge.sh"
 
-slug="school.codex"
+slug=""
 cwd="$PWD"
 
 usage() {
   cat <<'USAGE'
-Usage: codex.sh [--slug NAME] [--cwd DIR]
+Usage: codex.sh [--cwd DIR] [--slug NAME]
 
 Options:
-  --slug NAME   ace-connect slug for incoming peer messages (default: school.codex)
   --cwd DIR     working directory for app-server and bridge (default: $PWD)
+  --slug NAME   override the ace-connect slug (default: derived from --cwd as
+                <parent>.<workdir>.codex per the ace-connect convention)
 USAGE
 }
 
@@ -47,6 +48,12 @@ if ! cwd=$(cd -- "$cwd" && pwd); then
   exit 1
 fi
 
+# Slug is deterministic per the ace-connect convention (SKILL.md): peers predict
+# it, so it isn't a free parameter. Derive <parent>.<workdir>.codex from cwd.
+if [[ -z "$slug" ]]; then
+  slug="$(basename -- "$(dirname -- "$cwd")").$(basename -- "$cwd").codex"
+fi
+
 startup_timeout_ms="${CODEX_BRIDGE_STARTUP_TIMEOUT_MS:-30000}"
 if ! [[ "$startup_timeout_ms" =~ ^[1-9][0-9]*$ ]]; then
   echo "CODEX_BRIDGE_STARTUP_TIMEOUT_MS must be a positive integer" >&2
@@ -56,6 +63,10 @@ fi
 log_dir="${CODEX_BRIDGE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}"
 socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
 socket_path="$socket_dir/$slug.sock"
+# Per-slug rendezvous file: the app-server binds an ephemeral port (ws://…:0),
+# so a separate bridge/TUI can't predict the URL. Publish it here, keyed by the
+# deterministic slug, so N codex sessions coexist without a port convention.
+rendezvous_path="$socket_dir/$slug.codex-app.url"
 if [[ -e "$socket_path" ]]; then
   echo "ace-connect socket already exists for slug=$slug: $socket_path" >&2
   echo "choose another --slug or remove the stale socket" >&2
@@ -100,6 +111,7 @@ cleanup() {
   trap - EXIT INT TERM
   terminate_process "$bridge_pid" "ace-connect bridge"
   terminate_process "$app_pid" "codex app-server"
+  rm -f "$rendezvous_path"
 }
 trap cleanup EXIT INT TERM
 
@@ -129,6 +141,9 @@ if [[ -z "$url" ]]; then
   exit 1
 fi
 
+mkdir -p "$socket_dir"
+printf '%s\n' "$url" >"$rendezvous_path"
+
 "$bridge_script" \
   --app-url "$url" \
   --slug "$slug" \
@@ -148,6 +163,7 @@ if ! kill -0 "$bridge_pid" 2>/dev/null; then
 fi
 
 echo "codex app-server=$url ace-connect slug=$slug bridge-log=$bridge_log" >&2
+echo "app-server url published at $rendezvous_path" >&2
 echo "ace-connect socket binds after the TUI creates a loaded thread" >&2
 
 codex_status=0

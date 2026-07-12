@@ -52,8 +52,12 @@ Scripts above assume Claude Code. For other backends, load
 `references/<backend>.md` first — it overrides the start (receive-side) recipe:
 
 - `claude` — use `start.sh` as documented.
-- `codex` — use `scripts/codex.sh` (TUI wrapper); requires `websocat` and `jq`
-  on PATH (`brew install websocat jq`). See `references/codex.md`.
+- `codex` — run `scripts/codex.sh` from the workspace root: it derives the slug,
+  boots `codex app-server --listen` + the bridge in the background, and attaches
+  your TUI in the foreground (one command, no extra terminals). Requires
+  `websocat`, `jq`, `socat` on PATH (`brew install websocat jq socat`). Future
+  `ace -b codex` will carry `--listen` by default, folding this in. See
+  `references/codex.md`.
 - `opencode` — see `references/opencode.md`.
 
 Send and discover are backend-independent.

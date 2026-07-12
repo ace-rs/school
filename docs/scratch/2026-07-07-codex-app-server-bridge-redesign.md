@@ -382,7 +382,13 @@ surfaced in-session — user to rotate.
 
 ---
 
-## 9. Direction 2026-07-12 — consolidate to one path (PARKED, not yet executed)
+## 9. Direction 2026-07-12 — consolidate to one path (EXECUTED)
+
+**Done 2026-07-12** — ruling in `docs/decisions/2026-07-12-codex-single-listen-path.md`.
+Prune + fold applied to `references/codex.md`, `SKILL.md`, and `scripts/codex.sh`
+(derived slug + per-slug rendezvous file, fixed port rejected under the swarm
+constraint). The plan below is the historical record of that work.
+
 
 User called the exploration done ("I give up"): **lock in the `--listen` path, delete every
 other alternative** so future sessions aren't confused by dead tracks. Then, on the bridge
