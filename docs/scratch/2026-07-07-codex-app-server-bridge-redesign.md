@@ -274,5 +274,110 @@ carries the security posture).
   `launch-tui.sh`, `workspace/`.
 - Stray test session left in `~/.codex/sessions/2026/07/05/rollout-…-019f31dd-….jsonl`
   (throwaway; `codex delete 019f31dd-…` to remove).
+
+---
+
+## 8. Live validation + the plain-codex breakthrough (2026-07-12, codex 0.142.5)
+
+Ran the whole thing live against a real codex the user launched. Two tracks:
+**(A)** the app-server bridge, now built and validated; **(B)** the harder question —
+inject into a **plain, already-running** codex that must never be restarted.
+
+### 8.1 App-server bridge — built + validated (resolves items #2, #4; #3 proposed)
+
+Wrote a from-scratch Node bridge, `~/Documents/ace-rs/codex-live-test/codex-bridge.mjs`
+(rig-local, **needs promotion into `skills/ace-connect/scripts/`**). One long-running
+process: WS client to `codex app-server --listen ws://…` + a **persistent Node
+`net.Server`** unix inbox (zero rebind gap — strictly better than `start.sh`'s
+one-`socat`-per-message). No `websocat` (Node ≥21 built-in `WebSocket`), no daemon.
+
+Proven end-to-end (~10.8k codex tokens total):
+
+- **Re-arm-free inject** — peer msg → `turn/start` when idle → renders in the human's TUI
+  as a chat turn. Codex never re-arms; the wrapper owns the socket loop.
+- **Reply-back (#2)** — subscribe via `thread/resume`, accumulate the answer from
+  `item/completed {item.type:"agentMessage"}` (the `item/agentMessage/delta` stream carries
+  **bare-string** deltas, not `{text}` — capture bug I hit and fixed), relay on
+  `turn/completed` via `send.sh`. Landed as `DONE pong` in my Monitor.
+- **Mid-turn steer (#4) — VALIDATED** — capture `turn.id` from `turn/started` (it's at
+  `params.turn.id`, not `params.turnId`), inject via `turn/steer{expectedTurnId}` on the
+  active turn. Fired live (`steer into <turnId>`), codex addressed it. **Timing gotcha:**
+  gpt-5.5 finishes short turns in <2s, so a mid-turn test needs a long turn (count to 150)
+  + short gap (~1s) or the turn completes first and you get a fresh `turn/start`.
+
+Confirmed protocol facts: `thread/resume` **fails on a pristine thread** ("no rollout") —
+no subscription (⇒ no turn-tracking / reply-back) until the thread has run ≥1 turn; it
+self-heals after. The **server's launch dir owns cwd + sandbox** (TUI `--remote` flags
+ignored) — every injected peer turn inherits the human's powers ⇒ item #3 (sandbox posture
+from ace-connect mode) is a real security decision, **still undecided**.
+
+### 8.2 Plain codex is NOT reachable by socket — exposure is launch-time
+
+Exhaustively checked whether a **plain** `codex` TUI (no `--listen`) exposes an attachable
+endpoint. It does **not**, by design:
+
+- `features list`: `tui_app_server = removed/true` (TUI always runs an app-server
+  internally, but over an **anonymous socketpair** — `lsof` fd 38↔39, both ends in-proc, no
+  path); `remote_control = removed/false` (the daemon-attach feature is gone).
+- No named/listen socket, nothing in the process env, no per-session socket file.
+- Managed daemon (`app-server daemon` / `remote-control` / `proxy` → control socket
+  `~/.codex/app-server-control/…sock`) is **walled behind the standalone installer** on
+  Homebrew; the plain TUI doesn't register there (`app-server-daemon/*.lock` are empty).
+- `lldb` attach to grab the fd is **blocked** — codex is hardened-runtime signed
+  (`flags=0x10000(runtime)`, no get-task-allow); needs SIP-off or re-sign (both = a
+  restart).
+
+Verdict: the native multi-client channel exists only if exposure is chosen **at launch**
+(`--listen` split, validated) — **never launch plain codex** for ace-connect use.
+
+### 8.3 Breakthrough — PTY-injection daemon for an un-restartable plain codex
+
+The one input surface a plain codex exposes is its **PTY**. A **persistent daemon** that
+turns each ace-connect line into PTY input (`tmux send-keys`) is interactive and re-arm-free
+— the loop lives in the daemon, codex just receives user turns.
+
+`~/Documents/ace-rs/codex-live-test/pty-inject-daemon.mjs` (rig-local, **needs promotion**).
+**Proven live** against a plain running codex: two messages injected back-to-back, no
+re-arm, no restart, no socket — codex answered them as normal chat turns.
+
+Open refinements (not re-arm — serialization/robustness):
+- **Serialize injections** — back-to-back sends merged into one input line (2nd `Enter`
+  before the 1st submitted). Fix: after `Enter`, poll `capture-pane` until the input line
+  clears before injecting the next.
+- **Reply-back** — scrape the pane between prompt-reappearing states and relay over the bus.
+- **Human/daemon share the input line** — interleave risk; gate injection to empty-input, or
+  bracketed paste. Single-user, low collision.
+- Requires codex in a controllable terminal (tmux / `expect` / `reptyr`).
+
+### 8.4 Design shape that fell out
+
+Two supported codex receivers, pick by whether we control launch:
+- **We launch codex** → `--listen` app-server split + `codex-bridge.mjs` (clean protocol,
+  turn/steer, structured reply-back). The tool-harness one-shot `socat` receive in the
+  current `references/codex.md` is the **wrong primitive** (blocking, re-arm) — demote it.
+- **Plain codex already running, never restart** → `pty-inject-daemon.mjs` (PTY transport).
+
+### 8.5 Pending school changes (for `ace-school` to propose)
+
+- Promote `codex-bridge.mjs` + `pty-inject-daemon.mjs` into `skills/ace-connect/scripts/`
+  (Node, no `websocat`); retire the `websocat` bash bridge (`codex-app-bridge.sh`) it
+  replaces, and rewire `codex.sh`.
+- Rewrite `references/codex.md`: demote the tool-harness one-shot; document the two receivers
+  (app-server bridge + PTY daemon); record the launch-time-exposure finding, `turn/steer`
+  validated, reply-back mechanism, the pristine-thread/rollout coupling, and server-owns-
+  sandbox.
+
+### 8.6 Next steps
+
+1. **Decide item #3** — sandbox/approval posture from ace-connect control-vs-autonomous mode
+   (control → read-only; autonomous → workspace-write inside tree + safety carve-outs). The
+   one blocker before consolidation.
+2. Tighten `pty-inject-daemon.mjs` (serialize + reply-back) and re-demo airtight.
+3. Promote both scripts into the skill + rewrite `references/codex.md` (§8.5) via `ace-school`.
+
+### 8.7 Aside (user-facing, not durable)
+
+`~/.codex/config.toml` stores the **GitHub PAT in plaintext** (`mcp_servers.github`); it
+surfaced in-session — user to rotate.
 </content>
 </invoke>
