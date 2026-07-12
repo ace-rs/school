@@ -420,7 +420,9 @@ first before any edits):
 - **Rig cleanup (outside tree, needs per-path go):** `~/Documents/ace-rs/codex-live-test/`
   and shallow clones `~/Documents/ace-rs/{codex,codex-plugin-cc}`.
 
-**Next `/ace` on this track:** wait for the user's deep-review verdict on the prune plan
-above; do not edit `references/codex.md` until they close it out.
-</content>
-</invoke>
+**Next `/ace` on this track:** prune executed (see §9, commit `768b957`). The remaining
+work is the deferred **non-Node bridge replacement** — the autonomous-swarm driver (a
+codex with no human TUI needs something to inject turns and run the loop), reply-back, and
+sandbox posture derived from ace-connect control-vs-autonomous mode. bash+websocat+jq vs
+Rust still open. Rig cleanup (clones + `codex-live-test/`, outside the tree) still needs a
+per-path go.
