@@ -117,8 +117,14 @@ isolated agents, one per non-overlapping file group. Criterion: context need, no
      there; don't barrel into task discovery in a bloated context. If the user declines
      `/clear`, fall back to looping in-session.
 
-   Judgment call, not a gauge reading — you can't see the context meter, so estimate from
-   what the task and session actually involved.
+   🚨 **Invariant (hard):** running `ace-save` is a precondition for naming `/clear`. Never
+   suggest, mention, or hint at `/clear` in a turn that didn't run `ace-save` first — the save
+   is automatic and unconditional. Heaviness only decides whether to *escalate* at all; it
+   never gates the save once `/clear` is on the table. Recommending clear without a preceding
+   save is a Violation.
+
+   Heaviness is a judgment call, not a gauge reading — you can't see the context meter, so
+   estimate from what the task and session actually involved.
 
 ## Two-phase audit every few tasks
 
