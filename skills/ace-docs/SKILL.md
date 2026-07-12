@@ -164,6 +164,21 @@ Don't run when:
 - **Auto-generated wikis (DeepWiki and similar) are a regenerable supplement** over these
   human-curated docs — not a sixth folder here, and not a replacement.
 
+### Tending scratch/ — retention and collapse
+
+`scratch/` is disposable, with two carve-outs once notes accumulate:
+
+- **Provenance pins a file.** A scratch note a frozen `decisions/` ruling cites as
+  provenance is retained even though scratch/ is disposable — the toll and disposability
+  govern *new filing*, not deletion of already-cited material. Prune the rest freely; never
+  orphan a decision's citation.
+- **Collapse prior art.** When scratch design notes pile up on one theme, consolidate them
+  into a single `scratch/prior-art.md` digest: one section per source note, each
+  cross-linked to the live `spec/` or `decisions/` doc it fed. Repoint any citations to the
+  digest, drop the absorbed notes. One digest with live cross-links beats N stale drafts,
+  and it becomes the retained provenance the rule above protects. `prior-art.md` is the one
+  undated file in `scratch/`.
+
 ## Build the `www/` review site
 
 A human-facing review site under top-level `www/`, synthesized from `docs/`. Run it when

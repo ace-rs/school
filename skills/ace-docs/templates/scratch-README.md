@@ -27,4 +27,14 @@ it was written). No template; write whatever shape fits.
 
 Disposable. Edit, rewrite, or delete freely. When exploration settles into a ruling or a
 design, promote the durable claim up to `../decisions/` or `../spec/`; what remains here is
-the raw working material. Nothing else should depend on a scratch file continuing to exist.
+the raw working material.
+
+Two carve-outs on deletion:
+
+- **Cited provenance is retained.** A note a frozen `../decisions/` ruling cites as its
+  provenance stays, even though scratch is disposable — disposability governs new filing,
+  not deletion of already-cited material. Never orphan a decision's citation.
+- **Collapse instead of scatter.** When design notes pile up on one theme, consolidate them
+  into a single `prior-art.md` digest — one section per source, each cross-linked to the
+  live `../spec/` or `../decisions/` doc it fed — then repoint citations and drop the
+  absorbed notes. `prior-art.md` is the one undated file here.
