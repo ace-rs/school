@@ -40,7 +40,7 @@ the table when it stabilizes.
 
 An `ASK` names the specific fact or action you need from the peer's domain —
 never the underlying problem you're solving. Your problem and its decision
-stay with you (see SKILL.md "Boundary").
+stay with you (see SKILL.md "Sending").
 
 ```
 ✅ ASK: does repo-create tooling allow dots in names?
