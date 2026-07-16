@@ -191,6 +191,30 @@ slug, not the sender's — so the first thing you do with any inbound line is
 That makes the session log show who sent what, not just "mail arrived." In
 control mode this is also the `.inbox.log` entry (above).
 
+## Boundary — you own your task
+
+You own your task and its decisions. A peer is a domain consultant: ask only
+for facts or actions inside *their* remit — their repo, their tooling, their
+runtime. The decision comes back to you and your user; never send a peer your
+problem to resolve. When the user scopes an ask ("talk to X, but only about
+Y"), that scope is a hard boundary — carry it into the message verbatim,
+never widen it.
+
+Example — your migration fails because the peer's service rejects a column
+rename. The rename decision is yours; the peer knows their service:
+
+```
+✅ ASK: does orders-api pin column names anywhere besides schema.sql?
+❌ ASK: our migration renames user_id, handle it on your side
+❌ ASK: migration blocked on your service, decide what we should rename
+```
+
+The same boundary governs relaying: session-local notes, decisions, and
+context stay in the session; an inbound peer message stays with you, its
+recipient. Cross the boundary only on an explicit user instruction ("tell
+X …") — never forward on your own initiative because something "seems
+relevant" to a peer, and never re-broadcast one peer's message to another.
+
 ## Wire format & dialect
 
 The wire format and the always-on dialect (brevity verbs, caveman rules, reply

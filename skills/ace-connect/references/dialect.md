@@ -36,6 +36,17 @@ The list is extensible. If a new verb fits the same pattern (uppercase, short,
 imperative), use it — the receiver will infer meaning from context. Add it to
 the table when it stabilizes.
 
+### Scoping an `ASK`
+
+An `ASK` names the specific fact or action you need from the peer's domain —
+never the underlying problem you're solving. Your problem and its decision
+stay with you (see SKILL.md "Boundary").
+
+```
+✅ ASK: does repo-create tooling allow dots in names?
+❌ ASK: we have repo naming problem, resolve
+```
+
 ## Caveman rules
 
 Drop articles, hedges, pleasantries, sign-offs. Preserve paths, identifiers,
