@@ -123,9 +123,6 @@ initialize → thread/loaded/list → thread/resume {threadId}
 - `turn/interrupt {threadId, turnId}`, `thread/inject_items` (model-visible
   history append without a turn), `thread/unsubscribe`.
 
-Full findings — file:line refs, transport internals, live-validation log — in
-`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`.
-
 ## Resolved questions
 
 1. **Identify the TUI's thread among many loaded** — `thread/loaded/list`
