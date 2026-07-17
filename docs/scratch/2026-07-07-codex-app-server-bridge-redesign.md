@@ -66,7 +66,7 @@ the ace-connect pointer; `codex-app-bridge.sh` drops the subscribe/relay reply p
 
 ---
 
-Continuation of [`2026-07-03-codex-plugin-cc-investigation.md`](2026-07-03-codex-plugin-cc-investigation.md)'s
+Continuation of an earlier codex-plugin-cc investigation note (since purged) and its
 "Follow-up not yet done". That note asked: fetch the codex-plugin-cc client, compare its
 thread-selection / turn-injection against `skills/ace-connect/scripts/codex-app-bridge.sh`,
 and answer the three open questions in `skills/ace-connect/references/codex.md`. This note

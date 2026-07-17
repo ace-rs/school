@@ -41,4 +41,4 @@ Why not the obvious alternatives:
   durable part is the *pattern* (a curated markdown index), already served by
   `docs/README.md` + the `CLAUDE.md` pointer.
 
-Full research and citations: `../notes/2026-06-07-llm-era-docs-taxonomy.md`.
+Full research and citations lived in a scratch note since purged as consumed.
