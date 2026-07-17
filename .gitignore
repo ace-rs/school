@@ -15,6 +15,5 @@
 ace.local.toml
 # end ACE
 
-# ace-connect inbox / ace-afk handoff log (runtime artifacts, never committed)
-.inbox.log
-.afk.log
+# ACE session scratch — trail, inbox, handoff log (runtime artifacts, never committed)
+/.ace/

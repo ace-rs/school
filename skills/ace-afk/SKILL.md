@@ -125,9 +125,9 @@ Loop until out of unblocked work or out of token budget. When the run genuinely 
 down the heartbeat** (delete the scheduled job/timer) so it stops pinging a finished session,
 then write the run summary into the handoff report.
 
-## The handoff report — `.afk.log`
+## The handoff report — `.ace/afk.log`
 
-One file at the repo root (same convention as `ace-connect`'s `.inbox.log`) — the
+One file in `.ace/` (same convention as `ace-connect`'s `.ace/connect.log`) — the
 human's morning read. Two parts:
 
 - **Blockers** — appended live as they arise. Each entry records enough to unblock

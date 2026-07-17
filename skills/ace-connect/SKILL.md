@@ -167,9 +167,9 @@ slug, not the sender's — so the first thing you do with any inbound line is
 ```
 
 That makes the session log show who sent what, not just "mail arrived." In
-control mode, also append the message to `.inbox.log` in the repo root —
-tab-separated, ISO 8601 UTC timestamp, append-only; user owns cleanup; add
-`.inbox.log` to `.gitignore` if not already ignored:
+control mode, also append the message to `.ace/connect.log` — tab-separated,
+ISO 8601 UTC timestamp, append-only; user owns cleanup; ensure `.ace/` is
+gitignored (`/.ace/`):
 
 ```
 2026-05-09T14:32:01Z	from=school.codex	<body>
@@ -214,10 +214,13 @@ boundary only on an explicit user instruction ("tell X …") — never forward o
 your own initiative because something "seems relevant" to a peer, and never
 re-broadcast one peer's message to another.
 
-**Ruled vs proposed.** A claim to a peer that something is settled/ruled cites
-the ruling artifact (ADR/spec path); anything uncitable is labeled `proposal —
-not ruled`. Fabricated doctrine travels: a peer will quote it back later as
-your repo's position.
+**Ruled vs proposed — the trail's provenance axis, on the wire.** A claim to a
+peer carries the same burden of proof as a SETTLED ledger item: "ruled" requires
+a citation to the ruling artifact (ADR/spec path) — the peer-facing form of
+`user:verbatim`. Anything uncitable is `agent:inferred`; send it labeled
+`proposal`, never as settled. And on receipt, trust the citation not the label:
+an uncited "ruled" claim from a peer is `agent:inferred`, not a ruling. Fabricated
+doctrine travels — a peer quotes it back later as your repo's position.
 
 ## Wire format & dialect
 

@@ -14,10 +14,10 @@ a mandatory start-to-finish sequence.
 - **Just committed?** → checkpoint, then loop back to task discovery.
 - **A Monitor you didn't start this session is still running?** → likely an ace-connect
   engine that outlived a `/clear` (context wiped, Monitor and slug survive). Load
-  `ace-connect` to recover its wire format and mode before touching `.inbox.log`.
+  `ace-connect` to recover its wire format and mode before touching `.ace/connect.log`.
 
-Resuming recorded work: read `STATE.md` and `*.ledger.md` only — never `LOG.md`
-(archaeology). **Present-then-position:** present the record as-is (statuses, provenance,
+Resuming recorded work: read `.ace/save.md` and `.ace/save.ledger.md`.
+**Present-then-position:** present the record as-is (statuses, provenance,
 next open item) before any position of your own; an `agent:inferred` item is surfaced as a
 derivation, never as your position or a stated fact. Positions come after, labeled, at
 most once, and are never re-argued after a ruling lands. Ledger statuses bind:
@@ -117,7 +117,7 @@ isolated agents, one per non-overlapping file group. Criterion: context need, no
 
 15. **Checkpoint** — persist progress before looping back to task discovery. Two modes:
 
-   - **Light (default)** — update scratch files or tasks with what was done, what's next,
+   - **Light (default)** — update the `.ace/` trail (`save.md`/`save.ledger.md`) or tasks with what was done, what's next,
      open questions. Just enough that the next loop or a surprise compaction doesn't lose the
      thread. Then loop back to task discovery.
 
@@ -156,8 +156,9 @@ files.
 
 1. **`$ARGUMENTS`** — user told you what to focus on.
 2. **Built-in tasks/memory** — survives compaction, not `/clear` or session exit.
-3. **Agent inbox** — if an ace-connect bridge is running and `.inbox.log` exists in the repo
-   root, read it for tasks queued by peer agents.
+3. **Agent inbox** — if an ace-connect bridge is running and `.ace/connect.log` exists,
+   read it for tasks queued by peer agents.
 4. **Task tracker** — Linear, GitHub Issues, Jira, or whatever the project uses.
-5. **Scratch files** — `.tasks.md`, `TODO.md`, CLAUDE.md scratchpad.
+5. **Scratch trail** — `.ace/save.md` (current state) and `.ace/save.ledger.md` (open
+   items); fall back to any `.tasks.md`, `TODO.md`, or CLAUDE.md scratchpad.
 6. **Git state** — `git status`, `git diff`, `git log --oneline -20`.

@@ -94,9 +94,9 @@ motion.
 
 Verify passes + slices remain → spawn the next. Stop only at a genuine blocker (basis-silent +
 expensive + irreversible, logged), a failed verify the subagent couldn't fix, or an empty plan
-— leaving the breadcrumb pointing at the next step. On stop, write the run summary to `.afk.log`.
+— leaving the breadcrumb pointing at the next step. On stop, write the run summary to `.ace/afk.log`.
 
 ## Storage cascade
 
-Same as the attended workflow ($ARGUMENTS → built-in tasks → agent inbox → task tracker →
-scratch files → git state).
+Same as the attended workflow ($ARGUMENTS → built-in tasks → agent inbox (`.ace/connect.log`)
+→ task tracker → `.ace/` trail (`save.md`/`save.ledger.md`) → git state).
