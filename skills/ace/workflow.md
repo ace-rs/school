@@ -16,6 +16,20 @@ a mandatory start-to-finish sequence.
   engine that outlived a `/clear` (context wiped, Monitor and slug survive). Load
   `ace-connect` to recover its wire format and mode before touching `.inbox.log`.
 
+Resuming recorded work: read `STATE.md` and `*.ledger.md` only — never `LOG.md`
+(archaeology). **Present-then-position:** present the record as-is (statuses, provenance,
+next open item) before any position of your own; an `agent:inferred` item is surfaced as a
+derivation, never as your position or a stated fact. Positions come after, labeled, at
+most once, and are never re-argued after a ruling lands. Ledger statuses bind:
+SETTLED/KILLED items are closed — re-litigating one is a Violation, not diligence. Trust the
+citation, not the label: a SETTLED/KILLED item with no quoted user phrase is treated as
+`agent:inferred`, not a ruling — a forgotten or mis-stamped provenance resolves to the safe
+side.
+
+Accused of losing or forgetting something ("you lost X", "we said Y"): grep the trail
+and quote what you find *before* any self-diagnosis — never adopt the amnesia framing
+unverified; a claim about your own failure is a causal claim like any other.
+
 ## Task discovery
 
 1. **Cleanup** — check `git status` and `git diff`. Uncommitted or staged changes from

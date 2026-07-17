@@ -34,11 +34,33 @@ questions, contradicted learnings) — don't open stores just to sweep.
 
 Survey the conversation and `git status`, then persist to the storage cascade:
 - **Tasks / next steps** → the most fitting store the cascade names (issue
-  tracker if one's in use, scratch file otherwise) — where the next `/ace` looks
-  for pending work.
+  tracker if one's in use, STATE otherwise) — where the next `/ace` looks for
+  pending work.
 - **Narrative** — what was done, where you stopped, open questions — enough that
   a fresh session picks up the thread.
 Include `$ARGUMENTS` if provided.
+
+## Trail format — state, not story
+
+When the store is repo scratch files, split current truth from item history:
+
+- **`STATE.md`** — current truth only; overwrite the whole file every save;
+  ≤60 lines; now / owed / queue / standing facts / pointers. No history, no
+  corrections-of-corrections — a dead item is absent, not struck through.
+- **`<topic>.ledger.md`** — one per walk/negotiation; the only home of item
+  statuses. Every item carries a status AND a provenance:
+  - Status: open · presented · proposed · self-resolved (derivation cited) ·
+    SETTLED · KILLED · deferred · needs-disambiguation · phantom.
+  - Provenance: `user:verbatim` (their exact, quotable words) ·
+    `user:paraphrased` (their intent, my wording) · `agent:inferred` (I derived
+    it — they never said it).
+  Default provenance is `agent:inferred`: an item written without a quoted user
+  phrase IS agent-derived, whatever else it's tagged. Settling is the burden of
+  proof, not inferring — SETTLED/KILLED must embed the user's verbatim words
+  inline; a ruling with no quoted phrase is malformed and reads as
+  `agent:inferred`. Forgetting to down-rank a solo call fails safe — it stays a
+  derivation. Ambiguity the model resolves stays `agent:inferred` until the user
+  confirms — never folded into the record as stated fact.
 
 ## 2. Route durable knowledge
 

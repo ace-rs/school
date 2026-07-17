@@ -214,6 +214,11 @@ boundary only on an explicit user instruction ("tell X …") — never forward o
 your own initiative because something "seems relevant" to a peer, and never
 re-broadcast one peer's message to another.
 
+**Ruled vs proposed.** A claim to a peer that something is settled/ruled cites
+the ruling artifact (ADR/spec path); anything uncitable is labeled `proposal —
+not ruled`. Fabricated doctrine travels: a peer will quote it back later as
+your repo's position.
+
 ## Wire format & dialect
 
 The wire format and the always-on dialect (brevity verbs, caveman rules, reply
