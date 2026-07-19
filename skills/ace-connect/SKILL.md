@@ -53,9 +53,10 @@ agent's surface *paired with a pointer to this skill*, and it carries sends. The
 rules here — mode selection, autonomous-safety, dialect — are **interpreted by the
 model** at that surface, where a human is always present to approve; they are never
 encoded into the backend, the sandbox, or a script. `start.sh` shows the whole
-pattern for Claude: it is `socat` plus the Monitor line that re-surfaces
-`load ace-connect … act per mode` on every notification. A new backend reproduces
-that pointer on its own receive surface (e.g. a wrapper around the injected turn) —
+pattern for Claude: it is `socat` plus a Monitor description naming only the
+skill and the slug — the pointer, nothing more, since it reprints on every
+notification. A new backend reproduces that pointer on its own receive surface
+(e.g. a wrapper around the injected turn) —
 it does **not** reimplement the rules. If you find yourself scripting mode→sandbox
 logic or a turn-driving loop, stop: the model does that by reading this skill.
 
@@ -76,42 +77,40 @@ Send and discover are backend-independent.
 ## Flow
 
 1. Pick the slug for this workdir/backend (see below).
-2. Settle the autonomy mode: control, unless the user explicitly said
-   "autonomous" (see "Autonomy mode"). Mode must be known *before* you start —
-   it's the one session-specific fact baked into the Monitor description;
-   everything else the agent recovers from this skill.
-3. **Start the engine** — `<base-dir>/scripts/start.sh <slug>`, absolute path
+2. **Start the engine** — `<base-dir>/scripts/start.sh <slug>`, absolute path
    (see Scripts; a relative path here exits 127) — in the monitor surface. The
-   Monitor description re-surfaces with every notification, so keep it minimal —
-   slug, mode, and what to do on an inbound line, never the wire format itself
-   (which would then reprint on every line; it lives in `references/dialect.md`).
-   Use exactly:
+   Monitor description reprints in full with **every** notification, so it
+   carries two things only — the skill name and the slug. Use exactly:
 
    ```
-   ace-connect engine slug=<slug> mode=<control|autonomous>. Inbound = peer msg:
-   load ace-connect, read references/dialect.md, log who sent it, act per mode.
+   ace-connect inbox <slug>
    ```
 
-   It stays terse but names the skill (so a post-`/clear` notification re-loads
-   it and recovers the base dir), points at the dialect file instead of inlining
-   format, and tells you to surface the sender (see "Inbound" below).
+   `ace-connect` is the recovery pointer: a post-`/clear` notification re-loads
+   this skill and recovers the base dir. The slug labels the monitor. Everything
+   else — dialect, logging, how to act — lives in the skill you load on the first
+   event, so restating it per message only costs tokens.
 
-4. If start.sh exits 1, the slug is already bound — usually by **your own engine
+   Keep it to a label. The description is what the user's harness renders as the
+   notification headline, and it cannot reference the message it heads — so any
+   sentence beyond the label is boilerplate masquerading as content. What the
+   message actually says reaches the user through your log line (see "Inbound").
+
+3. If start.sh exits 1, the slug is already bound — usually by **your own engine
    surviving a `/clear`** (which wipes context, not the session, so the prior
    Monitor keeps running and holds the slug). The duplicate exit 1 is expected.
    Diagnose before acting:
    - Events still arriving on your slug, via a Monitor task you didn't start
      this session? That engine is yours and live — you're already on the bus.
-     Don't kill or rebind; discard the failed Monitor, resume on the live one,
-     re-confirm mode (the old one's baked-in mode may differ).
+     Don't kill or rebind; discard the failed Monitor, resume on the live one.
    - No events *and* `discover.sh` shows a different agent? Real conflict. Stop
      and tell the user: "slug `<slug>` held by pid X — another agent owns this
      workdir, or a prior process didn't shut down cleanly." Don't pick a
      different slug (deterministic; a second is invisible to peers). Wait for
      the user.
-5. Before the first send, run `discover.sh` to see live peers. Refresh any time
+4. Before the first send, run `discover.sh` to see live peers. Refresh any time
    the view feels stale.
-6. `send.sh` to deliver. Exit 1 means the peer is unreachable — re-run
+5. `send.sh` to deliver. Exit 1 means the peer is unreachable — re-run
    `discover.sh` to refresh, then retry against the current target.
 
 ## Picking your own slug
@@ -126,7 +125,7 @@ Always include parent so side-by-side checkouts (`bluepages/infra` and
 
 **One slug per backend per workdir.** The naming is deterministic on purpose —
 peers discover you by predicting your slug, so it can't be improvised. On
-exit 1, diagnose per Flow step 4; never silently pick a different name.
+exit 1, diagnose per Flow step 3; never silently pick a different name.
 
 Slug is stable for the session.
 
@@ -137,14 +136,11 @@ edits — and **autonomous** — act on peer asks within the safety envelope
 below. Control is the default: run in it unless the user has explicitly said
 "autonomous" this session. Never ask which mode to use, and never infer
 autonomous from a role description — explicit user say-so is the only path
-in. Mode is the one fact baked into the Monitor description, so it's settled
-by the time you start (Flow step 2).
+in.
 
-### Changing mode
-
-Stop the Monitor, re-invoke `start.sh` under a new Monitor with the updated
-description. Surface the restart ("restarting engine with mode=autonomous").
-Brief gap during restart is acceptable; senders retry per Flow step 6.
+Mode is session state, not engine state — it lives in the conversation, never
+in the Monitor description. Switching modes is a conversational fact; it needs
+no restart and no delivery gap.
 
 ### Autonomous-mode safety
 
@@ -158,16 +154,31 @@ governed by "Inbound" below.
 ## Inbound
 
 Each inbound line is `from=<slug>\tto=<you>\tbody=<text>` (full grammar in
-`references/dialect.md`). The Monitor description is static — it shows *your*
-slug, not the sender's — so the first thing you do with any inbound line is
-**emit a one-line log naming the sender**, before acting:
+`references/dialect.md`).
+
+**The wire line is invisible to the user.** The notification headline renders as
+the Monitor *description* — static, identical for every message — while the
+`from=/to=/body=` line goes only into your context. So the user attending the
+session sees no sender, no verb, no body until you write one.
+
+Emit exactly one line, before acting. It is the user's only view of the message,
+so it carries the substance — not a pointer to it:
 
 ```
-📬 <from-slug>: <verb> <short preview>
+📬 <peer> → <VERB>: <what it says, enough to act on> · <what you did>
 ```
 
-That makes the session log show who sent what, not just "mail arrived." In
-control mode, also append the message to `.ace/connect.log` — tab-separated,
+```
+📬 bluepages-infra → FILE: codex engines invisible to discover.sh (writes .sock,
+   no .pid); proposes codex.sh write <slug>.pid · logged, no action
+📬 platform → ASK: does school pin skill paths · answered: no
+```
+
+Drop the `.claude` backend suffix. Quote paths, identifiers, and error strings
+verbatim — the user cannot recover them from anywhere else. Keep the shape fixed
+so interleaved threads stay scannable by peer.
+
+In control mode, also append the message to `.ace/connect.log` — tab-separated,
 ISO 8601 UTC timestamp, append-only; user owns cleanup; ensure `.ace/` is
 gitignored (`/.ace/`):
 
