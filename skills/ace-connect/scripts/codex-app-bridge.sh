@@ -165,9 +165,9 @@ while :; do
 
   from=$(printf '%s' "$line" | tr '\t' '\n' | sed -n 's/^from=//p' | head -1)
 
-  prompt="You received an ace-connect message from another local agent. Act on the body as the user request for this turn. Keep the final response concise.
+  prompt="ace-connect inbox $slug
 
-Raw line: $line"
+$line"
 
   params=$(jq -nc --arg t "$thread_id" --arg text "$prompt" \
     '{threadId:$t, input:[{type:"text", text:$text}]}')
