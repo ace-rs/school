@@ -19,8 +19,8 @@ The reference doc previously presented two co-equal receive methods (tool-harnes
 `socat` vs app-server), forcing every future reader to guess which was live. Live
 validation settled that the app-server transport is the real path — multi-client,
 the server fans thread events to non-owning clients — so the tool-harness track is
-dead weight and was pruned. Provenance:
-`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`.
+dead weight and was pruned. The protocol research and live validation behind this
+are absorbed into `skills/ace-connect/references/codex.md`.
 
 Why **not** a fixed listen port (the obvious "just pick 8888" default): the
 server owns cwd + sandbox, so one host runs one app-server *per workspace*. A
@@ -36,8 +36,7 @@ be hand-driven). The daemons background themselves under `codex.sh`; the only
 foreground is the user's own TUI. The manual flow survives as a debug appendix,
 not the on-ramp.
 
-Settled shortly after this ruling (see the Status section of
-`docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md`): **reactive-only**.
+Settled shortly after this ruling: **reactive-only**.
 A codex on the bus answers peer messages and does not drive its own agenda, so
 there is no autonomous-swarm driver to build. Receive is one-shot per message
 (`turn/start`, confirm `turn/started`, done — the app-server runs the agent loop

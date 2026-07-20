@@ -45,6 +45,5 @@ Consequence for the sandbox: launch the app-server at a permissive **ceiling**
 floor) and stop. Do not map mode to flags. The sandbox is a backstop, not the policy
 engine; the model plus the human are the policy engine.
 
-Provenance: `docs/scratch/2026-07-07-codex-app-server-bridge-redesign.md` (Status
-section). Sibling ruling on the single receive path:
+Sibling ruling on the single receive path:
 `docs/decisions/2026-07-12-codex-single-listen-path.md`.

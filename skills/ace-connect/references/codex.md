@@ -20,6 +20,19 @@ Two facts settled by live validation, load-bearing for everything below:
 - **A Homebrew install has no daemon.** `app-server-daemon` is a lifecycle
   wrapper, not the wire; the plain binary is the whole surface.
 
+**Exposure is chosen at launch — never attach to a plain codex.** A TUI started
+without `--listen` has no attachable endpoint, by design, and the investigation
+is closed: `features list` reports `tui_app_server = removed/true` (the TUI does
+run an app-server, but over an **anonymous socketpair** — both ends in-process,
+no path) and `remote_control = removed/false`; there is no named socket, nothing
+in the process env, no per-session socket file; the managed daemon's control
+socket is walled behind OpenAI's standalone installer, and the plain TUI never
+registers there; `lldb` fd-stealing is blocked by hardened-runtime signing
+(`flags=0x10000(runtime)`, no `get-task-allow`) and needs SIP-off or a re-sign —
+both a restart, which defeats the point. Don't re-derive this: if a codex must
+join the bus, it is relaunched via `codex.sh`. PTY injection (`tmux send-keys`)
+works but is a dead track — ruled out with the single-`--listen` path.
+
 ## Getting a codex session on the bus
 
 Run one command from the workspace root:
