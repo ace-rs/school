@@ -50,10 +50,10 @@ done
 
 cwd=$(cd -- "$cwd" && pwd)
 
-dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
-mkdir -p "$dir"
-chmod 700 "$dir"
-sock="$dir/$slug.sock"
+socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
+mkdir -p "$socket_dir"
+chmod 700 "$socket_dir"
+socket_path="$socket_dir/$slug.sock"
 
 # Set up FIFOs for the websocat coprocess. Opening order matters:
 # websocat starts first with stdin <- ws_in_fifo and stdout -> ws_out_fifo;
@@ -66,7 +66,7 @@ mkfifo "$ws_in_fifo" "$ws_out_fifo"
 ws_pid=""
 cleanup() {
   trap - EXIT INT TERM
-  rm -f "$sock"
+  rm -f "$socket_path"
   if [[ -n "$ws_pid" ]] && kill -0 "$ws_pid" 2>/dev/null; then
     kill "$ws_pid" 2>/dev/null || true
     wait "$ws_pid" 2>/dev/null || true
@@ -148,14 +148,14 @@ if [[ -z "$thread_id" ]]; then
   fi
 fi
 
-rm -f "$sock"
+rm -f "$socket_path"
 echo "ace-connect codex bridge: slug=$slug thread=$thread_id" >&2
 
 # One-shot accept loop — same rebind-gap behavior as every other ace-connect
 # engine. Re-bind after each accepted message.
 while :; do
-  rm -f "$sock"
-  if ! line=$(socat -u "UNIX-LISTEN:$sock,unlink-early" - 2>/dev/null); then
+  rm -f "$socket_path"
+  if ! line=$(socat -u "UNIX-LISTEN:$socket_path,unlink-early" - 2>/dev/null); then
     break
   fi
   [[ -z "$line" ]] && continue

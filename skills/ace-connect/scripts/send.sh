@@ -17,20 +17,21 @@ body=${body//$'\t'/ }
 body=${body//$'\n'/ }
 body=${body//$'\r'/ }
 
-dir=${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages
-sock=$dir/$to.sock
+socket_dir=${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages
+socket_path=$socket_dir/$to.sock
 
 # Backstop: if our own engine isn't running, any reply to us bounces. Warn,
 # don't block — one-way sends (CTX/DONE/FILE) are still valid without an inbox.
-frompid=$dir/$from.pid
-if [[ ! -f $frompid ]] || ! kill -0 "$(cat "$frompid" 2>/dev/null || echo -1)" 2>/dev/null; then
+from_pid_path=$socket_dir/$from.pid
+from_pid=$(cat "$from_pid_path" 2>/dev/null || echo -1)
+if [[ ! -f $from_pid_path ]] || ! kill -0 "$from_pid" 2>/dev/null; then
   echo "warning: engine for from=$from not started; replies will bounce — start it with start.sh $from" >&2
 fi
 
 if printf 'from=%s\tto=%s\tbody=%s\n' "$from" "$to" "$body" \
-     | socat - "UNIX-CONNECT:$sock" 2>/dev/null; then
+     | socat - "UNIX-CONNECT:$socket_path" 2>/dev/null; then
   exit 0
 fi
 
-echo "send failed: $sock unreachable" >&2
+echo "send failed: $socket_path unreachable" >&2
 exit 1

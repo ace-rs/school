@@ -60,7 +60,7 @@ signalled. So ace-connect ignition folds into the one command you run to start
 codex — no extra terminals, no tmux.
 
 Requires `codex`, `websocat`, `jq`, `socat` on PATH. Logs land under
-`${CODEX_BRIDGE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}`.
+`${ACE_CODEX_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}`.
 
 ### Optional: make it your default codex
 

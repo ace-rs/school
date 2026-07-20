@@ -20,6 +20,10 @@ Options:
   --cwd DIR     working directory for app-server and bridge (default: $PWD)
   --slug NAME   override the ace-connect slug (default: derived from --cwd as
                 <parent>.<workdir>.codex per the ace-connect convention)
+
+Environment:
+  ACE_CODEX_STARTUP_TIMEOUT_MS  app-server wait budget (default: 30000)
+  ACE_CODEX_LOG_DIR             log directory (default: $TMPDIR/ace-connect-codex)
 USAGE
 }
 
@@ -54,13 +58,13 @@ if [[ -z "$slug" ]]; then
   slug="$(basename -- "$(dirname -- "$cwd")").$(basename -- "$cwd").codex"
 fi
 
-startup_timeout_ms="${CODEX_BRIDGE_STARTUP_TIMEOUT_MS:-30000}"
+startup_timeout_ms="${ACE_CODEX_STARTUP_TIMEOUT_MS:-30000}"
 if ! [[ "$startup_timeout_ms" =~ ^[1-9][0-9]*$ ]]; then
-  echo "CODEX_BRIDGE_STARTUP_TIMEOUT_MS must be a positive integer" >&2
+  echo "ACE_CODEX_STARTUP_TIMEOUT_MS must be a positive integer" >&2
   exit 1
 fi
 
-log_dir="${CODEX_BRIDGE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}"
+log_dir="${ACE_CODEX_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-codex}"
 socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
 socket_path="$socket_dir/$slug.sock"
 # Per-slug rendezvous file: the app-server binds an ephemeral port (ws://…:0),
@@ -75,12 +79,12 @@ fi
 
 mkdir -p "$log_dir"
 safe_slug=$(printf '%s' "$slug" | tr -c 'A-Za-z0-9_.-' '_')
-app_log="$log_dir/$safe_slug.app-server.log"
+server_log="$log_dir/$safe_slug.server.log"
 bridge_log="$log_dir/$safe_slug.bridge.log"
-: >"$app_log"
+: >"$server_log"
 : >"$bridge_log"
 
-app_pid=""
+server_pid=""
 bridge_pid=""
 
 # shellcheck disable=SC2329
@@ -110,42 +114,42 @@ terminate_process() {
 cleanup() {
   trap - EXIT INT TERM
   terminate_process "$bridge_pid" "ace-connect bridge"
-  terminate_process "$app_pid" "codex app-server"
+  terminate_process "$server_pid" "codex app-server"
   rm -f "$rendezvous_path"
 }
 trap cleanup EXIT INT TERM
 
 cd "$cwd"
-codex app-server --listen "ws://127.0.0.1:0" >"$app_log" 2>&1 &
-app_pid=$!
+codex app-server --listen "ws://127.0.0.1:0" >"$server_log" 2>&1 &
+server_pid=$!
 
-url=""
+server_url=""
 polls=$(( (startup_timeout_ms + 99) / 100 ))
 for ((attempt = 0; attempt < polls; attempt += 1)); do
-  if [[ -s "$app_log" ]]; then
-    if url=$(grep -E -m1 -o 'ws://127\.0\.0\.1:[0-9]+' "$app_log"); then
-      [[ -n "$url" ]] && break
+  if [[ -s "$server_log" ]]; then
+    if server_url=$(grep -E -m1 -o 'ws://127\.0\.0\.1:[0-9]+' "$server_log"); then
+      [[ -n "$server_url" ]] && break
     fi
   fi
-  if ! kill -0 "$app_pid" 2>/dev/null; then
+  if ! kill -0 "$server_pid" 2>/dev/null; then
     echo "codex app-server exited before printing URL; log follows:" >&2
-    cat "$app_log" >&2
+    cat "$server_log" >&2
     exit 1
   fi
   sleep 0.1
 done
 
-if [[ -z "$url" ]]; then
+if [[ -z "$server_url" ]]; then
   echo "timed out waiting for codex app-server URL; log follows:" >&2
-  cat "$app_log" >&2
+  cat "$server_log" >&2
   exit 1
 fi
 
 mkdir -p "$socket_dir"
-printf '%s\n' "$url" >"$rendezvous_path"
+printf '%s\n' "$server_url" >"$rendezvous_path"
 
 "$bridge_script" \
-  --app-url "$url" \
+  --app-url "$server_url" \
   --slug "$slug" \
   --cwd "$cwd" \
   --wait-for-loaded-thread \
@@ -162,12 +166,12 @@ if ! kill -0 "$bridge_pid" 2>/dev/null; then
   exit 1
 fi
 
-echo "codex app-server=$url ace-connect slug=$slug bridge-log=$bridge_log" >&2
+echo "codex app-server=$server_url ace-connect slug=$slug bridge-log=$bridge_log" >&2
 echo "app-server url published at $rendezvous_path" >&2
 echo "ace-connect socket binds after the TUI creates a loaded thread" >&2
 
-codex_status=0
-codex --remote "$url" --no-alt-screen || codex_status=$?
+tui_status=0
+codex --remote "$server_url" --no-alt-screen || tui_status=$?
 
 if [[ -n "$bridge_pid" ]] && ! kill -0 "$bridge_pid" 2>/dev/null; then
   bridge_status=0
@@ -179,4 +183,4 @@ if [[ -n "$bridge_pid" ]] && ! kill -0 "$bridge_pid" 2>/dev/null; then
   fi
 fi
 
-exit "$codex_status"
+exit "$tui_status"

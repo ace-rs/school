@@ -132,13 +132,13 @@ server_pid=$!
 
 # Match any loopback spelling the server logs — 127.0.0.1, localhost, 0.0.0.0 —
 # rather than assuming one.
-base_url=""
+server_url=""
 for ((attempt = 0; attempt < polls; attempt += 1)); do
   if [[ -s "$server_log" ]]; then
     url_re='http://(127\.0\.0\.1|0\.0\.0\.0|localhost):[0-9]+'
-    if base_url=$(grep -E -m1 -o "$url_re" "$server_log"); then
-      base_url=${base_url/0.0.0.0/127.0.0.1}
-      [[ -n "$base_url" ]] && break
+    if server_url=$(grep -E -m1 -o "$url_re" "$server_log"); then
+      server_url=${server_url/0.0.0.0/127.0.0.1}
+      [[ -n "$server_url" ]] && break
     fi
   fi
   if ! kill -0 "$server_pid" 2>/dev/null; then
@@ -149,7 +149,7 @@ for ((attempt = 0; attempt < polls; attempt += 1)); do
   sleep 0.1
 done
 
-if [[ -z "$base_url" ]]; then
+if [[ -z "$server_url" ]]; then
   echo "timed out waiting for the opencode server URL; log follows:" >&2
   cat "$server_log" >&2
   exit 1
@@ -163,7 +163,7 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
 fi
 
 list_session_ids() {
-  curl -sS ${curl_auth[@]+"${curl_auth[@]}"} "$base_url/session" 2>/dev/null \
+  curl -sS ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" 2>/dev/null \
     | jq -r 'if type=="array" then . else (.sessions // []) end
              | .[].id // empty' 2>/dev/null || true
 }
@@ -192,7 +192,7 @@ bridge() {
     return 1
   fi
 
-  local url="$base_url${message_path_tmpl//\{session\}/$sid}"
+  local url="$server_url${message_path_tmpl//\{session\}/$sid}"
   echo "ace-connect opencode bridge: slug=$slug session=$sid endpoint=$url" >&2
 
   # One socat per message — same rebind-gap behavior as every other ace-connect
@@ -229,11 +229,11 @@ if ! kill -0 "$bridge_pid" 2>/dev/null; then
   exit 1
 fi
 
-echo "opencode server=$base_url ace-connect slug=$slug bridge-log=$bridge_log" >&2
+echo "opencode server=$server_url ace-connect slug=$slug bridge-log=$bridge_log" >&2
 echo "ace-connect socket binds once the TUI creates its session" >&2
 
 tui_status=0
-opencode attach "$base_url" || tui_status=$?
+opencode attach "$server_url" || tui_status=$?
 
 if [[ -n "$bridge_pid" ]] && ! kill -0 "$bridge_pid" 2>/dev/null; then
   bridge_status=0
