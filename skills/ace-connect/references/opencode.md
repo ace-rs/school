@@ -59,7 +59,7 @@ current turn rather than queueing behind it. If a future version moves the route
 
 ```
 curl -sS http://127.0.0.1:<P>/doc        # openapi/swagger spec, exact path varies
-curl -sS http://127.0.0.1:<P>/session    # list current sessions, find session id
+curl -sS http://127.0.0.1:<P>/api/session # list current sessions, find session id
 
 ACE_OPENCODE_MESSAGE_PATH='/session/{session}/prompt' <base>/scripts/opencode.sh
 ```

@@ -170,8 +170,11 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
   curl_auth=(--user "opencode:$OPENCODE_SERVER_PASSWORD")
 fi
 
+# /api/session is what the server's own /doc lists. A bare /session answers too,
+# but it is an undocumented alias — don't build on it.
 list_sessions() {
-  curl -sS ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" 2>/dev/null \
+  curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/api/session" \
+    2>/dev/null \
     | jq -c 'if type=="array" then . else (.sessions // []) end' 2>/dev/null || true
 }
 
@@ -237,7 +240,10 @@ bridge() {
     body=$(jq -nc --arg t "ace-connect
 $line" '{prompt:{text:$t}}')
 
-    if ! curl -sS -f -X POST "$url" ${curl_auth[@]+"${curl_auth[@]}"} \
+    # Bounded: the accept loop is serial, so one hung POST would wedge the inbox
+    # for every later message with no way to recover short of a restart.
+    if ! curl -sS -f --max-time 120 -X POST "$url" \
+      ${curl_auth[@]+"${curl_auth[@]}"} \
       -H 'content-type: application/json' --data "$body" >/dev/null; then
       echo "POST failed for line: $line" >&2
     fi
