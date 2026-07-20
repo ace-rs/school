@@ -177,8 +177,8 @@ so it carries the substance — not a pointer to it:
 ```
 
 ```
-📬 bluepages-infra → FILE: codex engines invisible to discover.sh (writes .sock,
-   no .pid); proposes codex.sh write <slug>.pid · logged, no action
+📬 bluepages-infra → FILE: discover.sh sweeps only .sock/.pid pairs, so orphan
+   sockets linger; proposes sweeping unpaired .sock too · logged, no action
 📬 platform → ASK: does school pin skill paths · answered: no
 ```
 

@@ -38,11 +38,24 @@ Exit — or `Ctrl-C` — tears down bridge, server, socket, and pidfile.
 Requires `opencode`, `curl`, `jq`, `socat` on PATH. Honors
 `OPENCODE_SERVER_PASSWORD` as basic auth.
 
+### Session resolution
+
+`opencode attach` may create a session or resume an existing one, so the bridge
+handles both: it waits ~5s for an id that wasn't present before the TUI attached
+(the create case), then falls back to the newest session whose `directory`
+matches the workdir (the resume case). The directory scope is what keeps it off a
+live session belonging to some other project. `/api/session/active` exists but
+reported `{"data":{}}` on a live attached server, so it isn't relied on.
+
 ### When the endpoint shape drifts
 
-The message endpoint and body are version-dependent. The script defaults to
-`POST /session/{session}/message` with `{parts:[{type:"text",text:…}]}`. If that
-404s (bridge log shows `POST failed`), check the running server and override:
+The endpoint and body are version-dependent. Verified against opencode's own
+`/doc`: `{sessionID}/message` is **GET-only** — posting goes to
+`POST /api/session/{sessionID}/prompt` with a `PromptInput` body,
+`{"prompt":{"text":…}}`, which is what the script sends. `delivery` is optional
+and the server defaults it to `steer`, so an inbound peer message interrupts the
+current turn rather than queueing behind it. If a future version moves the route
+(bridge log shows `POST failed`), check the running server and override:
 
 ```
 curl -sS http://127.0.0.1:<P>/doc        # openapi/swagger spec, exact path varies

@@ -20,8 +20,8 @@ Options:
 
 Environment:
   OPENCODE_SERVER_PASSWORD    basic-auth password, if the server requires one
-  ACE_OPENCODE_MESSAGE_PATH   message endpoint template; {session} is
-                              substituted (default: /session/{session}/message)
+  ACE_OPENCODE_MESSAGE_PATH   prompt endpoint template; {session} is
+                              substituted (default: /api/session/{session}/prompt)
   ACE_OPENCODE_STARTUP_TIMEOUT_MS   server/session wait budget (default: 30000)
   ACE_OPENCODE_LOG_DIR        log directory (default: $TMPDIR/ace-connect-opencode)
 USAGE
@@ -60,8 +60,14 @@ if ! [[ "$startup_timeout_ms" =~ ^[1-9][0-9]*$ ]]; then
   exit 1
 fi
 polls=$(( (startup_timeout_ms + 99) / 100 ))
+# Short window for "did attach create a brand-new session?" before falling back
+# to the newest session in this workdir. Long enough for the TUI to register,
+# short enough that a resume isn't stuck behind the full startup budget.
+new_session_polls=50
 
-message_path_tmpl="${ACE_OPENCODE_MESSAGE_PATH:-/session/{session}/message}"
+# Verified against the server's own /doc: {sessionID}/message is GET-only and
+# posting goes to /prompt with a PromptInput body.
+message_path_tmpl="${ACE_OPENCODE_MESSAGE_PATH:-/api/session/{session}/prompt}"
 log_dir="${ACE_OPENCODE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-opencode}"
 socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
 socket_path="$socket_dir/$slug.sock"
@@ -88,6 +94,7 @@ bridge_log="$log_dir/$safe_slug.bridge.log"
 
 server_pid=""
 bridge_pid=""
+watchdog_pid=""
 
 # shellcheck disable=SC2329
 terminate_process() {
@@ -115,6 +122,7 @@ terminate_process() {
 # shellcheck disable=SC2329
 cleanup() {
   trap - EXIT INT TERM
+  terminate_process "$watchdog_pid" "ace-connect watchdog"
   terminate_process "$bridge_pid" "ace-connect bridge"
   terminate_process "$server_pid" "opencode serve"
   rm -f "$socket_path" "$pid_path"
@@ -162,10 +170,22 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
   curl_auth=(--user "opencode:$OPENCODE_SERVER_PASSWORD")
 fi
 
-list_session_ids() {
+list_sessions() {
   curl -sS ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" 2>/dev/null \
-    | jq -r 'if type=="array" then . else (.sessions // []) end
-             | .[].id // empty' 2>/dev/null || true
+    | jq -c 'if type=="array" then . else (.sessions // []) end' 2>/dev/null || true
+}
+
+list_session_ids() {
+  list_sessions | jq -r '.[].id // empty' 2>/dev/null || true
+}
+
+# Newest session belonging to this workdir. Scoping by directory is what keeps
+# us off a live session in some other project; without it "newest" is a coin
+# flip across every project the server holds.
+newest_session_here() {
+  list_sessions | jq -r --arg d "$cwd" \
+    '[.[] | select(.directory == $d)] | max_by(.time.updated // 0) | .id // empty' \
+    2>/dev/null || true
 }
 
 # The bridge runs as a child so the TUI can own the foreground. It waits for the
@@ -173,13 +193,13 @@ list_session_ids() {
 bridge() {
   local sid="" i pre
 
-  # The server persists sessions across runs, so "newest session" would happily
-  # resolve to a stale one from a previous attach and deliver every inbound
-  # message somewhere nobody is reading. Snapshot the pre-existing ids — the
-  # bridge starts before `opencode attach` — and wait for one that isn't in it.
+  # `opencode attach` may either create a session or resume an existing one, so
+  # neither rule works alone. Prefer an id that wasn't there before the TUI
+  # attached — unambiguous when attach creates. Failing that, fall back to the
+  # newest session in this workdir, which is the resumed one.
   pre=$(list_session_ids)
 
-  for ((i = 0; i < polls; i += 1)); do
+  for ((i = 0; i < new_session_polls; i += 1)); do
     # An empty snapshot prints one blank line; -x can only match it against a
     # blank id, so every real id still survives -v.
     sid=$(list_session_ids | grep -vxFf <(printf '%s\n' "$pre") | head -1 || true)
@@ -188,7 +208,15 @@ bridge() {
   done
 
   if [[ -z "$sid" ]]; then
-    echo "timed out waiting for the TUI to create a session" >&2
+    for ((i = 0; i < polls; i += 1)); do
+      sid=$(newest_session_here)
+      [[ -n "$sid" ]] && break
+      sleep 0.1
+    done
+  fi
+
+  if [[ -z "$sid" ]]; then
+    echo "no opencode session found for $cwd after waiting for the TUI" >&2
     return 1
   fi
 
@@ -207,7 +235,7 @@ bridge() {
 
     # Carry the skill pointer with the message; the model reads the rules there.
     body=$(jq -nc --arg t "ace-connect
-$line" '{parts:[{type:"text",text:$t}]}')
+$line" '{prompt:{text:$t}}')
 
     if ! curl -sS -f -X POST "$url" ${curl_auth[@]+"${curl_auth[@]}"} \
       -H 'content-type: application/json' --data "$body" >/dev/null; then
@@ -229,8 +257,18 @@ if ! kill -0 "$bridge_pid" 2>/dev/null; then
   exit 1
 fi
 
+# The TUI outlives the bridge, so a bridge that dies mid-session would leave the
+# pidfile standing and discover.sh would keep advertising an engine nobody can
+# reach. Retract the slug the moment the bridge is gone.
+(
+  while kill -0 "$bridge_pid" 2>/dev/null; do sleep 1; done
+  rm -f "$pid_path" "$socket_path"
+  echo "ace-connect bridge for $slug exited; slug retracted (see $bridge_log)" >&2
+) &
+watchdog_pid=$!
+
 echo "opencode server=$server_url ace-connect slug=$slug bridge-log=$bridge_log" >&2
-echo "ace-connect socket binds once the TUI creates its session" >&2
+echo "ace-connect socket binds once the TUI session is resolved" >&2
 
 tui_status=0
 opencode attach "$server_url" || tui_status=$?
