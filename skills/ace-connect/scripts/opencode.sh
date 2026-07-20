@@ -170,12 +170,16 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
   curl_auth=(--user "opencode:$OPENCODE_SERVER_PASSWORD")
 fi
 
-# /api/session is what the server's own /doc lists. A bare /session answers too,
-# but it is an undocumented alias — don't build on it.
+# /session and /api/session are different endpoints, not aliases. /api/session is
+# global and paginated ({cursor, data}) and returns entries whose directory is
+# null — useless for scoping. Bare /session returns a flat array scoped to this
+# project with directory populated, which is what resolution needs. It is absent
+# from /doc; verified against a live server instead.
 list_sessions() {
-  curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/api/session" \
+  curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" \
     2>/dev/null \
-    | jq -c 'if type=="array" then . else (.sessions // []) end' 2>/dev/null || true
+    | jq -c 'if type=="array" then . else (.data // .sessions // []) end' \
+      2>/dev/null || true
 }
 
 list_session_ids() {
