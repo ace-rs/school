@@ -55,10 +55,13 @@ model** at that surface, where a human is always present to approve; they are ne
 encoded into the backend, the sandbox, or a script. `start.sh` shows the whole
 pattern for Claude: it is `socat` plus a Monitor description naming only the
 skill and the slug — the pointer, nothing more, since it reprints on every
-notification. A new backend reproduces that pointer on its own receive surface
-(e.g. a wrapper around the injected turn) —
-it does **not** reimplement the rules. If you find yourself scripting mode→sandbox
-logic or a turn-driving loop, stop: the model does that by reading this skill.
+notification. A new backend carries the skill name on its own receive surface
+(e.g. a wrapper around the injected turn) — it does **not** reimplement the
+rules. Carry only what that surface needs: the skill name is the irreducible
+part; the slug is worth its tokens only where a human reads the surface and
+labels it. Codex's injected turn drops it (see `references/codex.md`). If you
+find yourself scripting mode→sandbox logic or a turn-driving loop, stop: the
+model does that by reading this skill.
 
 Scripts above assume Claude Code. For other backends, load
 `references/<backend>.md` first — it overrides the start (receive-side) recipe:

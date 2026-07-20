@@ -160,8 +160,7 @@ while :; do
   fi
   [[ -z "$line" ]] && continue
 
-  prompt="ace-connect inbox $slug
-
+  prompt="ace-connect
 $line"
 
   params=$(jq -nc --arg t "$thread_id" --arg text "$prompt" \

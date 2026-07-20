@@ -142,11 +142,15 @@ initialize → thread/loaded/list → thread/resume {threadId}
 
 ## Receiving, reply-back, and reactive scope
 
-**The injected turn carries the skill pointer.** The bridge's `turn/start` wraps the
-peer body with the same minimal pointer Claude's Monitor description uses — name the
-skill, nothing more. The human's codex loads it, interprets the rules, and acts. This
-is the codex analogue of `start.sh`'s Monitor description: transport + pointer, no
-scripted rule logic, and no rules restated per message.
+**The injected turn carries the skill pointer.** The bridge's `turn/start` prefixes the
+wire line with `ace-connect` — the skill name alone, on its own line. The human's codex
+loads it, interprets the rules, and acts. Codex analogue of `start.sh`'s Monitor
+description: transport + pointer, no scripted rule logic, no rules restated per message.
+
+Same role, smaller minimum. The Monitor description adds the slug because it is the
+user's notification headline and labels one monitor among several; the injected turn is
+read by the model, not scanned by a human, and the wire line below it already carries
+`to=<slug>`. Anything past `ace-connect` is duplication billed on every message.
 
 - **Reply-back is codex's own `send.sh` call**, symmetric with Claude: `turn/start`
   delivers the peer message, codex does the work, codex shells out to `send.sh` to
