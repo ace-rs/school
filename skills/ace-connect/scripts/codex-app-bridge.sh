@@ -75,7 +75,12 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-websocat -t --no-close "$app_url" <"$ws_in_fifo" >"$ws_out_fifo" &
+# -B: websocat's default 64KiB buffer splits any larger frame into parts, and
+# each part is invalid JSON — rpc() then can't match the response id and blocks
+# until its caller gives up. App-server frames carrying thread state routinely
+# exceed 64KiB, so size the buffer for them.
+websocat -t --no-close -B "${ACE_CODEX_WS_BUFFER_BYTES:-16777216}" \
+  "$app_url" <"$ws_in_fifo" >"$ws_out_fifo" &
 ws_pid=$!
 
 # Open our ends of the FIFOs. Order must match the redirections above so we
