@@ -120,6 +120,11 @@ Send and discover are backend-independent.
    the view feels stale.
 5. `send.sh` to deliver. Exit 1 means the peer is unreachable — re-run
    `discover.sh` to refresh, then retry against the current target.
+6. **Exit 0 means delivered, not answered.** End your turn there. A reply is a
+   fresh inbound event on your own engine, arriving in its own turn whenever the
+   peer gets to it — so sleeping, polling the socket, or re-sending only burns
+   the turn the reply needs to land in. Say what you sent and stop; if the user
+   is waiting on the answer, tell them it arrives as a separate event.
 
 ## Picking your own slug
 
