@@ -21,7 +21,7 @@ Options:
 Environment:
   OPENCODE_SERVER_PASSWORD    basic-auth password, if the server requires one
   ACE_OPENCODE_MESSAGE_PATH   prompt endpoint template; {session} is
-                              substituted (default: /api/session/{session}/prompt)
+                              substituted (default: /session/{session}/prompt_async)
   ACE_OPENCODE_STARTUP_TIMEOUT_MS   server/session wait budget (default: 30000)
   ACE_OPENCODE_LOG_DIR        log directory (default: $TMPDIR/ace-connect-opencode)
 USAGE
@@ -65,16 +65,18 @@ polls=$(( (startup_timeout_ms + 99) / 100 ))
 # short enough that a resume isn't stuck behind the full startup budget.
 new_session_polls=50
 
-# Verified against the server's own /doc: {sessionID}/message is GET-only and
-# posting goes to /prompt with a PromptInput body.
+# prompt_async is the only route that does what a bridge needs: it starts the
+# session if idle and returns immediately. /api/…/prompt admits the input but
+# schedules no agent loop, so messages pile up as unread user turns; bare
+# …/message streams the whole response, which would block this serial accept
+# loop for an entire turn. Both were tried against a live server.
 #
 # The default is assigned separately, NOT as ${VAR:-default}: the closing brace
 # of the {session} placeholder would end the parameter expansion early and leave
-# the literal "/api/session/{session/prompt}" — which substitutes to nothing and
-# 404s on every message.
+# a literal "{session/prompt_async}" that substitutes to nothing.
 message_path_tmpl="${ACE_OPENCODE_MESSAGE_PATH:-}"
 if [[ -z "$message_path_tmpl" ]]; then
-  message_path_tmpl='/api/session/{session}/prompt'
+  message_path_tmpl='/session/{session}/prompt_async'
 fi
 log_dir="${ACE_OPENCODE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-opencode}"
 socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
@@ -178,11 +180,11 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
   curl_auth=(--user "opencode:$OPENCODE_SERVER_PASSWORD")
 fi
 
-# /session and /api/session are different endpoints, not aliases. /api/session is
-# global and paginated ({cursor, data}) and returns entries whose directory is
-# null — useless for scoping. Bare /session returns a flat array scoped to this
-# project with directory populated, which is what resolution needs. It is absent
-# from /doc; verified against a live server instead.
+# /session and /api/session are two API surfaces, not aliases — /doc lists both.
+# /api/session is global and paginated ({cursor, data}) and returns entries whose
+# directory is null, useless for scoping. Bare /session returns a flat array
+# scoped to this project with directory populated, which is what resolution
+# needs.
 list_sessions() {
   curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" \
     2>/dev/null \
@@ -250,7 +252,7 @@ bridge() {
 
     # Carry the skill pointer with the message; the model reads the rules there.
     body=$(jq -nc --arg t "ace-connect
-$line" '{prompt:{text:$t}}')
+$line" '{parts:[{type:"text",text:$t}]}')
 
     # Bounded: the accept loop is serial, so one hung POST would wedge the inbox
     # for every later message with no way to recover short of a restart.
