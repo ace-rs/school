@@ -21,36 +21,38 @@ it. That is the injection point ace-connect rides on.
 Goal: incoming lines on `<dir>/<slug>.sock` become user messages in the TUI's current
 session.
 
-Steps on session start:
+Run `../scripts/opencode.sh` from the workspace root. One command, one terminal:
 
-1. Start a server on a free port:
-   ```
-   opencode serve --port 0 --print-logs --log-level INFO &
-   ```
-   Capture the actual port from the log line (server logs the bound URL).
-2. Start the TUI in another terminal: `opencode attach http://127.0.0.1:<P>`.
-   Capture the session id (visible in TUI; also queryable via the server's
-   `/session` endpoint).
-3. Spawn a sidecar bridge that reads the unix socket and POSTs each line as a user
-   message to the captured session. Reference shape:
-   ```
-   socat UNIX-LISTEN:<dir>/<slug>.sock,fork - | while IFS= read -r line; do
-     curl -sS -X POST "http://127.0.0.1:<P>/session/<sid>/message" \
-       -H 'content-type: application/json' \
-       --data "$(jq -nc --arg t "$line" '{parts:[{type:"text",text:$t}]}')"
-   done
-   ```
-4. On shutdown, kill the bridge, kill the server, remove `<slug>.sock`.
+```
+<base>/scripts/opencode.sh
+```
 
-The exact endpoint path and request body shape are version-dependent. Verify against
-the running server's OpenAPI spec before relying on the snippet above:
+It derives the slug from `$PWD` (`--slug` / `--cwd` override), boots
+`opencode serve --port 0` and reads the bound URL from its log, spawns the bridge,
+writes `<slug>.pid` so `discover.sh` sees the engine, and attaches
+`opencode attach` in the foreground. The bridge polls `/session` until the TUI
+creates its session, then binds the socket and POSTs each inbound line as a user
+message, prefixed with `ace-connect` so the receiving model loads this skill.
+Exit — or `Ctrl-C` — tears down bridge, server, socket, and pidfile.
+
+Requires `opencode`, `curl`, `jq`, `socat` on PATH. Honors
+`OPENCODE_SERVER_PASSWORD` as basic auth.
+
+### When the endpoint shape drifts
+
+The message endpoint and body are version-dependent. The script defaults to
+`POST /session/{session}/message` with `{parts:[{type:"text",text:…}]}`. If that
+404s (bridge log shows `POST failed`), check the running server and override:
 
 ```
 curl -sS http://127.0.0.1:<P>/doc        # openapi/swagger spec, exact path varies
 curl -sS http://127.0.0.1:<P>/session    # list current sessions, find session id
+
+ACE_OPENCODE_MESSAGE_PATH='/session/{session}/prompt' <base>/scripts/opencode.sh
 ```
 
-If `OPENCODE_SERVER_PASSWORD` is set, the bridge must send basic auth too.
+Bridge and server logs land in `$TMPDIR/ace-connect-opencode/` — the script prints
+the bridge log path on start.
 
 ## Sending (outbound)
 
@@ -70,7 +72,7 @@ No OpenCode-specific path needed for sending. The peer's bridge handles translat
 - Plugins are an alternative injection path (an OpenCode plugin could bind the socket
   and call into the server in-process). Skip unless the sidecar+REST approach proves
   inadequate — extra dependency, separate install/upgrade lifecycle.
-- The server outlives any single TUI attach. If the user `Ctrl-C`s the TUI but leaves
-  the server up, incoming messages still land in the session and are visible on next
-  attach. Decide per-session whether you want this behaviour or strict TUI-bound
-  lifetime.
+- A server can outlive any single TUI attach, but `opencode.sh` owns the one it
+  starts and kills it on exit — engine lifetime is TUI-bound, matching every other
+  ace-connect backend. To keep a server up across attaches, run it yourself and
+  don't use the script.
