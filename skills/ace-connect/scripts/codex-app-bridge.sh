@@ -151,9 +151,6 @@ fi
 rm -f "$sock"
 echo "ace-connect codex bridge: slug=$slug thread=$thread_id" >&2
 
-self_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-send_script="$self_dir/send.sh"
-
 # One-shot accept loop — same rebind-gap behavior as every other ace-connect
 # engine. Re-bind after each accepted message.
 while :; do
@@ -163,8 +160,6 @@ while :; do
   fi
   [[ -z "$line" ]] && continue
 
-  from=$(printf '%s' "$line" | tr '\t' '\n' | sed -n 's/^from=//p' | head -1)
-
   prompt="ace-connect inbox $slug
 
 $line"
@@ -172,11 +167,7 @@ $line"
   params=$(jq -nc --arg t "$thread_id" --arg text "$prompt" \
     '{threadId:$t, input:[{type:"text", text:$text}]}')
 
-  if rpc turn/start "$params" >/dev/null; then
-    if [[ -n "$from" ]] && [[ -x "$send_script" ]]; then
-      "$send_script" "$slug" "$from" "delivered to thread $thread_id" || true
-    fi
-  else
+  if ! rpc turn/start "$params" >/dev/null; then
     echo "turn/start failed for line: $line" >&2
   fi
 done
