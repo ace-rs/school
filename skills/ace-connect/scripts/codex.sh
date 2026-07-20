@@ -71,10 +71,21 @@ socket_path="$socket_dir/$slug.sock"
 # so a separate bridge/TUI can't predict the URL. Publish it here, keyed by the
 # deterministic slug, so N codex sessions coexist without a port convention.
 rendezvous_path="$socket_dir/$slug.codex-app.url"
-if [[ -e "$socket_path" ]]; then
-  echo "ace-connect socket already exists for slug=$slug: $socket_path" >&2
-  echo "choose another --slug or remove the stale socket" >&2
-  exit 1
+pid_path="$socket_dir/$slug.pid"
+
+mkdir -p "$socket_dir"
+chmod 700 "$socket_dir"
+
+# Liveness, not mere existence: a socket left behind by a crashed run would
+# otherwise lock the slug out permanently. The pidfile says whether an engine is
+# actually there, and a dead one gets swept.
+if [[ -f "$pid_path" ]]; then
+  existing=$(cat "$pid_path" 2>/dev/null || true)
+  if [[ -n "$existing" ]] && kill -0 "$existing" 2>/dev/null; then
+    echo "engine already running for slug=$slug (pid $existing): $socket_path" >&2
+    exit 1
+  fi
+  rm -f "$pid_path" "$socket_path"
 fi
 
 mkdir -p "$log_dir"
@@ -115,9 +126,13 @@ cleanup() {
   trap - EXIT INT TERM
   terminate_process "$bridge_pid" "ace-connect bridge"
   terminate_process "$server_pid" "codex app-server"
-  rm -f "$rendezvous_path"
+  rm -f "$rendezvous_path" "$socket_path" "$pid_path"
 }
 trap cleanup EXIT INT TERM
+
+# Claim the slug before the multi-second app-server boot, and publish it so
+# discover.sh can see this engine — peers can't route to a slug they can't list.
+echo "$$" >"$pid_path"
 
 cd "$cwd"
 codex app-server --listen "ws://127.0.0.1:0" >"$server_log" 2>&1 &
@@ -145,7 +160,6 @@ if [[ -z "$server_url" ]]; then
   exit 1
 fi
 
-mkdir -p "$socket_dir"
 printf '%s\n' "$server_url" >"$rendezvous_path"
 
 "$bridge_script" \
