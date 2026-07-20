@@ -67,7 +67,15 @@ new_session_polls=50
 
 # Verified against the server's own /doc: {sessionID}/message is GET-only and
 # posting goes to /prompt with a PromptInput body.
-message_path_tmpl="${ACE_OPENCODE_MESSAGE_PATH:-/api/session/{session}/prompt}"
+#
+# The default is assigned separately, NOT as ${VAR:-default}: the closing brace
+# of the {session} placeholder would end the parameter expansion early and leave
+# the literal "/api/session/{session/prompt}" — which substitutes to nothing and
+# 404s on every message.
+message_path_tmpl="${ACE_OPENCODE_MESSAGE_PATH:-}"
+if [[ -z "$message_path_tmpl" ]]; then
+  message_path_tmpl='/api/session/{session}/prompt'
+fi
 log_dir="${ACE_OPENCODE_LOG_DIR:-${TMPDIR:-/tmp}/ace-connect-opencode}"
 socket_dir="${XDG_RUNTIME_DIR:-$HOME/.ace/run}/messages"
 socket_path="$socket_dir/$slug.sock"
