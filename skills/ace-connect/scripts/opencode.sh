@@ -60,16 +60,13 @@ if ! [[ "$startup_timeout_ms" =~ ^[1-9][0-9]*$ ]]; then
   exit 1
 fi
 polls=$(( (startup_timeout_ms + 99) / 100 ))
-# Short window for "did attach create a brand-new session?" before falling back
-# to the newest session in this workdir. Long enough for the TUI to register,
-# short enough that a resume isn't stuck behind the full startup budget.
-new_session_polls=50
 
 # prompt_async is the only route that does what a bridge needs: it starts the
-# session if idle and returns immediately. /api/…/prompt admits the input but
-# schedules no agent loop, so messages pile up as unread user turns; bare
+# session's agent loop and returns immediately. /api/…/prompt admits the input
+# but schedules no loop, so messages pile up as unread user turns; bare
 # …/message streams the whole response, which would block this serial accept
-# loop for an entire turn. Both were tried against a live server.
+# loop for an entire turn. Both were tried against a live server. {session} is
+# filled with the id of the session this bridge creates and owns (see below).
 #
 # The default is assigned separately, NOT as ${VAR:-default}: the closing brace
 # of the {session} placeholder would end the parameter expansion early and leave
@@ -105,6 +102,7 @@ bridge_log="$log_dir/$safe_slug.bridge.log"
 server_pid=""
 bridge_pid=""
 watchdog_pid=""
+session_id=""
 
 # shellcheck disable=SC2329
 terminate_process() {
@@ -134,6 +132,12 @@ cleanup() {
   trap - EXIT INT TERM
   terminate_process "$watchdog_pid" "ace-connect watchdog"
   terminate_process "$bridge_pid" "ace-connect bridge"
+  # Delete the owned session before the server dies, or every boot leaves one
+  # behind — the persisted pileup this design exists to avoid.
+  if [[ -n "$session_id" && -n "${server_url:-}" ]]; then
+    curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} \
+      -X DELETE "$server_url/session/$session_id" >/dev/null 2>&1 || true
+  fi
   terminate_process "$server_pid" "opencode serve"
   rm -f "$socket_path" "$pid_path"
 }
@@ -180,65 +184,29 @@ if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
   curl_auth=(--user "opencode:$OPENCODE_SERVER_PASSWORD")
 fi
 
-# /session and /api/session are two API surfaces, not aliases — /doc lists both.
-# /api/session is global and paginated ({cursor, data}) and returns entries whose
-# directory is null, useless for scoping. Bare /session returns a flat array
-# scoped to this project with directory populated, which is what resolution
-# needs.
-list_sessions() {
-  curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} "$server_url/session" \
-    2>/dev/null \
-    | jq -c 'if type=="array" then . else (.data // .sessions // []) end' \
-      2>/dev/null || true
-}
+# One session per boot, owned by this bridge. Create it explicitly, then attach
+# the TUI to that exact id (opencode attach -s) so bridge and TUI are aligned by
+# construction. The alternative — scanning /session and guessing which of a
+# server's persisted sessions the TUI landed on — is what bound the bridge to a
+# stale session and ran peer traffic through a headless agent the user couldn't
+# see. There is only ever one live session here: the one created below.
+create_body=$(jq -nc --arg t "ace-connect $slug" '{title:$t}')
+session_id=$(curl -sS --max-time 10 ${curl_auth[@]+"${curl_auth[@]}"} \
+  -X POST "$server_url/session" -H 'content-type: application/json' \
+  --data "$create_body" 2>/dev/null \
+  | jq -r '.id // .data.id // empty' 2>/dev/null || true)
+if [[ -z "$session_id" ]]; then
+  echo "failed to create an opencode session on $server_url" >&2
+  exit 1
+fi
 
-list_session_ids() {
-  list_sessions | jq -r '.[].id // empty' 2>/dev/null || true
-}
+prompt_url="$server_url${message_path_tmpl//\{session\}/$session_id}"
 
-# Newest session belonging to this workdir. Scoping by directory is what keeps
-# us off a live session in some other project; without it "newest" is a coin
-# flip across every project the server holds.
-newest_session_here() {
-  list_sessions | jq -r --arg d "$cwd" \
-    '[.[] | select(.directory == $d)] | max_by(.time.updated // 0) | .id // empty' \
-    2>/dev/null || true
-}
-
-# The bridge runs as a child so the TUI can own the foreground. It waits for the
-# TUI to create its session, binds the socket, then posts each inbound line.
+# The bridge runs as a child so the TUI can own the foreground. The session is
+# already known, so it binds the socket immediately and posts each inbound line.
 bridge() {
-  local sid="" i pre
-
-  # `opencode attach` may either create a session or resume an existing one, so
-  # neither rule works alone. Prefer an id that wasn't there before the TUI
-  # attached — unambiguous when attach creates. Failing that, fall back to the
-  # newest session in this workdir, which is the resumed one.
-  pre=$(list_session_ids)
-
-  for ((i = 0; i < new_session_polls; i += 1)); do
-    # An empty snapshot prints one blank line; -x can only match it against a
-    # blank id, so every real id still survives -v.
-    sid=$(list_session_ids | grep -vxFf <(printf '%s\n' "$pre") | head -1 || true)
-    [[ -n "$sid" ]] && break
-    sleep 0.1
-  done
-
-  if [[ -z "$sid" ]]; then
-    for ((i = 0; i < polls; i += 1)); do
-      sid=$(newest_session_here)
-      [[ -n "$sid" ]] && break
-      sleep 0.1
-    done
-  fi
-
-  if [[ -z "$sid" ]]; then
-    echo "no opencode session found for $cwd after waiting for the TUI" >&2
-    return 1
-  fi
-
-  local url="$server_url${message_path_tmpl//\{session\}/$sid}"
-  echo "ace-connect opencode bridge: slug=$slug session=$sid endpoint=$url" >&2
+  echo "ace-connect opencode bridge:" \
+    "slug=$slug session=$session_id endpoint=$prompt_url" >&2
 
   # One socat per message — same rebind-gap behavior as every other ace-connect
   # engine. Re-bind after each accepted message.
@@ -256,7 +224,7 @@ $line" '{parts:[{type:"text",text:$t}]}')
 
     # Bounded: the accept loop is serial, so one hung POST would wedge the inbox
     # for every later message with no way to recover short of a restart.
-    if ! curl -sS -f --max-time 120 -X POST "$url" \
+    if ! curl -sS -f --max-time 120 -X POST "$prompt_url" \
       ${curl_auth[@]+"${curl_auth[@]}"} \
       -H 'content-type: application/json' --data "$body" >/dev/null; then
       echo "POST failed for line: $line" >&2
@@ -287,11 +255,11 @@ fi
 ) &
 watchdog_pid=$!
 
-echo "opencode server=$server_url ace-connect slug=$slug bridge-log=$bridge_log" >&2
-echo "ace-connect socket binds once the TUI session is resolved" >&2
+echo "opencode server=$server_url ace-connect slug=$slug session=$session_id" \
+  "bridge-log=$bridge_log" >&2
 
 tui_status=0
-opencode attach "$server_url" || tui_status=$?
+opencode attach "$server_url" -s "$session_id" || tui_status=$?
 
 if [[ -n "$bridge_pid" ]] && ! kill -0 "$bridge_pid" 2>/dev/null; then
   bridge_status=0

@@ -28,40 +28,54 @@ Run `../scripts/opencode.sh` from the workspace root. One command, one terminal:
 ```
 
 It derives the slug from `$PWD` (`--slug` / `--cwd` override), boots
-`opencode serve --port 0` and reads the bound URL from its log, spawns the bridge,
-writes `<slug>.pid` so `discover.sh` sees the engine, and attaches
-`opencode attach` in the foreground. The bridge polls `/session` until the TUI
-creates its session, then binds the socket and POSTs each inbound line as a user
-message, prefixed with `ace-connect` so the receiving model loads this skill.
-Exit — or `Ctrl-C` — tears down bridge, server, socket, and pidfile.
+`opencode serve --port 0` and reads the bound URL from its log, **creates one
+session and owns it**, spawns the bridge, writes `<slug>.pid` so `discover.sh`
+sees the engine, and runs `opencode attach <url> -s <session>` in the foreground
+so the TUI lands on that exact session. Each inbound line is POSTed into the
+owned session, prefixed with `ace-connect` so the receiving model loads this
+skill. Exit — or `Ctrl-C` — tears down bridge, server, socket, pidfile, and the
+owned session.
 
 Requires `opencode`, `curl`, `jq`, `socat` on PATH. Honors
 `OPENCODE_SERVER_PASSWORD` as basic auth.
 
-### Session resolution
+### One owned session, not discovery
 
-`opencode attach` may create a session or resume an existing one, so the bridge
-handles both: it waits ~5s for an id that wasn't present before the TUI attached
-(the create case), then falls back to the newest session whose `directory`
-matches the workdir (the resume case). The directory scope is what keeps it off a
-live session belonging to some other project. `/api/session/active` exists but
-reported `{"data":{}}` on a live attached server, so it isn't relied on.
+`opencode serve` persists sessions across runs, so a server carries a pile of old
+sessions (`/session` for this project, `/api/session` globally). The bridge does
+**not** scan that pile and guess which one the TUI is on — that guess bound the
+bridge to a stale session and ran peer traffic through a headless agent invisible
+to the user. Instead: `POST /session` to create one, `opencode attach -s <id>` to
+put the TUI on it, `prompt_async` into it. Bridge and TUI are aligned by
+construction; there is only ever one live session. It is `DELETE`d on exit so
+boots don't accumulate.
 
-### When the endpoint shape drifts
+Signals that looked usable but aren't: `/api/session/active` returned
+`{"data":{}}` even mid-turn; `/global/event` carries a `sessionID` on every event
+but activity is not focus — a headless `prompt_async` emits the same `busy`
+events as user typing. Driving the TUI prompt box (`/tui/append-prompt` +
+`/tui/submit-prompt`) was rejected outright: `append` concatenates onto whatever
+the user is typing and `submit` fires the mash as one turn.
 
-The endpoint and body are version-dependent. Verified against opencode's own
-`/doc`: `{sessionID}/message` is **GET-only** — posting goes to
-`POST /api/session/{sessionID}/prompt` with a `PromptInput` body,
-`{"prompt":{"text":…}}`, which is what the script sends. `delivery` is optional
-and the server defaults it to `steer`, so an inbound peer message interrupts the
-current turn rather than queueing behind it. If a future version moves the route
-(bridge log shows `POST failed`), check the running server and override:
+### The message route, and why prompt_async
+
+Verified against opencode's own `/doc`, three POST routes exist and only one
+fits:
+
+- `POST /session/{id}/prompt_async` — *"start the session if needed, return
+  immediately."* This is the one. Body is `{parts:[{type:"text",text:…}]}`.
+- `POST /api/session/{id}/prompt` — admits the input (200) but schedules **no**
+  agent loop; messages pile up as unread user turns and nothing runs.
+- `POST /session/{id}/message` — runs the turn but **streams the whole
+  response**, blocking the serial accept loop for its entire duration.
+
+`{id}/message` is GET-only on the `/api` prefix, so don't confuse the two. If a
+future version moves the route (bridge log shows `POST failed`), inspect `/doc`
+and override:
 
 ```
-curl -sS http://127.0.0.1:<P>/doc        # openapi/swagger spec, exact path varies
-curl -sS http://127.0.0.1:<P>/session    # project-scoped list; /api/session is global+paginated
-
-ACE_OPENCODE_MESSAGE_PATH='/session/{session}/prompt' <base>/scripts/opencode.sh
+curl -sS http://127.0.0.1:<P>/doc     # openapi spec; find the run-and-return route
+ACE_OPENCODE_MESSAGE_PATH='/session/{session}/prompt_async' <base>/scripts/opencode.sh
 ```
 
 Bridge and server logs land in `$TMPDIR/ace-connect-opencode/` — the script prints

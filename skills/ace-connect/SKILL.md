@@ -74,8 +74,9 @@ Scripts above assume Claude Code. For other backends, load
   `ace -b codex` will carry `--listen` by default, folding this in. See
   `references/codex.md`.
 - `opencode` — run `scripts/opencode.sh` from the workspace root: it derives the
-  slug, boots `opencode serve` + the bridge in the background, and attaches your
-  TUI in the foreground (one command, no extra terminals). Requires `curl`,
+  slug, boots `opencode serve`, creates one session it owns, runs the bridge, and
+  attaches your TUI to that session in the foreground (one command, no extra
+  terminals). Requires `curl`,
   `jq`, `socat` on PATH. The message endpoint is version-dependent — override
   with `ACE_OPENCODE_MESSAGE_PATH` if the default 404s. See
   `references/opencode.md`.
