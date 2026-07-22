@@ -60,6 +60,11 @@ overrides, MCP allow-list, and which skills to include or exclude.
   ship to every downstream school that imports this one.
 - One skill (or one coherent theme) per commit / PR. See `skills/ace-school/SKILL.md` for
   the full PR workflow.
+- **Commit prefix is the skill name, not `skills:`.** Almost every edit here touches a
+  skill, so `skills:` carries no information — prefix with the skill being changed:
+  `ace-connect: fix the opencode bridge`, `ace-audit: tighten the checklist`. Edits
+  spanning several skills use a shared theme prefix; non-skill edits scope to their area
+  (`docs:`, `meta:` for repo-level files like this one).
 
 ## Common commands
 
