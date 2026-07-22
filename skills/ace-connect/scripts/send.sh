@@ -23,7 +23,7 @@ socket_path=$socket_dir/$to.sock
 # Backstop: if our own engine isn't running, any reply to us bounces. Warn,
 # don't block — one-way sends (CTX/DONE/FILE) are still valid without an inbox.
 from_pid_path=$socket_dir/$from.pid
-from_pid=$(cat "$from_pid_path" 2>/dev/null || echo -1)
+from_pid=$(cat "$from_pid_path" 2>/dev/null || true)
 if [[ ! -f $from_pid_path ]] || ! kill -0 "$from_pid" 2>/dev/null; then
   echo "warning: engine for from=$from not started; replies will bounce — start it with start.sh $from" >&2
 fi
