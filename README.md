@@ -111,6 +111,13 @@ ACE supports multiple backends. The built-ins are `claude` (Claude Code) and
 `[[backends]]` and can wrap anything that takes the same general shape
 (OpenCode, droid, etc.).
 
+The reason to switch through `ace` rather than launching the tool directly:
+your school comes with you. Skills, MCP servers, session prompt, and
+conventions are wired in by ACE, not by the backend, so the same set is live
+whichever one you run. That makes the choice a per-task one — reach for a
+different model when it suits the work, or when one is rate-limited — with no
+per-tool configuration to keep in sync and nothing to re-teach on arrival.
+
 Switch for one invocation:
 
 ```sh
