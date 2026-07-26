@@ -25,10 +25,11 @@ downstream AI sessions read.
 
 ## This repo is public
 
-Everything tracked here is world-readable and ships to every downstream school. Keep out
-of tracked files: personal or machine-specific paths, the maintainer's own school name,
-internal wiki or tracker URLs, private hostnames and real IPs. Local setup goes in
-`ace.local.toml`; local notes and the design record go in `.docs/`. Both are gitignored.
+Everything tracked here is world-readable and ships to every downstream school. Nothing
+here is secret — the point is proportion: a base school others adopt shouldn't read like
+one maintainer's working directory. So keep tracked files pointed outward. Internal wikis
+and trackers, machine-specific paths, and real project or org names used as examples all
+belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples.
 
 ## Editing rules specific to this repo
 
