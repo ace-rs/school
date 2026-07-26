@@ -4,8 +4,8 @@
 
 Before starting at step 1, figure out where you already are — conversation history, git
 state (`git status`, `git log --oneline -5`), loaded skills, in-progress tasks or scratch
-files. You may be mid-workflow; if so, resume at the right phase. The phases are a map, not
-a mandatory start-to-finish sequence.
+files. You may be mid-workflow; if so, resume at the right phase. The phases are a map,
+not a mandatory start-to-finish sequence.
 
 - **Dirty tree with coherent changes?** → verify, audit, or commit.
 - **Plan confirmed, no changes yet?** → red.
@@ -21,10 +21,10 @@ Resuming recorded work: read `.ace/save.md` and `.ace/save.ledger.md`.
 next open item) before any position of your own; an `agent:inferred` item is surfaced as a
 derivation, never as your position or a stated fact. Positions come after, labeled, at
 most once, and are never re-argued after a ruling lands. Ledger statuses bind:
-SETTLED/KILLED items are closed — re-litigating one is a Violation, not diligence. Trust the
-citation, not the label: a SETTLED/KILLED item with no quoted user phrase is treated as
-`agent:inferred`, not a ruling — a forgotten or mis-stamped provenance resolves to the safe
-side.
+SETTLED/KILLED items are closed — re-litigating one is a Violation, not diligence. Trust
+the citation, not the label: a SETTLED/KILLED item with no quoted user phrase is treated
+as `agent:inferred`, not a ruling — a forgotten or mis-stamped provenance resolves to the
+safe side.
 
 Accused of losing or forgetting something ("you lost X", "we said Y"): grep the trail
 and quote what you find *before* any self-diagnosis — never adopt the amnesia framing
@@ -37,13 +37,13 @@ unverified; a claim about your own failure is a causal claim like any other.
    task selection with a dirty working tree.
 
 2. **Surface** — read the storage cascade in order (below); collect pending tasks, open
-   questions, and blockers. Present them as a list. If nothing found, suggest tasks or state
-   "nothing pending."
+   questions, and blockers. Present them as a list. If nothing found, suggest tasks or
+   state "nothing pending."
 
 3. **Propose** — suggest the natural next task from what was surfaced, and identify which
-   skills to load. **Stop.** Don't load skills, don't start execution. Wait for the user to
-   confirm or refine. On confirm ("ok", "go", "do it", or a task pick), proceed to planning
-   — `/ace` need not be invoked again.
+   skills to load. **Stop.** Don't load skills, don't start execution. Wait for the user
+   to confirm or refine. On confirm ("ok", "go", "do it", or a task pick), proceed to
+   planning — `/ace` need not be invoked again.
 
 ## Planning
 
@@ -57,18 +57,19 @@ unverified; a claim about your own failure is a causal claim like any other.
    change (spec updates first, then tests, then code), file by file, stating what changes.
    For any durable doc this task produces, name its target `docs/` folder now by walking
    the routing gate in `docs/README.md` — decide placement at plan time, not when filing.
-   If ambiguous, ask. If too large, propose a breakdown first. Identify which skills to load.
+   If ambiguous, ask. If too large, propose a breakdown first. Identify which skills to
+   load.
 
 6. **Simplify plan** — cut anything unnecessary; prefer deletions; merge combinable steps.
    Aim for elegant just-enough — not the minimum possible, not the perfect solution, an
-   elegant fit for the ask. Don't cut requirements or edge cases the spec or user called out
-   — simplify the *how*, not the *what*.
+   elegant fit for the ask. Don't cut requirements or edge cases the spec or user called
+   out — simplify the *how*, not the *what*.
 
-7. **Test plan** — define validation before implementation: tests to add/update, the narrow
-   command to run first, broader checks before commit, any manual verification. TDD by
-   default (plan the failing test first); where it doesn't apply, state why and name the
-   substitute verification. Don't invent fake tests for docs-only, config-only, mechanical,
-   or untestable changes.
+7. **Test plan** — define validation before implementation: tests to add/update, the
+   narrow command to run first, broader checks before commit, any manual verification. TDD
+   by default (plan the failing test first); where it doesn't apply, state why and name
+   the substitute verification. Don't invent fake tests for docs-only, config-only,
+   mechanical, or untestable changes.
 
 8. **Confirm** — present the simplified plan and test plan. **Stop.** Don't edit files,
    don't run commands, don't implement. Wait for explicit approval. If the user refines or
@@ -78,31 +79,33 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 Size the execution before editing (across red, green, refactor): single-file or
 self-contained work stays in the main context; multi-file or cross-module work warrants
-isolated agents, one per non-overlapping file group. Criterion: context need, not line count.
+isolated agents, one per non-overlapping file group. Criterion: context need, not line
+count.
 
-9. **Red** — on approval, add or update tests first; run the narrow target; confirm it fails
-   for the expected reason. If TDD doesn't apply, state the approved exception and use the
-   planned substitute. Follow loaded skill conventions. If something unexpected comes up,
-   stop and surface it — don't work around it silently.
+9. **Red** — on approval, add or update tests first; run the narrow target; confirm it
+   fails for the expected reason. If TDD doesn't apply, state the approved exception and
+   use the planned substitute. Follow loaded skill conventions. If something unexpected
+   comes up, stop and surface it — don't work around it silently.
 
-10. **Green** — smallest change that satisfies the failing tests. If red was skipped under an
-    approved exception, make the change here and carry the substitute forward. Stay within
-    the confirmed plan; if behavior, scope, or file set must change, return to planning.
+10. **Green** — smallest change that satisfies the failing tests. If red was skipped under
+    an approved exception, make the change here and carry the substitute forward. Stay
+    within the confirmed plan; if behavior, scope, or file set must change, return to
+    planning.
 
 11. **Refactor** — once narrow tests pass, clean up without changing behavior; prefer
     deletions; elegant just-enough. Don't cut requirements or edge cases the spec or user
     called out — simplify the *how*, not the *what*. If no cleanup is needed, say so and
     move on.
 
-12. **Verify** — run the planned narrow and broad checks. A missing test case → add the test
-    and loop red/green/refactor again. If a planned check can't run, record why and
+12. **Verify** — run the planned narrow and broad checks. A missing test case → add the
+    test and loop red/green/refactor again. If a planned check can't run, record why and
     substitute the closest useful verification.
 
 ## Review and close
 
-13. **Audit** — re-read every changed file (not just diffs). Verify alignment: code matches
-    spec, the simplified plan was followed, the test plan ran (or deviations were justified),
-    conventions and loaded skill rules respected. Categorize every finding:
+13. **Audit** — re-read every changed file (not just diffs). Verify alignment: code
+    matches spec, the simplified plan was followed, the test plan ran (or deviations were
+    justified), conventions and loaded skill rules respected. Categorize every finding:
 
    - **Violation** — clear skill or spec rule broken. Blocks; must be fixed.
    - **Borderline** — judgment call the skill permits. Flag once; leave unless the user
@@ -126,36 +129,37 @@ isolated agents, one per non-overlapping file group. Criterion: context need, no
 
    - **Full save + clear** — when the just-finished work was context-heavy, escalate.
      Heaviness lives in the change *or* the conversation: many files touched, large reads,
-     isolated agents, a long planning/design discussion (even if the change was tiny), many
-     turns, several tasks this session, or a compaction already fired. On any of these, run
-     `ace-save` **immediately and without asking** — don't offer it as a choice, don't wait
-     for approval (it's notes-only and reversible). Only *after* the save, recommend the user
-     `/clear` and re-`/ace` for fresh context — that, and only that, is theirs to call. Stop
-     there; don't barrel into task discovery in a bloated context. If the user declines
-     `/clear`, fall back to looping in-session.
+     isolated agents, a long planning/design discussion (even if the change was tiny),
+     many turns, several tasks this session, or a compaction already fired. On any of
+     these, run `ace-save` **immediately and without asking** — don't offer it as a
+     choice, don't wait for approval (it's notes-only and reversible). Only *after* the
+     save, recommend the user `/clear` and re-`/ace` for fresh context — that, and only
+     that, is theirs to call. Stop there; don't barrel into task discovery in a bloated
+     context. If the user declines `/clear`, fall back to looping in-session.
 
    🚨 **Invariant (hard):** running `ace-save` is a precondition for naming `/clear`. Never
-   suggest, mention, or hint at `/clear` in a turn that didn't run `ace-save` first — the save
-   is automatic and unconditional. Heaviness only decides whether to *escalate* at all; it
-   never gates the save once `/clear` is on the table. Recommending clear without a preceding
-   save is a Violation.
+   suggest, mention, or hint at `/clear` in a turn that didn't run `ace-save` first — the
+   save is automatic and unconditional. Heaviness only decides whether to *escalate* at
+   all; it never gates the save once `/clear` is on the table. Recommending clear without
+   a preceding save is a Violation.
 
    Heaviness is a judgment call, not a gauge reading — you can't see the context meter, so
    estimate from what the task and session actually involved.
 
 ## Two-phase audit every few tasks
 
-Every 2–3 completed tasks, run a batch pass beyond the per-task audit. Spawn audit subagents:
-(A) code-quality (correctness, DRY, test strength, skill compliance over the batch), then
-(B) architecture/cleanup (boundaries, layering, dead code, simplification over the module
-graph). Fold findings into the next plan as fix-tasks; don't let them stall forward motion.
+Every 2–3 completed tasks, run a batch pass beyond the per-task audit. Spawn audit
+subagents: (A) code-quality (correctness, DRY, test strength, skill compliance over the
+batch), then (B) architecture/cleanup (boundaries, layering, dead code, simplification
+over the module graph). Fold findings into the next plan as fix-tasks; don't let them
+stall forward motion.
 
 ## Storage cascade
 
 Pick the one or two most likely to have what you need; widen only if they come up empty,
-contradict each other, or seem to lack important context. Write to the most fitting available
-location — e.g. persist tasks in the project's issue tracker if one's in use, not scratch
-files.
+contradict each other, or seem to lack important context. Write to the most fitting
+available location — e.g. persist tasks in the project's issue tracker if one's in use,
+not scratch files.
 
 1. **`$ARGUMENTS`** — user told you what to focus on.
 2. **Built-in tasks/memory** — survives compaction, not `/clear` or session exit.
