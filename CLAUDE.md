@@ -100,6 +100,13 @@ design/surface → `spec/`; unsettled exploration → `scratch/` (residual, open
 "not spec/decision because ___" line). Nothing defaults to `scratch/`. See the per-dir
 READMEs for each folder's test and format.
 
+## Issue tracker
+
+GitHub Issues are disabled on `ace-rs/school`, and Linear is no longer the source of
+truth. School-scoped work is tracked in Outline: **ACE → School**
+(<https://outline.prodigy9.co/doc/school-0LU8NLqTfG>). Work on the ACE tool itself
+belongs in that collection's epic docs (A–L), not the School doc.
+
 ## Command-output compaction — lowfat
 
 Noisy command output is compacted by [lowfat](https://github.com/zdk/lowfat), wired as a
