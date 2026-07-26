@@ -1,3 +1,4 @@
+school = "prod9/school"
 skills = [
   "ace",
   "ace-*",
