@@ -19,10 +19,10 @@ Standing rules for the whole run:
   never replay it later as their ruling. Going far is the goal; laundering your own calls
   into the user's mouth is not.
 - **Never amend `docs/spec/` on your own initiative.** The spec is ratified design, and
-  ratification takes the user, who is asleep. Every call you make alone stays in
-  `.ace/save.ledger.md` as `agent:inferred` until they rule on it — that is what the ledger
-  is for. The one exception is an explicit ask: if writing or updating a spec *is* the task
-  they handed you, write it and route it by `docs/README.md` like any other work.
+  ratification takes the user, who is away. Every call you make alone stays in
+  `.ace/save.ledger.md` as `agent:inferred` until they rule on it — that is what the
+  ledger is for. The one exception is an explicit ask: if writing or updating a spec *is*
+  the task they handed you, write it and route it by `docs/README.md` like any other work.
 - **`docs/` output follows the gate, unchanged.** Exploratory output a run genuinely
   produces — a research dump, a survey, a comparison — files in `docs/scratch/` with its
   "not spec because ___" line. Everything else the run makes durable lives in `.ace/`.
@@ -86,7 +86,7 @@ non-overlapping file group so parallel edits don't collide.
     **Envelope: do not push, publish, release, or deploy** — those wait for the human.
 15. **Checkpoint** — update the `.ace/` trail (what landed, what's next, open
     blockers) so a crash or compaction leaves a clean restore point. No `/ace-save` or
-    `/clear` between slices — the subagent boundary gives fresh context, the breadcrumb gives
+    `/clear` between slices — the subagent boundary gives fresh context, the trail gives
     continuity.
 
 ## Two-phase audit every 2–3 slices
@@ -100,7 +100,8 @@ motion.
 
 Verify passes + slices remain → spawn the next. Stop only at a genuine blocker (basis-silent +
 expensive + irreversible, logged), a failed verify the subagent couldn't fix, or an empty plan
-— leaving the breadcrumb pointing at the next step. On stop, write the run summary to `.ace/afk.log`.
+— leaving `.ace/save.md` pointing at the next step. On stop, write the run summary to
+`.ace/afk.log`.
 
 ## Storage cascade
 

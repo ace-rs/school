@@ -27,11 +27,12 @@ The audit lives in `ace/workflow.md` as the `Audit` step. Two ways in:
 
    - **Code** — load each language's coding skill, plus any framework or infrastructure
      skill relevant to the changed files.
-   - **Skills (`skills/<name>/SKILL.md`)** — load `skill-reviewer`.
+   - **Skills (`skills/<name>/SKILL.md`)** — load `skill-reviewer` if the session has it.
    - **Docs, config, or anything else** — audit against the repo's own instructions file
      (`CLAUDE.md` / `AGENTS.md`) and the conventions it points at.
 
-   Never skip this step because no language skill fits; every diff has a governing surface.
+   Never skip this step because no language skill fits; every diff has a governing
+   surface.
 
 2. **Check for design-level violations before patching.** If the loaded skills surface
    structural issues — a missing transaction/consistency boundary, a stringly-typed field

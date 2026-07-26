@@ -33,6 +33,10 @@ attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
   over uncommitted work, or force-overwrite of files you didn't create this run.
 - **Commit, don't push** — land green slices on the *current* branch so progress
   survives. Pushing is the canonical "needs a human" action; it waits.
+- **No unratified rulings in `docs/spec/`** — the spec is ratified design and
+  only the user ratifies. Calls you make alone stay in `.ace/save.ledger.md`
+  stamped `agent:inferred`. Writing a spec is allowed only when that was the
+  task handed to this run.
 
 A boundary you'd have to cross to make progress is a blocker. Log it, don't cross
 it.
