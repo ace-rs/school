@@ -73,13 +73,11 @@ A school ships every skill it bundles by default. Trim to what this repo needs.
 | `ace.toml`       | shared, committed     | the team-wide skill set |
 | `ace.local.toml` | personal, uncommitted | your overrides on top   |
 
-Three ways to set it, equivalent in effect:
+Two ways to set it, equivalent in effect:
 
 - Edit the `skills = [...]` array directly — globs like `ace-*` work.
 - `ace skills include <pat>` / `ace skills exclude <pat>` — always-add / always-remove
   patterns layered on the array.
-- `ace learn` — let ACE study the repo and narrow the filter for you. It also edits the
-  instructions file, so it overlaps steps 1–2; reach for it as the quick mechanical pass.
 
 Record the chosen set in the plan with a one-line rationale per add or drop, mapped to the
 study (e.g. "drop `frontend-design` — no UI here"). `ace skills` lists what's active;
