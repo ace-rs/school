@@ -117,15 +117,27 @@ rule is genuinely non-obvious.
 
 ## Durable artifacts
 
-`.docs/` — file by the routing gate in `.docs/README.md`, first match wins: third-party
-lookup → `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`; unsettled
-exploration → `scratch/` (residual, opened with a "not spec because ___" line). Nothing
-defaults to `scratch/`. Everything settled — instructions, conventions, preferences,
-rulings — amends `spec/`; the spec is authoritative, so read it before working and comply.
-`.docs/spec/README.md` indexes every spec file: read the index before adding one, and
-update it in the same change when you add, rename, or retire a file. See the per-dir
-READMEs for each folder's test and format.
+`.docs/` holds this project's durable record. It is gitignored: read and write it freely,
+but never assume a fresh clone has it. Start with `.docs/spec/working-in-this-repo.md` —
+it holds the editing rules that don't ship publicly.
 
-Read and write `.docs/` freely, but never assume a fresh clone has it. Start with
-`.docs/spec/working-in-this-repo.md` — it holds the editing rules that don't ship
-publicly.
+**`.docs/spec/` is authoritative — read the relevant spec before working, and comply.**
+It owes no justification: a rule that departs from mainstream practice, from what you
+would have picked, or from what you expected is not grounds to escalate, annotate, or
+re-open it. If a spec is wrong, raise it with the user and amend the spec.
+
+**Everything settled is a `.docs/spec/` amendment** — an instruction you were given, an
+approach that was agreed, a library that was picked, a convention or preference that was
+fixed. Write it there, state the current rule, move on. There is no decisions log.
+
+File new material by the gate, first match wins: third-party lookup → `vendor/`; a how-to
+→ `guides/`; our own design or surface → `spec/`; unsettled exploration → `scratch/` (last
+resort, opened with a "not spec because ___" line). Nothing defaults to `scratch/`.
+
+**Before writing into a `.docs/` folder, read that folder's `README.md` first.** It holds
+the folder's filing test, filename format, and lifecycle rules, and they are binding.
+Nothing else surfaces them.
+
+**`.docs/spec/README.md` indexes every spec file — keep it current.** Read the index
+before adding a spec file, so you amend the existing doc on a subject instead of writing a
+second one. Adding, renaming, or retiring a file updates its row in the same change.
