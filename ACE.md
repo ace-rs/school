@@ -86,8 +86,9 @@ persistence. Not for intra-session, MCP, or cross-machine messaging.
 
 ## `ace-docs` — give durable artifacts a home
 
-Research dumps, decisions, specs, usage docs, and references pile up with nowhere to live,
+Research dumps, rulings, specs, usage docs, and references pile up with nowhere to live,
 so they scatter or rot. `ace-docs` scaffolds a `docs/` tree routed by a single gate —
-`guides/` (how-to), `vendor/` (third-party reference), `spec/` (our design + surface),
-`decisions/` (dated rulings), `scratch/` (residual exploration) — and wires
-`CLAUDE.md`/`AGENTS.md` to point at it so humans and agents both find it.
+`vendor/` (third-party reference), `guides/` (how-to), `spec/` (our design and surface),
+`scratch/` (residual exploration) — and wires `CLAUDE.md`/`AGENTS.md` to point at it so
+humans and agents both find it. Everything settled amends `spec/`, which is authoritative;
+there is no decisions log.

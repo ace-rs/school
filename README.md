@@ -46,7 +46,7 @@ Eleven skills, all loaded by default for any school that imports this one:
 | `ace-afk`        | Unattended autonomous mode inside a safety envelope              |
 | `ace-audit`      | Recover when a diff landed without passing through audit         |
 | `ace-connect`    | Local agent-to-agent bridge over unix sockets                    |
-| `ace-docs`       | Scaffold a `docs/` tree (usage + design record)                  |
+| `ace-docs`       | Scaffold a `docs/` tree routed by a single gate                  |
 | `ace-init`       | One-time onboarding of a repo into ACE                           |
 | `ace-realign`    | Re-anchor drifted attention; trace the prompt-chain cause        |
 | `ace-save`       | Persist session state before `/clear` or context switch          |
