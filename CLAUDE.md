@@ -62,6 +62,33 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
    the skill.
 3. Body of `SKILL.md` is the actual instructions loaded on trigger.
 
+## Who reads what you write here
+
+Nothing in `skills/` is for you. Every file is an artifact shipped to a different agent,
+in a different repo, in a fresh context, under a harness that may not be Claude Code —
+running a smaller, cheaper, or weaker model than the one authoring it. That reader has no
+memory of the session the skill was written in and cannot ask a follow-up question.
+
+Apply this on **every** skill edit:
+
+- **Write for the reader, not for yourself.** No reasoning-in-progress, no defending a
+  rule against the wording it replaced, no "the point is", no reference to a conversation,
+  a decision, or a prior version. If a sentence only makes sense to someone who watched
+  the edit happen, delete it.
+- **Assume less capability than your own.** Short sentences, concrete nouns, explicit file
+  paths and commands. No inference chains. Where a weaker model could plausibly pick the
+  wrong branch, state the branch condition outright.
+- **Place text where it will actually be read.** A skill body loads only when the skill
+  triggers — it is absent from every other session. A rule that must govern ongoing work
+  therefore cannot live in `SKILL.md`; the skill must instruct the agent to write that
+  rule into a surface the target repo loads on its own (its `CLAUDE.md` / `AGENTS.md`).
+  Explaining a rule inside `SKILL.md` and stopping there means the rule never binds.
+- **Reachability is a chain.** A file the target repo never opens is dead text. If a skill
+  ships supporting docs (per-directory READMEs, references), something in an
+  always-loaded surface must explicitly instruct the reader to open them.
+- **Ship placeable text, not descriptions of it.** Give the exact block to copy, in a
+  fenced example, with the destination path. Don't describe what the block should say.
+
 ## Skill writing house style
 
 Load the `skill-creator` skill first for its workflow guidance when authoring or
