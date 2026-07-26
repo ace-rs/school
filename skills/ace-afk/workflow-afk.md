@@ -67,9 +67,11 @@ loaded skills, and in-progress tasks before starting at step 1.
 7. **Test plan** — define validation before implementing; TDD by default (failing test
    first); name the substitute verification where TDD doesn't apply. Don't invent fake tests
    for docs-only, config-only, mechanical, or untestable changes.
-8. **Record the plan** in `.ace/save.md` and proceed. No confirm gate — the basis and the
-   envelope replace it. If the plan exceeds the decision-basis (a genuinely silent, expensive,
-   irreversible fork), log a blocker and pick up the next unblocked slice.
+8. **Record the plan** — the narrative in `.ace/save.md`, each open slice in
+   `.ace/save.ledger.md` with a status and a provenance — and proceed. No confirm gate —
+   the basis and the envelope replace it. If the plan exceeds the decision-basis (a
+   genuinely silent, expensive, irreversible fork), log a blocker and pick up the next
+   unblocked slice.
 
 ## TDD execution
 
@@ -108,8 +110,8 @@ motion.
 
 Verify passes + slices remain → spawn the next. Stop only at a genuine blocker (basis-silent +
 expensive + irreversible, logged), a failed verify the subagent couldn't fix, or an empty plan
-— leaving `.ace/save.md` pointing at the next step. On stop, write the run summary to
-`.ace/afk.log`.
+— leaving `.ace/save.md` describing where the run stopped and `.ace/save.ledger.md`
+holding the next step as an item. On stop, write the run summary to `.ace/afk.log`.
 
 ## Storage cascade
 

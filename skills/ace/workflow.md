@@ -119,9 +119,10 @@ isolated agents, one per non-overlapping file group. Criterion: context need, no
 
 15. **Checkpoint** — persist progress before looping back to task discovery. Two modes:
 
-   - **Light (default)** — update the `.ace/` trail (`save.md`/`save.ledger.md`) or tasks with what was done, what's next,
-     open questions. Just enough that the next loop or a surprise compaction doesn't lose the
-     thread. Then loop back to task discovery.
+   - **Light (default)** — update the `.ace/` trail or tasks. What was done goes in
+     `save.md`; next steps and open questions go in `save.ledger.md`, each with a status
+     and a provenance. Just enough that the next loop or a surprise compaction doesn't
+     lose the thread. Then loop back to task discovery.
 
    - **Full save + clear** — when the just-finished work was context-heavy, escalate.
      Heaviness lives in the change *or* the conversation: many files touched, large reads,

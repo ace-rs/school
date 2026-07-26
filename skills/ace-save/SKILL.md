@@ -45,9 +45,10 @@ Include `$ARGUMENTS` if provided.
 The trail lives in `.ace/` (gitignored). Split current truth from item history:
 
 - **`.ace/save.md`** — current truth only; overwrite the whole file every save;
-  ≤60 lines; now / owed / queue / standing facts / pointers. No history, no
-  corrections-of-corrections — a dead item is absent, not struck through. A
+  ≤60 lines; now / standing facts / pointers. No history, no
+  corrections-of-corrections — a dead line is absent, not struck through. A
   settled ruling lives here as a one-line pointer; its full text is in `docs/`.
+  An item with a status lives in `save.ledger.md`, never here.
 - **`.ace/save.ledger.md`** — a single in-flight item buffer, not an archive;
   the only home of item statuses. Every item carries a status AND a provenance:
   - Status: open · presented · proposed · self-resolved (derivation cited) ·
