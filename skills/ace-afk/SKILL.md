@@ -95,12 +95,10 @@ that support it:
 
 - **Turn auto-compact on.** A nightshift run will outlast a single context window;
   without it the run dies mid-work when context fills.
-- **Delegate to subagents by default.** This is the default operating mode, not an
-  optimization: push every edit, search, and research step to a subagent and keep only
-  its summary. The point is the *driver's* context — the main session runs the afk loop
-  and must stay thin, or it compacts mid-run and loses the thread. The reason is context
-  churn, not throughput, so even a single sequential task goes to a subagent. Spawning for
-  speed and parallelism is still encouraged on top of this.
+- **Delegate to subagents by default.** Push every edit, search, and research step to a
+  subagent and keep only its summary. The main session runs the afk loop and must stay
+  thin, or it compacts mid-run and loses the thread — so delegate even a single sequential
+  task. Spawning for speed and parallelism is encouraged on top of this.
 
 ## Don't block — log it
 

@@ -15,8 +15,8 @@ is `../vendor/`; a task walkthrough is `../guides/`.
 <!-- not spec because: still exploring; nothing settled yet -->
 ```
 
-If you cannot write that line honestly, the artifact belongs in one of those folders — put
-it there instead.
+If that line cannot be written truthfully, the artifact belongs in one of those folders.
+Put it there instead.
 
 ## Format
 

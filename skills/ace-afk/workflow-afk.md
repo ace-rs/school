@@ -26,9 +26,8 @@ Standing rules for the whole run:
   before logging it as needing the human.
 - **Thin orchestrator — delegate by default.** You drive; you do not do the work. Every edit,
   search, and research step goes to a subagent in fresh context, and you keep only its summary.
-  This is the default mode, not an optimization: the point is keeping the *driver's* context
-  thin so the loop survives long runs, not speed. Parallel subagents for speed are encouraged
-  on top.
+  Delegate even a single sequential task — the driver's context must stay thin or the loop
+  compacts mid-run. Parallel subagents for speed are encouraged on top.
 
 ## Orientation
 
