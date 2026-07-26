@@ -23,7 +23,16 @@ fifth folder; if it feels like a decision, it's a spec amendment.
 
 **The spec is authoritative — read it before you work, and comply.** It owes your priors no
 justification. That a rule departs from mainstream practice or from what you expected is
-not grounds to escalate or re-open it. If you think it's wrong, raise it and amend the spec.
+not grounds to escalate or re-open it. If a spec is wrong, raise it and amend the spec.
 
-Each folder's README states its one test precisely. `CLAUDE.md` / `AGENTS.md` points here
-as the index.
+**Spec may outrun code.** Something agreed but not yet implemented belongs in `spec/` now,
+with the affected section flagged intended/target. Never leave the spec teaching a design
+that has been abandoned, and never strand a settled rule in a resume or handoff note.
+
+Permanence falls out of the folder, not a separate judgment: `guides/`, `vendor/`, and
+`spec/` are living and edited in place; `scratch/` is disposable and dated.
+
+**Before writing into a folder, read that folder's `README.md` first.** It states the
+folder's filing test, filename format, and lifecycle rules, and they are binding.
+
+`CLAUDE.md` / `AGENTS.md` points here as the index.
