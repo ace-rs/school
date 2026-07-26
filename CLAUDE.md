@@ -58,8 +58,12 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
 
 1. Create `skills/<name>/SKILL.md` with frontmatter: `name`, `description` (must include
    clear TRIGGER and DO NOT TRIGGER guidance — see existing skills as the pattern).
-2. Keep the description tight — it's what the model sees when deciding whether to load
-   the skill.
+2. Keep the description tight. It is what the model sees when deciding whether to load the
+   skill, and every description is resident in context for the whole session whether the
+   skill triggers or not. A reader with dozens of skills installed pays for all of them at
+   once, so spend words only where they change the trigger decision: cut restatements of
+   the skill name, examples that repeat a trigger already listed, and any description of
+   what the body does.
 3. Body of `SKILL.md` is the actual instructions loaded on trigger.
 
 ## Who reads what you write here
