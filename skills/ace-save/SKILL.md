@@ -64,9 +64,9 @@ The trail lives in `.ace/` (gitignored). Split current truth from item history:
   confirms — never folded into the record as stated fact.
 
 **Graduate and trim.** The ledger is a staging buffer, not the resting place. A
-SETTLED item's durable form graduates out via the `docs/README.md` gate — it
-lands in `spec/` (current design truth), and a contested call additionally earns a
-dated `decisions/` doc. Once graduated, trim the line from the ledger and leave a
+SETTLED item's durable form graduates out via the `docs/README.md` gate — which
+means `spec/`, current design truth, for anything settled. Lock it in as a spec
+amendment. Once graduated, trim the line from the ledger and leave a
 one-line pointer in `save.md`. The ledger stays short because settled items
 leave, not because they're rare.
 
@@ -88,7 +88,7 @@ serves** — checked top-down, stop at the first fit:
 Also sweep for school-bound artifacts that aren't learnings: skill edits already
 in the working tree (→ note in the breadcrumb for `ace-school` to propose later;
 don't branch/push/PR during a save) and non-trivial design calls (→ the school's
-decisions log if it keeps one).
+`docs/spec/`).
 
 Skip anything that doesn't apply; don't invent learnings.
 

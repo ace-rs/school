@@ -107,7 +107,7 @@ A directory layout. Mark folders `dir`, files `file`; whitespace is preserved.
 ```html
 <div class="tree"><span class="dir">docs/</span>
   <span class="dir">spec/</span>
-  <span class="dir">decisions/</span></div>
+  <span class="dir">guides/</span></div>
 ```
 
 ## Code block

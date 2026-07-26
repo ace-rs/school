@@ -2,8 +2,8 @@
 name: ace-docs
 description: >
   Scaffold a durable-docs directory routed by a single gate — guides/ (how-to),
-  vendor/ (third-party reference), spec/ (our design + surface), decisions/ (dated
-  rulings), scratch/ (residual exploration). Also builds the downstream `www/` review site — a human-facing, editorialized
+  vendor/ (third-party reference), spec/ (our design + surface, and the home for
+  everything settled), scratch/ (residual exploration). Also builds the downstream `www/` review site — a human-facing, editorialized
   presentation synthesized from the docs, previewed locally and published to
   gh-pages. TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should
   ADRs/specs/guides/reference go", before creating the first durable doc in a repo
@@ -21,7 +21,7 @@ This skill has two modes over one source of truth, `docs/`: **scaffold** the tre
 (default), and **build the `www/` review site** from it (its own section below). Both use
 the `docs/` structure below.
 
-Scaffold a `docs/` directory of five folders, each named as a **predicate** — the name is
+Scaffold a `docs/` directory of four folders, each named as a **predicate** — the name is
 the test, so filing is a match, not a judgment call:
 
 - `docs/guides/` — task-oriented how-to, start to finish. *How do I do X?* — using the
@@ -29,10 +29,7 @@ the test, so filing is a match, not a judgment call:
 - `docs/vendor/` — third-party lookup you keep reaching for: a framework's commands, an
   external API/CLI. *What exactly does their thing do?* Link-first; mark provenance. Living.
 - `docs/spec/` — design, architecture, how-it-works, and our own exact surface (our flags,
-  config, API). *How our system is built and meant to work.* Living; edit in place. The
-  default home for anything settled.
-- `docs/decisions/` — dated rulings on *contested* questions. *Why not the alternative.*
-  Frozen at the moment of decision; supersede, never edit.
+  config, API). *How our system is built and meant to work.* Living; edit in place.
 - `docs/scratch/` — unsettled exploration: research, surveys, drafts. *What we're still
   working out.* The residual home; disposable; dated.
 
@@ -46,40 +43,52 @@ top to bottom and file at the first yes; the bottom charges a toll, so nothing l
 3. How our system is built or meant to work, including its own config/CLI surface? →
    `spec/`
 4. None of the above — genuinely unsettled exploration → `scratch/`, opened with a
-   one-line "not spec/decision because ___."
+   one-line "not spec because ___."
 
-**`decisions/` is not a gate branch.** Every settled thing lands in `spec/` first — being
-told to do something, agreeing on an approach, picking a library, fixing a convention.
-That is a spec amendment, full stop. A decision is an *additional* artifact you write
-**on top of** that spec edit, and only when the call was contested:
+**Everything settled is a `spec/` amendment.** Being told to do something, agreeing on an
+approach, picking a library, fixing a convention, ruling on a preference — all of it is an
+edit to `spec/`. Make the edit, state the current rule, move on. There is no fifth folder
+and no separate ruling artifact to reach for; if the thought "this feels like a decision"
+occurs, it is a spec amendment.
 
-- A real alternative was argued and lost, and the argument will otherwise replay.
-- The choice contradicts the obvious default — mainstream practice, training-data
-  instinct, or this project's own prior convention — so a future reader would assume we
-  just didn't know better.
-
-Absent one of those, write the spec and stop. A settled instruction is not contention;
-"the user told me to" is not a re-litigation risk. When in doubt, `spec/` only — an
-unwritten decision costs one re-argument, while a decisions log padded with uncontested
-entries buries the load-bearing ones.
+**The spec is authoritative — read it before you work, and comply.** It owes your priors no
+justification. That a rule departs from mainstream practice, from what you'd have picked,
+or from what you expected is not a reason to escalate, annotate, or re-open it. The spec
+says so, so do it. If you think it is wrong, raise it with the user and amend the spec.
 
 Permanence is not a sorting axis — it falls out of the answer: `guides`/`vendor`/`spec` are
-living, `decisions` frozen, `scratch` disposable. Don't reason about it; read it off the
-folder.
+living, `scratch` disposable. Don't reason about it; read it off the folder.
 
-**Decided-but-not-yet-applied.** A ruling often outruns the code — agreed but not yet
-implemented. Write it down or it gets re-derived each time someone reconstructs the design
-from spec + code. `spec/` is the living *what*, `decisions/` the frozen *why-not*: a reader
-learns current state from `spec/`, never from `decisions/`. So anything that changes or
-retires existing behavior updates `spec/` in the same stroke — even before the code lands —
-with the affected section flagged intended/target; never leave the spec teaching the
-superseded design. Never strand a ruling in a resume/handoff note: those don't survive the
-next handoff. Amend `spec/` immediately, and add the dated `decisions/` entry only if the
-call was contested.
+**Spec outruns code, and that's fine.** Something agreed but not yet implemented still
+belongs in `spec/` now — otherwise it gets re-derived every time someone reconstructs the
+design from spec + code. Flag the affected section intended/target and land it in the same
+stroke; never leave the spec teaching a design we've abandoned. And never strand a settled
+rule in a resume/handoff note — those don't survive the next handoff.
 
-Most repos use a subset — a library may need only `decisions/` + `scratch/`; a tool with
-users adds `guides/` + `vendor/`. An empty dir with a README is a valid signpost. Don't
+Most repos use a subset — a library may need only `spec/` + `scratch/`; a tool with users
+adds `guides/` + `vendor/`. An empty dir with a README is a valid signpost. Don't
 manufacture content to fill a folder.
+
+### The escape hatch: `docs/decisions/`
+
+**This folder does not exist.** It is not scaffolded, not in the gate, and not something to
+route to. Assume any repo you open has no decisions log and needs none.
+
+Cut it open only when a spec amendment alone would lose something substantial that the
+spec cannot carry — and the spec carries a lot, so this is rare. Concretely: a real
+argument happened, two positions were on the table, one lost, and the losing case is
+detailed enough that without a written record it will be re-argued from scratch. The
+evidence is in the conversation or the review thread. If you can't point to it, there was
+no argument.
+
+Not escape-hatch material: a preference the user stated. A convention we fixed. A library
+we picked. A rule that surprised you. Anything you'd summarize in a sentence — that
+sentence *is* the spec edit. Lock it into `spec/` and be done.
+
+When the hatch is genuinely warranted: `mkdir docs/decisions`, drop
+`templates/decisions-README.md`, write `YYYY-MM-DD-slug.md`, and amend `spec/` in the same
+change — a reader learns current state from `spec/`, never from `decisions/`. Entries are
+frozen; supersede, never edit.
 
 The agent entry point is not a folder: the `CLAUDE.md` / `AGENTS.md` pointer (step 4) is
 the *schema document* that tells an agent how `docs/` is laid out. Keep it as the single
@@ -97,7 +106,7 @@ source in `docs/`; the `www/` site (below) is where they reach readers.
 Run when:
 
 - A repo has no durable-docs convention and you're about to create the first artifact — a
-  guide, reference page, spec, decision, or research dump.
+  guide, reference page, spec, or research dump.
 - The user explicitly asks to scaffold the docs directory.
 - An existing project's docs are scattered (root-level `DECISIONS.md`, ad-hoc `notes/`
   outside any container, `RFCs/` parallel to `docs/`) and the user wants to consolidate.
@@ -117,19 +126,22 @@ Don't run when:
 2. **Create the tree.**
 
    ```sh
-   mkdir -p docs/guides docs/vendor docs/spec docs/decisions docs/scratch
+   mkdir -p docs/guides docs/vendor docs/spec docs/scratch
    ```
 
-3. **Drop the six READMEs** from this skill's `templates/` directory:
+   No `docs/decisions/` — see the escape hatch above.
+
+3. **Drop the five READMEs** from this skill's `templates/` directory:
 
    - `templates/root-README.md` → `docs/README.md`
    - `templates/guides-README.md` → `docs/guides/README.md`
    - `templates/vendor-README.md` → `docs/vendor/README.md`
    - `templates/spec-README.md` → `docs/spec/README.md`
-   - `templates/decisions-README.md` → `docs/decisions/README.md`
    - `templates/scratch-README.md` → `docs/scratch/README.md`
 
-   Templates are short and project-agnostic. Copy verbatim; let the user customize after.
+   `templates/decisions-README.md` is deliberately not dropped; it ships only if the escape
+   hatch is ever cut open. Templates are short and project-agnostic. Copy verbatim; let the
+   user customize after.
 
 4. **Wire up the harness instructions file** — `CLAUDE.md`, `AGENTS.md`, or both. Add a
    short section pointing at `docs/`:
@@ -139,9 +151,10 @@ Don't run when:
 
    `docs/` — file by the routing gate in `docs/README.md`: third-party lookup →
    `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`; unsettled
-   exploration → `scratch/` (last resort, opened with a "not spec/decision because ___"
-   line). Nothing defaults to `scratch/`. Anything settled is a `spec/` amendment;
-   `decisions/` is an extra dated entry on top, only when the call was contested.
+   exploration → `scratch/` (last resort, opened with a "not spec because ___" line).
+   Nothing defaults to `scratch/`. Everything settled — instructions, conventions,
+   preferences, rulings — is a `spec/` amendment; the spec is authoritative, so read it
+   before working and comply. There is no decisions log.
    ```
 
    This pointer is the schema document an agent reads to navigate `docs/`; keep it short —
@@ -155,25 +168,27 @@ Don't run when:
    Scaffold docs/ — single-gate routing
 
    Four folders routed by one gate: vendor/ (third-party reference), guides/
-   (how-to), spec/ (our design + surface), scratch/ (residual exploration), plus
-   decisions/ for dated rulings on contested calls. Each sub-dir has a README
-   defining its test. CLAUDE.md (or AGENTS.md) points at it as the schema/index.
+   (how-to), spec/ (our design + surface), scratch/ (residual exploration).
+   Everything settled amends spec/; there is no decisions log. Each sub-dir has a
+   README defining its test. CLAUDE.md (or AGENTS.md) points at it as the
+   schema/index.
    ```
 
 ### Gotchas
 
 - **Don't pre-fill any dir with example content.** An empty dir + README beats a sample to
   delete.
-- **Date-prefix filenames only in** `decisions/` and `scratch/` — the moment matters there.
-  `guides/`, `vendor/`, `spec/` use `<slug>.md`; they describe a thing, not a moment.
+- **Date-prefix filenames only in** `scratch/` (and `decisions/` if the hatch is open) —
+  the moment matters there. `guides/`, `vendor/`, `spec/` use `<slug>.md`; they describe a
+  thing, not a moment.
 - **Script repeatable operations, don't narrate them.** An operational guide an agent
   re-runs by hand is a latent mistake — encode the steps in `scripts/*.sh` and let the
   guide hold the invocation plus the judgment a script can't.
 - **`vendor/` is link-first.** Cache the slice you reuse plus a provenance marker, never
   mirror a whole external API — the copy rots when upstream ships.
 - **`scratch/` is residual, not default.** Reachable only by failing every gate above it;
-  each file opens with a one-line "not spec/decision because ___." A file that lands there
-  without that line is misfiled.
+  each file opens with a one-line "not spec because ___." A file that lands there without
+  that line is misfiled.
 - **Don't symlink scattered docs.** Move them so `git log --follow` keeps history.
   Migrating existing docs in is a separate task — propose it, don't fold it into the
   scaffold.
@@ -184,16 +199,16 @@ Don't run when:
 
 `scratch/` is disposable, with two carve-outs once notes accumulate:
 
-- **Provenance pins a file.** A scratch note a frozen `decisions/` ruling cites as
-  provenance is retained even though scratch/ is disposable — the toll and disposability
-  govern *new filing*, not deletion of already-cited material. Prune the rest freely; never
-  orphan a decision's citation.
+- **Provenance pins a file.** A scratch note cited as provenance by a frozen `decisions/`
+  entry is retained even though scratch/ is disposable — the toll and disposability govern
+  *new filing*, not deletion of already-cited material. Prune the rest freely; never orphan
+  a citation.
 - **Collapse prior art.** When scratch design notes pile up on one theme, consolidate them
   into a single `scratch/prior-art.md` digest: one section per source note, each
-  cross-linked to the live `spec/` or `decisions/` doc it fed. Repoint any citations to the
-  digest, drop the absorbed notes. One digest with live cross-links beats N stale drafts,
-  and it becomes the retained provenance the rule above protects. `prior-art.md` is the one
-  undated file in `scratch/`.
+  cross-linked to the live `spec/` doc it fed. Repoint any citations to the digest, drop the
+  absorbed notes. One digest with live cross-links beats N stale drafts, and it becomes the
+  retained provenance the rule above protects. `prior-art.md` is the one undated file in
+  `scratch/`.
 
 ## Build the `www/` review site
 
@@ -243,8 +258,9 @@ catch staleness for you.
    - `templates/docs-site-deploy.sh` → `scripts/docs-site-deploy.sh` (`chmod +x`)
 
 2. **Synthesize pages** into `www/pages/` from the relevant `docs/`. Default to
-   `spec/ guides/ vendor/ decisions/`; treat `scratch/` as exploratory — pull one in
-   only when it carries reader value. Every page gets a provenance header.
+   `spec/ guides/ vendor/` (plus `decisions/` if the repo has one); treat `scratch/` as
+   exploratory — pull one in only when it carries reader value. Every page gets a
+   provenance header.
 
 3. **Wire the nav** in `www/index.html` by reader journey, not by `docs/` folders.
 

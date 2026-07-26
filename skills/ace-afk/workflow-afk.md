@@ -17,8 +17,8 @@ Standing rules for the whole run:
 - **Stamp provenance; unmarked is yours.** A fork you resolve solo is `agent:inferred`
   and stays provisional — it turns SETTLED only with the user's verbatim words, and you
   never replay it later as their ruling. Going far is the goal; laundering your own calls
-  into the user's mouth is not. A decision doc you write solo lands in `docs/scratch/`
-  (agent-derived), never `docs/decisions/` — that's ratified-only.
+  into the user's mouth is not. A call you make solo lands in `docs/scratch/`
+  (agent-derived), never `docs/spec/` — the spec is ratified-only.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up the next
   startable task — inside the envelope and state rules — not where you stop. Keep going while
   there's work with no unresolved decision and no unearnable blocker.

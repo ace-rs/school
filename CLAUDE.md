@@ -76,7 +76,8 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 `.docs/` — file by the routing gate in `.docs/README.md`, first match wins: third-party
 lookup → `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`; unsettled
-exploration → `scratch/` (residual, opened with a "not spec/decision because ___" line).
-Nothing defaults to `scratch/`. Anything settled is a `spec/` amendment; `decisions/` is
-an extra dated entry on top, only when the call was contested. See the per-dir READMEs
+exploration → `scratch/` (residual, opened with a "not spec because ___" line). Nothing
+defaults to `scratch/`. Everything settled — instructions, conventions, preferences,
+rulings — amends `spec/`; the spec is authoritative, so read it before working and comply.
+`decisions/` is a pre-existing escape hatch, not a destination. See the per-dir READMEs
 for each folder's test and format.
