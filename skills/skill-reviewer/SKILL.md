@@ -33,8 +33,8 @@ The description is `name` plus one block, and it is the whole trigger surface. C
 - **Disambiguation.** If another skill covers adjacent ground, name it and draw the line.
 - **Length.** Enough to carry triggers and boundaries; not padded with body content.
 
-Follow the repo's own description convention. If siblings use `TRIGGER` / `DO NOT TRIGGER`,
-use that — do not rewrite toward a different house style.
+Follow the repo's own description convention. If siblings use `TRIGGER` /
+`DO NOT TRIGGER`, use that — do not rewrite toward a different house style.
 
 ## Structure
 

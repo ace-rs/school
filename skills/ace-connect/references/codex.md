@@ -76,7 +76,9 @@ alias codex-connect="/resolved/path/to/scripts/codex.sh"
 Or a pass-through function that wraps only the no-arg interactive case:
 
 ```sh
-codex() { [ $# -eq 0 ] && command /resolved/path/to/scripts/codex.sh || command codex "$@"; }
+codex() {
+  [ $# -eq 0 ] && command /resolved/path/to/scripts/codex.sh || command codex "$@"
+}
 ```
 
 Shorten the name yourself if you like.
