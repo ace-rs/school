@@ -69,7 +69,9 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
    session whether the skill triggers or not. A reader with dozens of skills installed
    pays for all of them at once, so spend words only where they change the trigger
    decision: cut restatements of the skill name, examples that repeat a trigger already
-   listed, and any description of what the body does.
+   listed, and any description of what the body does. Descriptions still have to push —
+   agents under-trigger — so keep the concrete phrases and the negative boundary, and
+   where under-triggering is the real risk add one short nudge clause, not a sentence.
 3. Body of `SKILL.md` is the actual instructions loaded on trigger.
 4. Update every roster that names the skill set, in the same change: the table in
    `README.md`, the table *and* the per-skill section in `ACE.md`, and "What ships" in

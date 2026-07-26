@@ -1,11 +1,10 @@
 ---
 name: ace-school
 description: >
-  ACE school management — proposing skill changes, creating PRs to the school
-  repo, and understanding school structure. TRIGGER when: user wants to propose
-  changes to skills, create a school PR, run `ace diff`, or asks about school
-  structure/workflow. DO NOT TRIGGER for: normal coding tasks or project-specific
-  work.
+  ACE school management — proposing skill changes and creating PRs to the school
+  repo. TRIGGER when: user wants to propose changes to skills, create a school PR,
+  run `ace diff`, or asks about school structure/workflow. DO NOT TRIGGER for:
+  normal coding tasks or project-specific work.
 ---
 
 # ACE School Management
@@ -92,8 +91,8 @@ Run clone-scoped commands from `cd $(ace paths school)`.
 
 ## Editing skills
 
-Skill files in the project are symlinks into the school cache. Edits go directly to the
-cache — this is intentional. The school cache is a real git working copy.
+Skill files in the project are symlinks into the school clone, so an edit through one
+lands in the clone — which is a real git working copy, branchable and committable.
 
 ## Proposing changes
 
@@ -134,7 +133,7 @@ When skill edits need to go upstream:
 
 Anthropic's `skill-creator` skill is the authoritative reference for skill mechanics
 (frontmatter, file layout, progressive disclosure, eval loops). The lessons below are
-school-specific — things that recur in reviews of PRs to this repo.
+school-specific — recurring findings in school PR reviews.
 
 0. **Check the school's house rules first.** Before authoring or editing any skill,
    read the school repo's `CLAUDE.md` and any durable record-keeping the school
@@ -156,9 +155,16 @@ school-specific — things that recur in reviews of PRs to this repo.
    starting point they can adjust. Likewise, specific CI vendors (Buildkite, GitHub
    Actions) should read as "your CI".
 
-4. **Write pushy descriptions.** Claude tends to under-trigger skills. Alongside the
-   TRIGGER / DO NOT TRIGGER blocks, include a nudge like "Use this skill whenever X is
-   involved, even if the user does not explicitly name it." It matters more than it looks.
+4. **Pushy descriptions, in as few words as possible.** Agents under-trigger skills, so a
+   description has to push — but every description sits in context all session for every
+   subscriber, whether the skill fires or not. Both hold at once.
+
+   Push with concrete verbatim phrases a user would actually type, plus the
+   `/slash-command` form and an explicit negative boundary. Where under-triggering is the
+   real risk, add one short nudge clause — "even if the user doesn't name it" — not a
+   sentence. Cut anything that doesn't change the trigger decision: restatements of the
+   skill name, a second example of a trigger already listed, descriptions of what the body
+   does.
 
 5. **Progressive disclosure.** Keep `SKILL.md` under ~500 lines. Push depth into
    `references/*.md` with a quick-map table in `SKILL.md` (task → reference file) so the
