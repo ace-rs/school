@@ -4,9 +4,9 @@ description: >
   Local agent-to-agent bridge over unix sockets — an engine each agent must
   start before it can send, receive, or discover peers. TRIGGER on
   `/ace-connect`, "start the bridge", "start a socket", "listen for messages",
-  "wait for / receive peer requests", "answer queries from other agents", or
-  "what agents are running". DO NOT TRIGGER for intra-session, MCP, or
-  cross-machine messaging.
+  "answer queries from other agents", or "what agents are running" — and
+  whenever a task needs another local agent, even if the user doesn't name the
+  skill. DO NOT TRIGGER for intra-session, MCP, or cross-machine messaging.
 ---
 
 # ace-connect
@@ -70,8 +70,7 @@ Scripts above assume Claude Code. For other backends, load
 - `codex` — run `scripts/codex.sh` from the workspace root: it derives the slug,
   boots `codex app-server --listen` + the bridge in the background, and attaches
   your TUI in the foreground (one command, no extra terminals). Requires
-  `websocat`, `jq`, `socat` on PATH (`brew install websocat jq socat`). Future
-  `ace -b codex` will carry `--listen` by default, folding this in. See
+  `websocat`, `jq`, `socat` on PATH (`brew install websocat jq socat`). See
   `references/codex.md`.
 - `opencode` — run `scripts/opencode.sh` from the workspace root: it derives the
   slug, boots `opencode serve`, creates one session it owns, runs the bridge, and
