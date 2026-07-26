@@ -74,8 +74,9 @@ reasoning kept to a single framing sentence only when the rule is genuinely non-
 
 ## Durable artifacts
 
-`.docs/` — file by the routing gate in `.docs/README.md`, first match wins: a ruling →
-`decisions/`; third-party lookup → `vendor/`; a how-to → `guides/`; our own
-design/surface → `spec/`; unsettled exploration → `scratch/` (residual, opened with a
-"not spec/decision because ___" line). Nothing defaults to `scratch/`. See the per-dir
-READMEs for each folder's test and format.
+`.docs/` — file by the routing gate in `.docs/README.md`, first match wins: third-party
+lookup → `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`; unsettled
+exploration → `scratch/` (residual, opened with a "not spec/decision because ___" line).
+Nothing defaults to `scratch/`. Anything settled is a `spec/` amendment; `decisions/` is
+an extra dated entry on top, only when the call was contested. See the per-dir READMEs
+for each folder's test and format.

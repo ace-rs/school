@@ -29,9 +29,10 @@ the test, so filing is a match, not a judgment call:
 - `docs/vendor/` — third-party lookup you keep reaching for: a framework's commands, an
   external API/CLI. *What exactly does their thing do?* Link-first; mark provenance. Living.
 - `docs/spec/` — design, architecture, how-it-works, and our own exact surface (our flags,
-  config, API). *How our system is built and meant to work.* Living; edit in place.
-- `docs/decisions/` — dated rulings. *What we decided, and why not the alternative.* Frozen
-  at the moment of decision; supersede, never edit.
+  config, API). *How our system is built and meant to work.* Living; edit in place. The
+  default home for anything settled.
+- `docs/decisions/` — dated rulings on *contested* questions. *Why not the alternative.*
+  Frozen at the moment of decision; supersede, never edit.
 - `docs/scratch/` — unsettled exploration: research, surveys, drafts. *What we're still
   working out.* The residual home; disposable; dated.
 
@@ -39,28 +40,42 @@ the test, so filing is a match, not a judgment call:
 top to bottom and file at the first yes; the bottom charges a toll, so nothing lands in
 `scratch/` by default:
 
-1. A ruling you'd defend if reopened? → `decisions/`
-2. Third-party facts you keep to look up? → `vendor/` (link-first, mark provenance)
-3. A how-to — using the product *or* operating the repo? → `guides/` (script repeatable
+1. Third-party facts you keep to look up? → `vendor/` (link-first, mark provenance)
+2. A how-to — using the product *or* operating the repo? → `guides/` (script repeatable
    operations; the guide holds the judgment a script can't)
-4. How our system is built or meant to work, including its own config/CLI surface? →
+3. How our system is built or meant to work, including its own config/CLI surface? →
    `spec/`
-5. None of the above — genuinely unsettled exploration → `scratch/`, opened with a
+4. None of the above — genuinely unsettled exploration → `scratch/`, opened with a
    one-line "not spec/decision because ___."
+
+**`decisions/` is not a gate branch.** Every settled thing lands in `spec/` first — being
+told to do something, agreeing on an approach, picking a library, fixing a convention.
+That is a spec amendment, full stop. A decision is an *additional* artifact you write
+**on top of** that spec edit, and only when the call was contested:
+
+- A real alternative was argued and lost, and the argument will otherwise replay.
+- The choice contradicts the obvious default — mainstream practice, training-data
+  instinct, or this project's own prior convention — so a future reader would assume we
+  just didn't know better.
+
+Absent one of those, write the spec and stop. A settled instruction is not contention;
+"the user told me to" is not a re-litigation risk. When in doubt, `spec/` only — an
+unwritten decision costs one re-argument, while a decisions log padded with uncontested
+entries buries the load-bearing ones.
 
 Permanence is not a sorting axis — it falls out of the answer: `guides`/`vendor`/`spec` are
 living, `decisions` frozen, `scratch` disposable. Don't reason about it; read it off the
 folder.
 
-**Decided-but-not-yet-applied.** A decision often outruns the code — agreed but not yet
-implemented. Route it or it gets re-litigated each time someone reconstructs the design
-from spec + code. `spec/` is the living *what*, `decisions/` the frozen *why*: a reader
-learns current state from `spec/`, never from `decisions/`. So a ruling that changes or
+**Decided-but-not-yet-applied.** A ruling often outruns the code — agreed but not yet
+implemented. Write it down or it gets re-derived each time someone reconstructs the design
+from spec + code. `spec/` is the living *what*, `decisions/` the frozen *why-not*: a reader
+learns current state from `spec/`, never from `decisions/`. So anything that changes or
 retires existing behavior updates `spec/` in the same stroke — even before the code lands —
-with the affected section flagged intended/target and pointing to the ADR; never leave the
-spec teaching the superseded design. Never strand a ruling in a resume/handoff note: those
-don't survive the next handoff. Promote it to `decisions/` and reflect it in `spec/`
-immediately.
+with the affected section flagged intended/target; never leave the spec teaching the
+superseded design. Never strand a ruling in a resume/handoff note: those don't survive the
+next handoff. Amend `spec/` immediately, and add the dated `decisions/` entry only if the
+call was contested.
 
 Most repos use a subset — a library may need only `decisions/` + `scratch/`; a tool with
 users adds `guides/` + `vendor/`. An empty dir with a README is a valid signpost. Don't
@@ -122,10 +137,11 @@ Don't run when:
    ```markdown
    ## Durable artifacts
 
-   `docs/` — file by the routing gate in `docs/README.md`: a ruling → `decisions/`;
-   third-party lookup → `vendor/`; a how-to → `guides/`; our own design/surface →
-   `spec/`; unsettled exploration → `scratch/` (last resort, opened with a
-   "not spec/decision because ___" line). Nothing defaults to `scratch/`.
+   `docs/` — file by the routing gate in `docs/README.md`: third-party lookup →
+   `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`; unsettled
+   exploration → `scratch/` (last resort, opened with a "not spec/decision because ___"
+   line). Nothing defaults to `scratch/`. Anything settled is a `spec/` amendment;
+   `decisions/` is an extra dated entry on top, only when the call was contested.
    ```
 
    This pointer is the schema document an agent reads to navigate `docs/`; keep it short —
@@ -138,10 +154,10 @@ Don't run when:
    ```
    Scaffold docs/ — single-gate routing
 
-   Five folders routed by one gate: guides/ (how-to), vendor/ (third-party
-   reference), spec/ (our design + surface), decisions/ (dated rulings), scratch/
-   (residual exploration). Each sub-dir has a README defining its test. CLAUDE.md
-   (or AGENTS.md) points at it as the schema/index.
+   Four folders routed by one gate: vendor/ (third-party reference), guides/
+   (how-to), spec/ (our design + surface), scratch/ (residual exploration), plus
+   decisions/ for dated rulings on contested calls. Each sub-dir has a README
+   defining its test. CLAUDE.md (or AGENTS.md) points at it as the schema/index.
    ```
 
 ### Gotchas

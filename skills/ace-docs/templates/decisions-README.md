@@ -1,31 +1,33 @@
 # Decisions Log
 
-**Point-in-time defenses against future re-litigation** — rulings made on
-a specific date for a specific question, recorded so the same argument
-doesn't have to be re-fought next quarter. Each entry is frozen at the
-moment of decision; if a later ruling reverses it, write a new dated
-decision that links back and mark the old one `superseded`.
+**Point-in-time defenses against future re-litigation** — rulings on
+*contested* questions, recorded so the same argument doesn't have to be
+re-fought next quarter. Each entry is frozen at the moment of decision;
+if a later ruling reverses it, write a new dated decision that links back
+and mark the old one `superseded`.
+
+This folder is **not** a routing destination. It is never where something
+goes *instead of* `../spec/` — every settled thing is a spec amendment
+first, and a decision is an extra artifact written on top of it.
 
 ## When to add an entry
 
-Add a decision when **the answer goes against the obvious default** —
-mainstream practice, what the agent's training data would suggest, or the
-project's own prior convention. The point of the log is to capture the
-*why* so future arguments don't keep re-discovering it. Examples that
-warrant an entry:
+Only two triggers, and the spec edit happens either way:
 
-- We deliberately deviate from a well-known pattern, and a future agent
-  reading our code would assume we just didn't know better.
-- A reviewer pushed back on a choice that we then defended; the defense
-  is worth preserving.
-- Two reasonable approaches were debated and one won — without the entry,
-  the next debate replays from scratch.
+- **A live alternative lost.** Two reasonable approaches were debated,
+  one won, and without the entry the next debate replays from scratch —
+  or a reviewer pushed back and the defense is worth preserving.
+- **The answer cuts against the obvious default** — mainstream practice,
+  what an agent's training data would suggest, or this project's own
+  prior convention — so a future reader would assume we just didn't know
+  better.
 
-**Don't** add a decision when the answer is already obvious or matches
-the prevailing convention. If there's no future confusion to head off,
-just document the result in `../spec/` and move on. A decisions log
-cluttered with "we chose the obvious thing" entries makes the actual
-load-bearing decisions harder to find.
+**Don't** add a decision for anything settled. Being told to do something
+is not contention. Agreeing on an approach nobody argued against is not
+contention. Picking the conventional library, naming a file, fixing a
+format — none of that is contention. Amend `../spec/` and move on. A log
+padded with uncontested entries buries the load-bearing ones, and an
+unwritten decision costs at most one re-argument.
 
 If your artifact is research, a survey, a draft, a transcript, or any
 exploratory write-up — that's scratch, not a decision. Use `../scratch/`.

@@ -64,8 +64,8 @@ The trail lives in `.ace/` (gitignored). Split current truth from item history:
   confirms — never folded into the record as stated fact.
 
 **Graduate and trim.** The ledger is a staging buffer, not the resting place. A
-SETTLED item's durable form graduates out via the `docs/README.md` gate — most
-land in `spec/` (current design truth); a ruling you'd defend if reopened earns a
+SETTLED item's durable form graduates out via the `docs/README.md` gate — it
+lands in `spec/` (current design truth), and a contested call additionally earns a
 dated `decisions/` doc. Once graduated, trim the line from the ledger and leave a
 one-line pointer in `save.md`. The ledger stays short because settled items
 leave, not because they're rare.

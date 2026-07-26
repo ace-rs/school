@@ -136,8 +136,10 @@ choices. Reverse-spec against the implementation. Reconcile each claim and flag
 divergences (spec says X, code does Y) instead of papering over them.
 
 **Route by the gate.** Per `ace-docs`: how-it-works, intent, and our own exact surface
-(every config key, every endpoint) → `docs/spec/`; a decision worth pinning →
-`docs/decisions/` as a dated ADR; third-party lookup we lean on → `docs/vendor/`.
+(every config key, every endpoint) → `docs/spec/`; third-party lookup we lean on →
+`docs/vendor/`. A contested call — a live alternative lost, or the choice cuts against the
+obvious default — earns a dated `docs/decisions/` ADR *on top of* its spec entry, never
+instead of one.
 
 Run each spec through the normal `ace` planning phases (`/ace` → Specs → Draft Plan);
 scaffold `docs/` first via `ace-docs`. If a full run is too big for now, write the
