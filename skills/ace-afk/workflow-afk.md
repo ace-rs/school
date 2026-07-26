@@ -25,7 +25,7 @@ Standing rules for the whole run:
   the task they handed you, write it and route it by `docs/README.md` like any other work.
 - **`docs/` output follows the gate, unchanged.** Exploratory output a run genuinely
   produces — a research dump, a survey, a comparison — files in `docs/scratch/` with its
-  "not spec because ___" line. Everything else the run makes durable lives in `.ace/`.
+  "not spec because ___" line. Placement is chosen at plan time (step 5), as attended.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up the next
   startable task — inside the envelope and state rules — not where you stop. Keep going while
   there's work with no unresolved decision and no unearnable blocker.
@@ -52,8 +52,16 @@ loaded skills, and in-progress tasks before starting at step 1.
 
 ## Planning
 
-4. **Specs** — read the project's source of truth; extract acceptance criteria; note gaps.
+4. **Specs** — read the project's source of truth (`docs/spec/` and what it points at;
+   start from `docs/spec/README.md` if it has an index). The spec is authoritative —
+   comply rather than re-deciding what it settles, and treat a contradiction between spec
+   and ask as a fork for the decision-basis, not a licence to rewrite the spec. Extract
+   acceptance criteria; note gaps.
 5. **Draft plan** — list every change (specs first, then tests, then code), file by file.
+   For any durable doc the slice produces, name its target `docs/` folder now by walking
+   the gate in `docs/README.md` — placement is decided at plan time, not when filing. In
+   an unattended run the gate resolves to `docs/scratch/` for exploratory output and to
+   `.ace/` for everything else; `docs/spec/` is reachable only if writing it was the ask.
 6. **Simplify plan** — cut to an elegant just-enough fit; prefer deletions; don't cut
    spec/called-out edge cases.
 7. **Test plan** — define validation before implementing; TDD by default (failing test

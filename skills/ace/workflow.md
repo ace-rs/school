@@ -47,9 +47,11 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 ## Planning
 
-4. **Specs** — read the project's source of truth (specs, design docs, PRDs, RFCs, ADRs).
-   Compare against the ask; note gaps, contradictions, outdated sections; extract acceptance
-   criteria. Don't edit yet — carry findings forward to the plan.
+4. **Specs** — read the project's source of truth (`docs/spec/` and any design docs, PRDs,
+   RFCs it points at; start from `docs/spec/README.md` if it has an index). The spec is
+   authoritative — comply with it rather than re-deciding a question it already settles.
+   Compare against the ask; note gaps, contradictions, outdated sections; extract the
+   acceptance criteria. Don't edit yet — carry findings forward to the plan.
 
 5. **Draft plan** — explore the space: alternatives, trade-offs, edge cases. List every
    change (spec updates first, then tests, then code), file by file, stating what changes.
