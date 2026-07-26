@@ -3,10 +3,11 @@ name: ace-afk
 description: >
   Unattended autonomous mode — the nightshift. Drive work forward with no human
   watching, strictly inside a safety envelope, logging blockers instead of
-  waiting on them. TRIGGER on `/ace-afk`, "afk", "going afk", "stepping away",
-  "run unattended", "work overnight", "nightshift", or "keep going while I'm
-  gone". DO NOT TRIGGER while you're in an interactive back-and-forth, for the
-  normal attended `/ace` loop, or when the user is present to approve steps.
+  waiting on them. TRIGGER on `/ace-afk`, "afk", "run unattended", "nightshift",
+  or any signal the user is leaving and wants work to continue — even if they
+  don't name the skill. DO NOT TRIGGER while you're in an interactive
+  back-and-forth, for the normal attended `/ace` loop, or when the user is
+  present to approve steps.
 argument-hint: "[focus or constraints for the unattended run]"
 ---
 

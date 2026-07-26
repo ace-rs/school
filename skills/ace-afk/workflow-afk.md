@@ -17,8 +17,11 @@ Standing rules for the whole run:
 - **Stamp provenance; unmarked is yours.** A fork you resolve solo is `agent:inferred`
   and stays provisional — it turns SETTLED only with the user's verbatim words, and you
   never replay it later as their ruling. Going far is the goal; laundering your own calls
-  into the user's mouth is not. A call you make solo lands in `docs/scratch/`
-  (agent-derived), never `docs/spec/` — the spec is ratified-only.
+  into the user's mouth is not.
+- **Route durable output by the gate, same as attended.** A design call you resolve is
+  settled work: it amends `docs/spec/` per `docs/README.md`, stamped `agent:inferred` so
+  the user can see what was decided without them. `docs/scratch/` is for genuinely
+  exploratory material only — never a holding pen for calls you made alone.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up the next
   startable task — inside the envelope and state rules — not where you stop. Keep going while
   there's work with no unresolved decision and no unearnable blocker.
