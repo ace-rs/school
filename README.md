@@ -33,8 +33,8 @@ needs to behave consistently across projects. A school can ship:
 ACE Home is the *baseline*: it ships the small set of skills required to make
 ACE itself useful, plus a pair of skill-authoring aids — Anthropic's
 `skill-creator` for writing skills and `skill-reviewer` for reviewing them.
-Anything team- or project-specific belongs in your school, not here. See [`docs/spec/baseline-school.md`](docs/spec/baseline-school.md)
-for the full charter.
+Anything team- or project-specific belongs in your school, not here — import this one and
+layer your own skills on top.
 
 ## What lives here
 
@@ -58,7 +58,6 @@ Top-level docs:
 
 - [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills, in order
 - [`CLAUDE.md`](CLAUDE.md) — house style when editing this school itself
-- [`docs/`](docs/) — durable artifacts (specs, decisions, notes)
 
 ## Quick start
 

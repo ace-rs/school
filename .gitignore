@@ -17,3 +17,8 @@ ace.local.toml
 
 # ACE session scratch — trail, inbox, handoff log (runtime artifacts, never committed)
 /.ace/
+
+# Durable design record — kept local. This repo is public and the record carries
+# maintainer-internal detail (personal school, tracker, machine paths). Agents still
+# read and write it; it just never ships. See CLAUDE.md.
+/.docs/
