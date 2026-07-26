@@ -129,13 +129,13 @@ Send and discover are backend-independent.
 
 ## Picking your own slug
 
-Format: `<parent>.<workdir>.<backend>` (e.g. `prod9.school.claude`,
-`bluepages.infra.codex`). `<parent>` is the basename of the workdir's parent
+Format: `<parent>.<workdir>.<backend>` (e.g. `acme.school.claude`,
+`acme.infra.codex`). `<parent>` is the basename of the workdir's parent
 directory; `<workdir>` is the workdir basename; backend is `claude`, `codex`,
 `opencode` — short, lowercase.
 
-Always include parent so side-by-side checkouts (`bluepages/infra` and
-`sso/infra`) stay distinct. If parent itself collides, prepend another segment.
+Always include parent so side-by-side checkouts (`acme/infra` and
+`widgets/infra`) stay distinct. If parent itself collides, prepend another segment.
 
 **One slug per backend per workdir.** The naming is deterministic on purpose —
 peers discover you by predicting your slug, so it can't be improvised. On
@@ -183,7 +183,7 @@ so it carries the substance — not a pointer to it:
 ```
 
 ```
-📬 bluepages-infra → FILE: discover.sh sweeps only .sock/.pid pairs, so orphan
+📬 acme-infra → FILE: discover.sh sweeps only .sock/.pid pairs, so orphan
    sockets linger; proposes sweeping unpaired .sock too · logged, no action
 📬 platform → ASK: does school pin skill paths · answered: no
 ```
