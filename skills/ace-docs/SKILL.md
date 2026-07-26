@@ -65,6 +65,9 @@ Don't run when:
    Each README carries its folder's routing test, format, and lifecycle. `docs/README.md`
    carries the gate. Copy them as-is; let the user customize after.
 
+   `docs/spec/README.md` ships with an index table and one placeholder row. Leave the
+   placeholder row in place — it shows the shape the next writer must follow.
+
    `templates/decisions-README.md` ships only if the escape hatch is cut open.
 
 4. **Wire up the harness instructions file** — `CLAUDE.md`, `AGENTS.md`, or both. This is
@@ -95,12 +98,18 @@ Don't run when:
    **Before writing into a `docs/` folder, read that folder's `README.md` first.** It
    holds the folder's filing test, filename format, and lifecycle rules, and they are
    binding. Nothing else surfaces them.
+
+   **`docs/spec/README.md` indexes every spec file — keep it current.** Read the index
+   before adding a spec file, so you amend the existing doc on a subject instead of
+   writing a second one. Adding, renaming, or retiring a file updates its row in the same
+   change.
    ```
 
-   Trim the folder list to the folders actually created. Keep all three bolded rules
-   intact. The third is load-bearing: a per-folder README is read only when something
-   instructs an agent to open it, and this block is the only surface that loads on its
-   own — drop the line and every folder rule becomes unreachable.
+   Trim the folder list to the folders actually created. Keep all four bolded rules
+   intact. The last two are load-bearing: a per-folder README is read only when something
+   instructs an agent to open it, and an index only stays useful if the rule to maintain it
+   loads on every session. This block is the only surface that loads on its own — drop
+   either line and the rule stops binding.
 
 5. **Commit.** One commit:
 
@@ -110,8 +119,8 @@ Don't run when:
    Four folders routed by one gate: vendor/ (third-party reference), guides/
    (how-to), spec/ (our design + surface), scratch/ (residual exploration).
    Everything settled amends spec/; there is no decisions log. Each sub-dir has a
-   README defining its test. CLAUDE.md (or AGENTS.md) points at it as the
-   schema/index.
+   README defining its test, and spec/README.md indexes every spec file. CLAUDE.md
+   (or AGENTS.md) points at it as the schema/index.
    ```
 
 ## The escape hatch: `docs/decisions/`
@@ -132,8 +141,10 @@ change.
 
 - **Don't pre-fill any dir with example content.** An empty dir + README beats a sample to
   delete.
-- **Don't shorten the instructions-file block past its three bolded rules.** It is the
+- **Don't shorten the instructions-file block past its four bolded rules.** It is the
   only surface that loads unprompted; anything cut from it stops binding.
+- **Don't drop the spec index because the folder is small.** A folder starts small; the
+  index is the habit that keeps it findable once it isn't.
 - **Don't symlink scattered docs.** Move them so `git log --follow` keeps history.
   Migrating existing docs in is a separate task — propose it, don't fold it into the
   scaffold.

@@ -18,6 +18,16 @@ not grounds to escalate or re-open it. If you think it's wrong, raise it and ame
 A *third-party* surface (a framework's API, another product's flags) is `../vendor/`.
 Research, a survey, or a draft is `../scratch/`.
 
+## Index
+
+One row per file in this folder. **Keep it current** — adding, renaming, or retiring a spec
+file updates its row in the same change. Read this table before you add a file: if a doc on
+the subject already exists, amend that doc instead of writing a second one.
+
+| File               | Covers                                  | Status      |
+|--------------------|-----------------------------------------|-------------|
+| `<slug>.md`        | one line on what this file governs       | implemented |
+
 ## Format
 
 One file per subject: `<slug>.md` (no date prefix — describes a thing, not the moment it
