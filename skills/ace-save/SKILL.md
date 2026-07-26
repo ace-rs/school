@@ -81,8 +81,9 @@ serves** — checked top-down, stop at the first fit:
   instead of reaching the skill's subscribers.
 - **This repo's team** (decisions, specs, shared patterns) → `docs/` or the
   issue tracker. Never memory — it doesn't reach teammates or other agents.
-- **You, everywhere** (how Claude should behave for you, your preferences) →
-  user MEMORY (`~/.claude/projects/<slug>/memory/MEMORY.md`).
+- **You, everywhere** (how the agent should behave for you, your preferences) →
+  your harness's user-level memory or instructions file — whatever persists
+  across every project on this machine (Claude Code: `~/.claude/…/MEMORY.md`).
 - **This repo only** (a fact specific to this codebase) → project `CLAUDE.md`.
 
 Also sweep for school-bound artifacts that aren't learnings: skill edits already
