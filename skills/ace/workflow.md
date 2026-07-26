@@ -8,7 +8,7 @@ files. You may be mid-workflow; if so, resume at the right phase. The phases are
 a mandatory start-to-finish sequence.
 
 - **Dirty tree with coherent changes?** → verify, audit, or commit.
-- **Plan confirmed, no changes yet?** → red.
+- **Plan confirmed — you can quote the approving words — and no changes yet?** → red.
 - **Tests failing for the expected reason?** → green.
 - **Fresh session, clean tree?** → task discovery.
 - **Just committed?** → checkpoint, then loop back to task discovery.
@@ -42,8 +42,7 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 3. **Propose** — suggest the natural next task from what was surfaced, and identify which
    skills to load. **Stop.** Don't load skills, don't start execution. Wait for the user to
-   confirm or refine. On confirm ("ok", "go", "do it", or a task pick), proceed to planning
-   — `/ace` need not be invoked again.
+   confirm or refine. On confirm, proceed to planning — `/ace` need not be invoked again.
 
 ## Planning
 
@@ -71,6 +70,11 @@ unverified; a claim about your own failure is a causal claim like any other.
 8. **Confirm** — present the simplified plan and test plan. **Stop.** Don't edit files,
    don't run commands, don't implement. Wait for explicit approval. If the user refines or
    redirects, return to the plan step.
+
+   Before the first edit, emit `approved:` followed by the user's verbatim approving words
+   from a message sent *after* the plan. Nothing quotable, or words that carry a question →
+   emit `gate: still open` and answer the question instead. Rulings on the plan's content
+   are not approval of the plan.
 
 ## TDD execution
 
