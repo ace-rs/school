@@ -1,15 +1,17 @@
 # ACE Skills
 
-ACE (Accelerated Coding Environment) is a session orchestration harness; using it
-normally means wiring up a *school* — a repo of shared skills and conventions a project
-subscribes to. This is that school, shipped by default: a batteries-included first school
-so ACE is useful out of the box instead of making you stand one up first.
-
-What's bundled is the basic stuff any harness needs, nothing domain-specific — things
-like workflow nudging, session management, model prompting (`ace-realign`), and
-documentation. Each covers a moment a raw coding session handles badly: losing the thread
+The `ace-*` skills ACE Home ships, and the moment each one is for. Nothing here is
+domain-specific — they cover what a raw coding session handles badly: losing the thread
 across a `/clear`, work that skipped review, a rule that won't stick. Reach for them by
 the problem, not the mechanism; each section below leads with the situation it's for.
+
+Invoke one by name — `/ace`, `/ace-save`, `/ace-docs` — or just describe the situation
+and let the agent pick; every skill declares triggers for that. `ace-realign` also
+self-engages without being asked, on a repeated violation of the same rule.
+
+This file covers the `ace-*` workflow skills only. The school also ships `skill-creator`
+and `skill-reviewer` for authoring and reviewing skills — see
+[`README.md`](README.md) for the full roster.
 
 | Skill         | Reach for it when                           |
 |---------------|---------------------------------------------|

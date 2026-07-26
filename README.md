@@ -8,9 +8,10 @@ other school inherits from.
 > prompts into every project so your AI sessions all start from the same
 > ground. **Schools** are how that shared ground is distributed.
 
-For docs, the latest releases, and the full feature catalogue, see
-[ace-rs.dev](https://ace-rs.dev). This README focuses on what ACE Home
-specifically ships and how to use it.
+For installation, the latest releases, and the full feature catalogue, see
+[ace-rs.dev](https://ace-rs.dev) — everything below assumes the `ace` CLI is
+already on your path. This README focuses on what ACE Home specifically ships
+and how to use it.
 
 ## What is a school?
 
@@ -32,7 +33,8 @@ needs to behave consistently across projects. A school can ship:
 
 ACE Home is the *baseline*: it ships the small set of skills required to make
 ACE itself useful, plus a pair of skill-authoring aids — Anthropic's
-`skill-creator` for writing skills and `skill-reviewer` for reviewing them.
+`skill-creator` for writing skills, and `skill-reviewer` for reviewing them,
+maintained here and adapted from Anthropic's plugin-dev agent of the same name.
 Anything team- or project-specific belongs in your school, not here — import this one and
 layer your own skills on top.
 
@@ -48,15 +50,21 @@ Eleven skills, all loaded by default for any school that imports this one:
 | `ace-connect`    | Local agent-to-agent bridge over unix sockets                    |
 | `ace-docs`       | Scaffold a `docs/` tree routed by a single gate                  |
 | `ace-init`       | One-time onboarding of a repo into ACE                           |
-| `ace-realign`    | Re-anchor drifted attention; trace the prompt-chain cause        |
+| `ace-realign`    | Repeat a rule you keep breaking until it sticks                  |
 | `ace-save`       | Persist session state before `/clear` or context switch          |
 | `ace-school`     | Manage school edits and PRs                                      |
 | `skill-creator`  | Anthropic's authoritative skill-authoring skill                  |
 | `skill-reviewer` | Review a skill for quality and triggering accuracy               |
 
+You don't have to take all eleven. Skill selection is managed by the `ace` CLI
+— `ace skills include <pat>` / `ace skills exclude <pat>`, or the `skills`
+array in `ace.toml` — so a project can narrow the set without forking the
+school. Declaring a skill of the same name in your own school shadows the one
+here. See [ace-rs.dev](https://ace-rs.dev) for the full CLI reference.
+
 Top-level docs:
 
-- [`ACE.md`](ACE.md) — overview of the `ace-*` workflow skills, in order
+- [`ACE.md`](ACE.md) — what each `ace-*` skill is for, by the problem it solves
 - [`CLAUDE.md`](CLAUDE.md) — house style when editing this school itself
 
 ## Quick start
@@ -79,6 +87,11 @@ To start your own team school that inherits from this one:
 ace school init --name your-school
 ace setup .                       # self-import: load this school's skills while editing
 ```
+
+`ace setup .` is convenient but couples the editing session to the skills being
+edited — a half-saved skill can break the session doing the editing. Once your
+school has skills you actively rewrite, point `school` at a stable clone
+instead and test edits by reading the local `SKILL.md` directly.
 
 Then add an import to `school.toml`:
 
@@ -130,8 +143,7 @@ ace config | grep -A3 '\[\[backends\]\]'
 
 ## Contributing
 
-ACE Home stays small and broadly applicable. Skill PRs should be generic
-enough to benefit every ACE user. Team- or domain-specific skills belong in
-your own school — import them from there instead. See
+ACE Home stays small and broadly applicable, so a skill PR here has to be
+generic enough to benefit every ACE user. See
 [`skills/ace-school/SKILL.md`](skills/ace-school/SKILL.md) for the full
 school-PR workflow and house-style notes.
