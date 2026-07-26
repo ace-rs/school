@@ -127,12 +127,16 @@ then write the run summary into the handoff report.
 ## The handoff report — `.ace/afk.log`
 
 One file in `.ace/` (same convention as `ace-connect`'s `.ace/connect.log`) — the
-human's morning read. Two parts:
+human's morning read. Three parts:
 
 - **Blockers** — appended live as they arise. Each entry records enough to unblock
   in one read: **what** (task and where it stopped), **why it can't be self-unblocked**
   (the decision-basis doesn't resolve it, no prior discussion settles it, and the input
   can't be earned — it genuinely needs the human), and **what you'd do** (recommended
   resolution, so a one-word reply unblocks it).
+- **Calls made alone** — every fork the decision-basis resolved for you, one line each,
+  with the basis clause you applied. These are `agent:inferred` and still live in
+  `.ace/save.ledger.md`; this section is the ratification queue. Nothing here has entered
+  `docs/spec/` — the user's ruling is what moves it there, in a later attended session.
 - **Summary** — written when the run ends: what landed (commits, tasks done) and
-  what's still queued. Don't re-list blockers here; they're already above.
+  what's still queued. Don't re-list blockers or calls here; they're already above.

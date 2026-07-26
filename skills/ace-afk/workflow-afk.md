@@ -9,19 +9,23 @@ exception.
 Standing rules for the whole run:
 
 - **Resolve forks by the basis, don't ask.** Apply the decision-basis from pre-flight, record
-  the choice in the durable record, move on. Surface a fork only when the basis is genuinely
+  the choice in `.ace/save.ledger.md`, move on. Surface a fork only when the basis is genuinely
   silent *and* the choice is expensive to reverse — and even then, in afk that is a logged
   blocker, not a stall.
-- **Record decisions as you make them, not as questions** — into the breadcrumb / durable
-  record, which is the crash-safe restore + fork point.
+- **Record decisions as you make them, not as questions** — into the `.ace/` trail, which is
+  the crash-safe restore + fork point.
 - **Stamp provenance; unmarked is yours.** A fork you resolve solo is `agent:inferred`
   and stays provisional — it turns SETTLED only with the user's verbatim words, and you
   never replay it later as their ruling. Going far is the goal; laundering your own calls
   into the user's mouth is not.
-- **Route durable output by the gate, same as attended.** A design call you resolve is
-  settled work: it amends `docs/spec/` per `docs/README.md`, stamped `agent:inferred` so
-  the user can see what was decided without them. `docs/scratch/` is for genuinely
-  exploratory material only — never a holding pen for calls you made alone.
+- **Never amend `docs/spec/` on your own initiative.** The spec is ratified design, and
+  ratification takes the user, who is asleep. Every call you make alone stays in
+  `.ace/save.ledger.md` as `agent:inferred` until they rule on it — that is what the ledger
+  is for. The one exception is an explicit ask: if writing or updating a spec *is* the task
+  they handed you, write it and route it by `docs/README.md` like any other work.
+- **`docs/` output follows the gate, unchanged.** Exploratory output a run genuinely
+  produces — a research dump, a survey, a comparison — files in `docs/scratch/` with its
+  "not spec because ___" line. Everything else the run makes durable lives in `.ace/`.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up the next
   startable task — inside the envelope and state rules — not where you stop. Keep going while
   there's work with no unresolved decision and no unearnable blocker.
@@ -55,7 +59,7 @@ loaded skills, and in-progress tasks before starting at step 1.
 7. **Test plan** — define validation before implementing; TDD by default (failing test
    first); name the substitute verification where TDD doesn't apply. Don't invent fake tests
    for docs-only, config-only, mechanical, or untestable changes.
-8. **Record the plan** in the durable record and proceed. No confirm gate — the basis and the
+8. **Record the plan** in `.ace/save.md` and proceed. No confirm gate — the basis and the
    envelope replace it. If the plan exceeds the decision-basis (a genuinely silent, expensive,
    irreversible fork), log a blocker and pick up the next unblocked slice.
 
@@ -80,7 +84,7 @@ non-overlapping file group so parallel edits don't collide.
     don't fix). Fix every Violation and re-audit; the audit converges. Run tests + lints.
 14. **Commit** — commit on the current branch using the repo's commit convention.
     **Envelope: do not push, publish, release, or deploy** — those wait for the human.
-15. **Checkpoint** — update the breadcrumb / durable record (what landed, what's next, open
+15. **Checkpoint** — update the `.ace/` trail (what landed, what's next, open
     blockers) so a crash or compaction leaves a clean restore point. No `/ace-save` or
     `/clear` between slices — the subagent boundary gives fresh context, the breadcrumb gives
     continuity.
