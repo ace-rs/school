@@ -43,8 +43,8 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
   spanning several skills use a shared theme prefix; non-skill edits scope to their area
   (`docs:`, `meta:` for repo-level files like this one).
 - State the current rule only. When a convention replaces an older one, rewrite the rule
-  and delete what it replaced — the reasoning belongs in `.docs/decisions/`, not inline
-  as "we used to X, now Y."
+  and delete what it replaced — the reasoning belongs in `.docs/spec/`, not inline as
+  "we used to X, now Y."
 
 ## Common commands
 
@@ -106,5 +106,6 @@ lookup → `vendor/`; a how-to → `guides/`; our own design/surface → `spec/`
 exploration → `scratch/` (residual, opened with a "not spec because ___" line). Nothing
 defaults to `scratch/`. Everything settled — instructions, conventions, preferences,
 rulings — amends `spec/`; the spec is authoritative, so read it before working and comply.
-`decisions/` is a pre-existing escape hatch, not a destination. See the per-dir READMEs
-for each folder's test and format.
+`.docs/spec/README.md` indexes every spec file: read the index before adding one, and
+update it in the same change when you add, rename, or retire a file. See the per-dir
+READMEs for each folder's test and format.
