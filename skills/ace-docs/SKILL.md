@@ -34,8 +34,8 @@ Run when:
 
 Don't run when:
 
-- A `docs/` directory already exists with a different shape — that is a migration question,
-  not a scaffold question. Discuss first.
+- A `docs/` directory already exists with a different shape — that is a migration
+  question, not a scaffold question. Discuss first.
 - The repo uses a different convention with a strong reason (e.g. a framework that owns
   `docs/` for generated output). Suggest the shape but defer.
 
@@ -106,10 +106,10 @@ Don't run when:
    ```
 
    Trim the folder list to the folders actually created. Keep all four bolded rules
-   intact. The last two are load-bearing: a per-folder README is read only when something
-   instructs an agent to open it, and an index only stays useful if the rule to maintain it
-   loads on every session. This block is the only surface that loads on its own — drop
-   either line and the rule stops binding.
+   intact. The last two are load-bearing: a per-folder README is read only when
+   something instructs an agent to open it, and an index only stays useful if the rule
+   to maintain it loads on every session. This block is the only surface that loads on
+   its own — drop either line and the rule stops binding.
 
 5. **Commit.** One commit:
 
@@ -128,8 +128,8 @@ Don't run when:
 Do not scaffold this folder. It is not in the gate and not a routing destination; assume a
 repo has no decisions log and needs none.
 
-Cut it open only when a spec amendment alone would lose something the spec cannot carry: an
-argument happened, two positions were on the table, one lost, and the losing case is
+Cut it open only when a spec amendment alone would lose something the spec cannot carry:
+an argument happened, two positions were on the table, one lost, and the losing case is
 detailed enough that without a written record it will be re-argued from scratch. Absent
 that, it is a spec edit.
 

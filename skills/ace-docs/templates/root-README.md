@@ -1,7 +1,7 @@
 # docs
 
-Durable artifacts. **File by the gate below** — walk it top to bottom and stop at the first
-yes. The bottom (`scratch/`) charges a toll, so nothing lands there by default.
+Durable artifacts. **File by the gate below** — walk it top to bottom and stop at the
+first yes. The bottom (`scratch/`) charges a toll, so nothing lands there by default.
 
 ## Where does this go?
 
@@ -21,9 +21,9 @@ convention or preference that was fixed — all of it is an edit to [`spec/`](sp
 the edit, state the current rule, move on. There is no separate ruling artifact and no
 fifth folder; if it feels like a decision, it's a spec amendment.
 
-**The spec is authoritative — read it before you work, and comply.** It owes your priors no
-justification. That a rule departs from mainstream practice or from what you expected is
-not grounds to escalate or re-open it. If a spec is wrong, raise it and amend the spec.
+**The spec is authoritative — read it before you work, and comply.** It owes your priors
+no justification. That a rule departs from mainstream practice or from what you expected
+is not grounds to escalate or re-open it. If a spec is wrong, raise it and amend the spec.
 
 **Spec may outrun code.** Something agreed but not yet implemented belongs in `spec/` now,
 with the affected section flagged intended/target. Never leave the spec teaching a design

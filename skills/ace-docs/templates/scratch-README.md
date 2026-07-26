@@ -2,8 +2,8 @@
 
 **Unsettled exploration** — research dumps, surveys, investigations, drafts, transcripts:
 thinking-in-progress whose claims are not expected to stay current. This is the residual
-home. Material lands here only when it fits nothing above it in the routing gate — never as
-a default.
+home. Material lands here only when it fits nothing above it in the routing gate — never
+as a default.
 
 Belongs here *only* if it is genuinely exploratory. Anything settled — current or intended
 design, a ruling, a convention, our own exact surface — is `../spec/`; third-party lookup
@@ -20,8 +20,8 @@ Put it there instead.
 
 ## Format
 
-One file per artifact: `YYYY-MM-DD-slug.md` (the date matters — scratch is about the moment
-it was written). No template; write whatever shape fits.
+One file per artifact: `YYYY-MM-DD-slug.md` (the date matters — scratch is about the
+moment it was written). No template; write whatever shape fits.
 
 ## Lifecycle
 
@@ -33,7 +33,7 @@ Two carve-outs on deletion:
 - **Cited provenance is retained.** A note another doc cites as its provenance stays, even
   though scratch is disposable — disposability governs new filing, not deletion of
   already-cited material. Never orphan a citation.
-- **Collapse instead of scatter.** When design notes pile up on one theme, consolidate them
-  into a single `prior-art.md` digest — one section per source, each cross-linked to the
-  live `../spec/` doc it fed — then repoint citations and drop the absorbed notes.
+- **Collapse instead of scatter.** When design notes pile up on one theme, consolidate
+  them into a single `prior-art.md` digest — one section per source, each cross-linked
+  to the live `../spec/` doc it fed — then repoint citations and drop the absorbed notes.
   `prior-art.md` is the one undated file here.
