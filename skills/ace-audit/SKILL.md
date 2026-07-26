@@ -22,9 +22,16 @@ The audit lives in `ace/workflow.md` as the `Audit` step. Two ways in:
 
 ## Audit procedure
 
-1. **Load coding skills for the languages in the diff.** `git diff --name-only` to see
-   files. Load each language's coding skill, plus any framework or infrastructure coding
-   skills relevant to the changed files.
+1. **Load the skills that govern what changed.** `git diff --name-only` to see the files,
+   then branch on what they are:
+
+   - **Code** — load each language's coding skill, plus any framework or infrastructure
+     skill relevant to the changed files.
+   - **Skills (`skills/<name>/SKILL.md`)** — load `skill-reviewer`.
+   - **Docs, config, or anything else** — audit against the repo's own instructions file
+     (`CLAUDE.md` / `AGENTS.md`) and the conventions it points at.
+
+   Never skip this step because no language skill fits; every diff has a governing surface.
 
 2. **Check for design-level violations before patching.** If the loaded skills surface
    structural issues — a missing transaction/consistency boundary, a stringly-typed field
