@@ -102,10 +102,8 @@ READMEs for each folder's test and format.
 
 ## Issue tracker
 
-GitHub Issues are disabled on `ace-rs/school`, and Linear is no longer the source of
-truth. School-scoped work is tracked in Outline: **ACE → School**
-(<https://outline.prodigy9.co/doc/school-0LU8NLqTfG>). Work on the ACE tool itself
-belongs in that collection's epic docs (A–L), not the School doc.
+GitHub Issues are disabled on this repo. Tracking lives in the maintainer's own wiki
+outside the repo — ask before filing anything, and never open issues here.
 
 ## Command-output compaction — lowfat
 
