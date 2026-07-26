@@ -89,8 +89,8 @@ From the study, decide whether durable docs are warranted — architecture, a do
 or non-obvious design history worth persisting. If so, the plan notes that `docs/` should
 be scaffolded via `ace-docs` (which owns the tree shape and routing) with a project
 overview in `docs/spec/` as the seed doc. Don't scaffold here — defer it to `ace-docs` at
-the point that first doc is written (the Phase 2 spec run, or whenever a doc is needed), so
-a tree that never gets filled is never created. If there's little to document, note
+the point that first doc is written (the Phase 2 spec run, or whenever a doc is needed),
+so a tree that never gets filled is never created. If there's little to document, note
 "no docs" in the plan.
 
 That overview is the high-level cut; the detailed specs come in Phase 2.
@@ -99,12 +99,13 @@ That overview is the high-level cut; the detailed specs come in Phase 2.
 
 Once the scan is done, finalize the plan file and present it as a whole — findings plus
 every proposed change. On approval, apply it in one batch: edit the instructions file and
-write the skills config, then run `ace link` so the newly selected skills are symlinked into
-the harness's skill folder. On harnesses that auto-reload skills from the filesystem (Claude,
-codex, opencode), they go live in the running session immediately — no relaunch needed; on a
-harness that doesn't, tell the user to relaunch to pick them up. Report what landed and remove
-the plan file. If durable docs are warranted, flag the `ace-docs` scaffold and (if applicable)
-a Phase 2 spec run as recommended follow-ups; don't start either here.
+write the skills config, then run `ace link` so the newly selected skills are symlinked
+into the harness's skill folder. On harnesses that auto-reload skills from the filesystem
+(Claude, codex, opencode), they go live in the running session immediately — no relaunch
+needed; on a harness that doesn't, tell the user to relaunch to pick them up. Report what
+landed and remove the plan file. If durable docs are warranted, flag the `ace-docs`
+scaffold and (if applicable) a Phase 2 spec run as recommended follow-ups; don't start
+either here.
 
 ## Phase 2 — Full spec run
 
