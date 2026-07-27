@@ -66,6 +66,12 @@ instructions file exists, the plan records which to create. Add all of this to t
 
 A school ships every skill it bundles by default. Trim to what this repo needs.
 
+**Discover what's on offer first.** Run `ace skills --all` — the full inventory the school
+and its imports provide, excluded ones included. Plan the selection from that list, not
+from the skills loaded in this session. For any candidate whose purpose isn't obvious from
+its name, read its frontmatter `description` under the resolved school clone (the `school`
+row of `ace paths`) before ruling it in or out.
+
 **Where to write it** — pick the layer by audience:
 
 | File             | Scope                 | Use for                 |
