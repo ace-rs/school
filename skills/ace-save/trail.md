@@ -37,13 +37,37 @@ sake, and if nothing can move, leave it long and say so in the report.
 ## `.ace/save.ledger.md` — items
 
 A single in-flight buffer across all open walks, not per-topic. The only home
-of item statuses. Every item carries a status AND a provenance:
+of item statuses. Every item carries a status AND a provenance, both leading
+the entry:
 
-- Status: open · presented · proposed · self-resolved (derivation cited) ·
-  SETTLED · KILLED · deferred · needs-disambiguation · phantom.
-- Provenance: `user:verbatim` (their exact, quotable words) ·
-  `user:paraphrased` (their intent, my wording) · `agent:inferred` (I derived
-  it — they never said it).
+```markdown
+SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what
+  the ruling was, wrapped at 90 columns with a two-space indent.
+  "their exact words"
+
+open · agent:inferred — **Another claim.** No quote line — nothing is ruled.
+```
+
+Statuses group by whether the entry can leave the file:
+
+**No exit — the entry stays until the user rules on it.**
+
+- `open` — raised, not yet put to the user.
+- `presented` — put to them; they advanced without ruling on substance.
+- `proposed` — a specific fix offered, awaiting their yes or no. A standing
+  rule may force the answer; cite the rule as the derivation and still wait.
+- `deferred` — real, deliberately not now.
+- `needs-disambiguation` — their words admit two readings; a question is
+  pending.
+
+**Exits the ledger** — see *Graduating an item*.
+
+- `SETTLED` — the user ruled it in. Verbatim words required.
+- `KILLED` — the user ruled it out. Verbatim words required.
+
+Provenance: `user:verbatim` (their exact, quotable words) · `user:paraphrased`
+(their intent, my wording) · `agent:inferred` (I derived it — they never said
+it).
 
 Default provenance is `agent:inferred`: an item written without a quoted user
 phrase IS agent-derived, whatever else it's tagged. Settling is the burden of
@@ -60,8 +84,9 @@ length.
 ## How a line leaves — both files
 
 A line goes only when it moves to a named destination, or when the thing it
-describes is finished or superseded. Say in the save report where each moved
-line went.
+describes is finished or superseded. A killed item with nothing to amend in the
+spec is the one deletion with no destination — see *Graduating an item*. Say in
+the save report where each moved line went, and name any that were deleted.
 
 Never drop a line to hit a size. Never rank lines by importance to choose what
 to cut — how important a line looks is a judgment about where it belongs and
@@ -69,14 +94,23 @@ how tersely to write it, never about whether it survives.
 
 ## Graduating an item
 
-A SETTLED item's durable form graduates out via the `docs/README.md` gate —
-which means `spec/`, current design truth, for anything settled. Lock it in as
-a spec amendment. Once graduated, trim the line from the ledger and leave a
-one-line pointer in `save.md`. The ledger stays short because settled items
-leave, not because they're rare.
+A ruled item leaves by landing its durable form through the `docs/README.md`
+gate — which means `spec/`, current design truth. Once it lands, trim the entry
+from the ledger and leave a one-line pointer in `save.md`. The ledger stays
+short because ruled items leave, not because they're rare.
 
-Only a ruling with the user's verbatim words graduates. An `agent:inferred`
-item never does, however confident the derivation.
+- `SETTLED` — lock the ruling in as a spec amendment.
+- `KILLED` — delete from the spec whatever the ruling kills. Where the idea
+  would otherwise be raised again, add a sentence or two of rationale so it
+  stays killed. An `agent:inferred` kill is the usual case: nobody is holding
+  the idea, so without the rationale the agent re-derives it next session.
+  Where nothing in the spec would resurface it, delete the entry and write
+  nothing.
+
+Only a ruling with the user's verbatim words graduates. What the item was
+tagged before the ruling doesn't matter — an `agent:inferred` item the user
+kills graduates on their words — but a derivation the user never ruled on
+never does, however confident it is.
 
 **No `docs/` in the repo.** The first time an item settles with nowhere to
 graduate to, recommend the user run `/ace-docs`, and wait for their go. Never
