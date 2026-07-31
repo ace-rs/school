@@ -42,34 +42,11 @@ Include `$ARGUMENTS` if provided.
 
 ## Trail format — state, not story
 
-The trail lives in `.ace/` (gitignored). Split current truth from item history:
-
-- **`.ace/save.md`** — current truth only; overwrite the whole file every save;
-  ≤60 lines; now / standing facts / pointers. No history, no
-  corrections-of-corrections — a dead line is absent, not struck through. A
-  settled ruling lives here as a one-line pointer; its full text is in `docs/`.
-  An item with a status lives in `save.ledger.md`, never here.
-- **`.ace/save.ledger.md`** — a single in-flight item buffer, not an archive;
-  the only home of item statuses. Every item carries a status AND a provenance:
-  - Status: open · presented · proposed · self-resolved (derivation cited) ·
-    SETTLED · KILLED · deferred · needs-disambiguation · phantom.
-  - Provenance: `user:verbatim` (their exact, quotable words) ·
-    `user:paraphrased` (their intent, my wording) · `agent:inferred` (I derived
-    it — they never said it).
-  Default provenance is `agent:inferred`: an item written without a quoted user
-  phrase IS agent-derived, whatever else it's tagged. Settling is the burden of
-  proof, not inferring — SETTLED/KILLED must embed the user's verbatim words
-  inline; a ruling with no quoted phrase is malformed and reads as
-  `agent:inferred`. Forgetting to down-rank a solo call fails safe — it stays a
-  derivation. Ambiguity the model resolves stays `agent:inferred` until the user
-  confirms — never folded into the record as stated fact.
-
-**Graduate and trim.** The ledger is a staging buffer, not the resting place. A
-SETTLED item's durable form graduates out via the `docs/README.md` gate — which
-means `spec/`, current design truth, for anything settled. Lock it in as a spec
-amendment. Once graduated, trim the line from the ledger and leave a
-one-line pointer in `save.md`. The ledger stays short because settled items
-leave, not because they're rare.
+The trail is `.ace/save.md` (current truth) and `.ace/save.ledger.md` (items
+with a status and a provenance), both gitignored. Read `ace-save/trail.md` —
+next to this file — before writing either one, and follow it. It holds the
+layout, the status and provenance enums, how a line may leave a file, and how
+a settled item graduates into `docs/`.
 
 ## 2. Route durable knowledge
 

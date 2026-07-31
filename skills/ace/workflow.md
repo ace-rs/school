@@ -124,8 +124,10 @@ count.
 
    - **Light (default)** — update the `.ace/` trail or tasks. What was done goes in
      `save.md`; next steps and open questions go in `save.ledger.md`, each with a status
-     and a provenance. Just enough that the next loop or a surprise compaction doesn't
-     lose the thread. Then loop back to task discovery.
+     and a provenance. Read `ace-save/trail.md` before writing either file and follow it —
+     revise `save.md` in place, never regenerate it, and never drop a line to keep the
+     file short. Just enough that the next loop or a surprise compaction doesn't lose the
+     thread. Then loop back to task discovery.
 
    - **Full save + clear** — when the just-finished work was context-heavy, escalate.
      Heaviness lives in the change *or* the conversation: many files touched, large reads,

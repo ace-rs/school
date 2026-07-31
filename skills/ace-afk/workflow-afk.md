@@ -69,7 +69,9 @@ state, loaded skills, and in-progress tasks before starting at step 1.
    first); name the substitute verification where TDD doesn't apply. Don't invent fake
    tests for docs-only, config-only, mechanical, or untestable changes.
 8. **Record the plan** — the narrative in `.ace/save.md`, each open slice in
-   `.ace/save.ledger.md` with a status and a provenance — and proceed. No confirm gate —
+   `.ace/save.ledger.md` with a status and a provenance. Read `ace-save/trail.md` before
+   writing either file and follow it — no user is present to notice a dropped line — and
+   proceed. No confirm gate —
    the basis and the envelope replace it. If the plan exceeds the decision-basis (a
    genuinely silent, expensive, irreversible fork), log a blocker and pick up the next
    unblocked slice.
@@ -99,7 +101,8 @@ subagent per non-overlapping file group so parallel edits don't collide.
     **Envelope: do not push, publish, release, or deploy** — those wait for the human.
 15. **Checkpoint** — update the `.ace/` trail: what landed goes in `save.md`, the next
     step and any open blocker go in `save.ledger.md` with a status and a provenance, so a
-    crash or compaction leaves a clean restore point. No `/ace-save` or
+    crash or compaction leaves a clean restore point. Follow `ace-save/trail.md`: revise
+    `save.md` in place, never regenerate it, never drop a line to keep it short. No `/ace-save` or
     `/clear` between slices — the subagent boundary gives fresh context, the trail gives
     continuity.
 
