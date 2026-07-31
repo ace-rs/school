@@ -69,31 +69,24 @@ removed — no stop-to-ask, no stop-to-plan. Honor `$ARGUMENTS` as the focus if 
 
 ## Heartbeat — survive a silent stall
 
-An unattended run can quietly come to rest before it's done: a subagent dies and leaves
-you waiting on a reply that never comes, a turn ends without queuing the next, or you
-pause to ask a question the decision-basis already answers. No human is watching to nudge
-you, so set up an external nudge before you start.
+1. Right after Go, schedule a recurring prompt on whatever timer the harness provides —
+   a cron / scheduled-prompt feature, a recurring self-message, or an external timer that
+   injects a line into the session. Roughly every 10 minutes; pick an off-round interval
+   if the harness offers one.
+2. Note the job's id or handle. Step 4 needs it.
+3. Fire this text each time:
 
-Right after Go, schedule a recurring **heartbeat** using whatever timer the harness
-provides — a cron / scheduled-prompt feature, a recurring self-message, or an external
-timer that injects a line into the session. Fire it roughly every 10 minutes (pick an
-off-round interval if the harness offers one). Each heartbeat re-enters the session with a
-prompt to this effect:
+   > AFK heartbeat. If the run has stalled — waiting on a dead subagent, stopped between
+   > turns, or paused to ask something the decision-basis or envelope already settles —
+   > resume the loop now. You hold standing authority to make safe, reversible decisions
+   > on your own: resolve the fork by the basis, record it, keep going. Log only a
+   > genuine blocker (basis-silent, expensive, irreversible). If the run is actually
+   > complete, tear down this heartbeat and write the final summary.
 
-> AFK heartbeat. If the run has stalled — waiting on a dead subagent, stopped between
-> turns, or paused to ask something the decision-basis or envelope already settles —
-> resume the loop now. You hold standing authority to make safe, reversible decisions on
-> your own: resolve the fork by the basis, record it, keep going. Log only a genuine
-> blocker (basis-silent, expensive, irreversible). If the run is actually complete, tear
-> down this heartbeat and write the final summary.
+4. When the run ends, delete the job so it stops pinging a finished session.
 
-Note the job's id/handle when you create it — the final step removes it.
-
-This is best-effort by design: a heartbeat lands when the session is between turns, so it
-revives a run that has come to rest and re-grounds you in the autonomous-decision
-protocol. A hard hang in the middle of one operation is the harness's own timeout to
-break, not the heartbeat's — what the heartbeat reliably catches is the common case where
-the agent simply stopped.
+A heartbeat lands when the session is between turns, so it revives a run that has come to
+rest. A hard hang in the middle of one operation is the harness's own timeout to break.
 
 ## Long runs — protect context
 
@@ -115,9 +108,12 @@ safely default, or an envelope boundary — append a blocker to the handoff repo
 item.
 
 **Earn the blocker.** Before logging any blocker for a missing input — example, fixture,
-dependency, test target — earn it first: fetch a public sample, download a real package,
-write a dummy/stub, build the minimal scaffolding yourself. Only a resource you genuinely
-cannot obtain or build is a real blocker.
+dependency, test target — run this gate, and log only if both moves fail:
+
+1. Obtain the real thing into the working tree or `/tmp` — a public sample, fixture, or
+   dataset. The envelope still holds: no global package manager, no system install. If
+   obtaining it would cross the envelope, that crossing *is* the blocker — log it.
+2. Build a stand-in — a stub, a dummy, or minimal scaffolding.
 
 **Keep making progress.** A finished goal or a clean checkpoint is where you pick up the
 next thing, not where you stop and report-and-ask. While there's work you can start inside
@@ -127,9 +123,8 @@ drive on.
 
 ## Stop conditions
 
-Loop until out of unblocked work or out of token budget. When the run genuinely ends,
-**tear down the heartbeat** (delete the scheduled job/timer) so it stops pinging a
-finished session, then write the run summary into the handoff report.
+Loop until out of unblocked work or out of token budget. When the run genuinely ends, tear
+down the heartbeat (Heartbeat step 4), then write the run summary into the handoff report.
 
 ## The handoff report — `.ace/afk.log`
 
