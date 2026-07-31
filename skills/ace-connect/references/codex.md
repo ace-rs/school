@@ -179,10 +179,10 @@ read by the model, not scanned by a human, and the wire line below it already ca
 - **Sandbox posture is not scripted.** cwd + sandbox come from the server's launch and
   every peer turn inherits them, so launch the app-server at a sensible permissive
   ceiling (`workspace-write` — in-tree room, out-of-tree writes and network blocked as
-  a free backstop). Do **not** map ace-connect mode to sandbox flags: a human is always
-  at the TUI, and codex applies the control-vs-autonomous and autonomous-safety rules by
-  reading this skill and prompting that human. The sandbox is a floor, not the policy
-  engine.
+  a free backstop). Do **not** map ace-connect authority to sandbox flags: a human is
+  always at the TUI, and codex applies the Receiving rules — authority, then the repo's
+  own rules — by reading this skill and prompting that human. The sandbox is a floor,
+  not the policy engine.
 
 ## Debug: manual attach
 

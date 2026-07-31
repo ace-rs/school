@@ -30,11 +30,19 @@ Open every body with one of these:
 | `STUCK` | blocked                                  |
 | `FILE`  | payload at path                          |
 | `CTX`   | background / one-liner setup             |
-| `NACK`  | reject                                   |
+| `NACK`  | reject — always carries its reason       |
 
 The list is extensible. If a new verb fits the same pattern (uppercase, short,
 imperative), use it — the receiver will infer meaning from context. Add it to
 the table when it stabilizes.
+
+A bare `NACK` is malformed. Name what blocked it, so the peer can tell a
+not-yet from a no:
+
+```
+NACK: no authority to deploy
+NACK: X conflicts with repo rule <rule>; alternative: <Y>
+```
 
 ### Scoping an `ASK`
 
