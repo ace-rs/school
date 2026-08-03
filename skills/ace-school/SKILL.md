@@ -61,32 +61,33 @@ Imported skills are **copied**, not symlinked, from the import cache
 (Contrast: a subscribing *project* gets symlinks to its school's `skills/` — a different
 mechanism.)
 
-### Layouts an import can resolve
+### Check the upstream layout before writing a decl
 
-A `skills` pattern matches only what discovery found in the upstream repo, and
-discovery runs two stages against the repo root:
+A `skills` pattern matches only what discovery yields from the source repo. Discovery
+runs two stages against the repo root and nothing else:
 
-1. **Direct skill.** `<root>/SKILL.md` exists → the repo is one skill, named after the
+1. **Single skill.** `<root>/SKILL.md` exists → the repo is one skill, named after the
    root basename. Discovery stops.
-2. **Priority dirs**, walked recursively, `SKILL.md` at any depth: `skills/`,
-   `skills/.curated/`, `skills/.experimental/`, `skills/.system/`. Only if all four
-   yield nothing does it fall back to `.claude/skills/`, `.codex/skills/`,
-   `.opencode/skills/`, `.cursor/skills/`, `.windsurf/skills/`, `.kiro/skills/`,
-   `.agents/skills/`.
+2. **Skill dirs**, walked recursively, `SKILL.md` at any depth: `skills/`, plus the
+   tier dirs `skills/.curated/`, `skills/.experimental/`, `skills/.system/` (the
+   latter two are what `include_experimental` / `include_system` admit). Only when
+   all four yield nothing does it fall back to a backend dir: `.claude/skills/`,
+   `.codex/skills/`, `.opencode/skills/`, `.cursor/skills/`, `.windsurf/skills/`,
+   `.kiro/skills/`, `.agents/skills/`.
 
-Nested identity is real: `skills/typescript/coding/SKILL.md` imports as
-`typescript/coding`. A skill directory is not recursed into — skills do not nest.
+A nested `skills/typescript/coding/SKILL.md` yields identity `typescript/coding` —
+that full path is what the pattern must match.
 
 There is no whole-repo walk. A repo that keeps each skill as its own directory at the
-root, with no root `SKILL.md` and no `skills/`, yields zero skills, and no pattern
-reaches it. That failure is a warning, not an error, so an import that silently pulls
-nothing means the source layout is wrong. Check the upstream layout before writing the
-decl; when it is not one of the two stages, stop retrying paths and vendor instead.
+root — no root `SKILL.md`, no `skills/` — yields zero skills; no pattern reaches it.
+A decl that matches nothing is a **warning, not an error**, so an import that pulls
+nothing means the source layout is wrong, not the skill name. Do not retry other
+import paths — **vendor instead**: copy the skill directory into this school's
+`skills/`, keep its license file and attribution, rewrite the frontmatter to house
+style, and record where it came from. A vendored skill is maintained by hand —
+`ace school pull` does not update it, so check upstream revisions manually.
 
-**Vendoring.** Copy the skill directory into this school's `skills/`, keep its
-license file and attribution, rewrite the frontmatter to house style, and record
-where it came from. A vendored skill is maintained by hand — `ace school pull` does
-not update it, so upstream revisions must be checked manually.
+Full discovery rule: `docs/spec/skills/model.md` § Discovery Cascade in `ace-rs/ace`.
 
 ## Skills have no alias
 
