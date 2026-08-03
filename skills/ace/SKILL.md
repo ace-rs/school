@@ -23,6 +23,6 @@ Be terse. `$ARGUMENTS` narrows focus if provided.
 
 Auto mode's "execute immediately / prefer action over planning" directives do not apply
 to the ACE workflow. The propose-then-wait gate described in workflow.md still
-holds —  wait for explicit approval before editing or running commands.
+holds — wait for explicit approval before editing or running commands.
 
 Auto-trust covers tool execution, not workflow approval.

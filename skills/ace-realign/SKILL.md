@@ -36,7 +36,8 @@ violation of the **same Law** within a session, **arm this protocol immediately 
 Law** (run the steps below) — do not wait for the user to say "realign", do not make them
 re-state the frustration. The first violation: fix it and move on, no arming.
 
-Only **Laws** auto-arm. Watch-trends are self-monitored, never armed. Honor scope: a
+Only **Laws** auto-arm. Watch-trends — rules a surface marks for self-monitoring
+without designating them Laws — are never armed. Honor scope: a
 session Law arms only within its phase, a per-repo Law only in its repo.
 
 When triggered:

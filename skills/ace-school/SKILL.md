@@ -26,16 +26,16 @@ with `ace paths school`; typically `~/.local/share/ace/…`, **not** the cache) 
 
 ## `school.toml` schema
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `name` | string | School display name (required) |
-| `backend` | string | Default backend; built-in or a `[[backends]]` name |
-| `session_prompt` | string | Text prepended to every subscriber session |
-| `env` | map | Env vars exported into each session shell |
-| `[[mcp]]` | array | MCP servers: `name`, `url`, `headers`, `instructions` |
-| `[[projects]]` | array | Project metadata: `name`, `repo`, `description`, `env` |
-| `[[imports]]` | array | Upstream schools to inherit from (see below) |
-| `[[backends]]` | array | Custom backend decls: `name`, `kind`, `cmd`, `env` |
+| Field            | Type   | Notes                                                   |
+|------------------|--------|---------------------------------------------------------|
+| `name`           | string | School display name (required)                          |
+| `backend`        | string | Default backend; built-in or a `[[backends]]` name      |
+| `session_prompt` | string | Text prepended to every subscriber session              |
+| `env`            | map    | Env vars exported into each session shell               |
+| `[[mcp]]`        | array  | MCP servers: `name`, `url`, `headers`, `instructions`   |
+| `[[projects]]`   | array  | Project metadata: `name`, `repo`, `description`, `env`  |
+| `[[imports]]`    | array  | Upstream schools to inherit from (see below)            |
+| `[[backends]]`   | array  | Custom backend decls: `name`, `kind`, `cmd`, `env`      |
 
 All fields but `name` are optional and dropped from output when empty.
 
@@ -43,14 +43,15 @@ All fields but `name` are optional and dropped from output when empty.
 
 A school composes others via `[[imports]]`. Each decl:
 
-| Field | Notes |
-|-------|-------|
-| `source` | `owner/repo` or URL of the upstream school |
-| `skills` | patterns to pull; `"*"` takes the whole school |
-| `skill` | backcompat singular alias for `skills`; folded in on load, never re-emitted |
-| `exclude_skills` | patterns to subtract; also suppresses collision warnings |
-| `include_experimental` / `include_system` | admit those tiers (default off) |
-| `include_internal` | admit `internal: true` skills via glob (explicit names bypass) |
+| Field                  | Notes                                                         |
+|------------------------|---------------------------------------------------------------|
+| `source`               | `owner/repo` or URL of the upstream school                    |
+| `skills`               | patterns to pull; `"*"` takes the whole school                |
+| `skill`                | backcompat singular alias for `skills`; never re-emitted      |
+| `exclude_skills`       | patterns to subtract; also silences collision warnings        |
+| `include_experimental` | admit the experimental tier (default off)                     |
+| `include_system`       | admit the system tier (default off)                           |
+| `include_internal`     | admit `internal: true` skills via glob; explicit names bypass |
 
 At least one of `skills`/`skill` must be set. Across decls, **first-wins**: an earlier
 decl claims an identity; a later decl matching the same one warns as a collision (silence
@@ -99,21 +100,21 @@ second directory, not a frontmatter field.
 
 ## `ace` CLI — school-relevant commands
 
-| Command | Purpose |
-|---------|---------|
-| `ace setup <school>` | Subscribe a project: clone school + wire it in |
-| `ace diff` | Show uncommitted changes in the school clone |
-| `ace paths [key]` | Resolved paths (`school`, `cache`, `project`, …) |
-| `ace import <owner/repo>` | Import skills from another school (`--skill`, `--all`) |
-| `ace school init` | Scaffold a new school |
-| `ace school pull` | Re-fetch imports (alias: `update`) |
-| `ace school skills` | List a school's skills |
-| `ace school validate` | Check school config (alias: `check`) |
-| `ace skills` | List/curate active skills (alias: `ls`; `--all`, `--names`) |
-| `ace explain <skill>` | Show how a skill resolves (provenance + trace) |
-| `ace config` | Print/get/set config keys |
-| `ace mcp` | Manage MCP server registrations |
-| `ace fmt` | Pretty-print/clean ace.toml & school.toml (alias: `format`) |
+| Command                   | Purpose                                                 |
+|---------------------------|---------------------------------------------------------|
+| `ace setup <school>`      | Subscribe a project: clone school + wire it in          |
+| `ace diff`                | Show uncommitted changes in the school clone            |
+| `ace paths [key]`         | Resolved paths (`school`, `cache`, `project`, …)        |
+| `ace import <owner/repo>` | Import skills from another school (`--skill`, `--all`)  |
+| `ace school init`         | Scaffold a new school                                   |
+| `ace school pull`         | Re-fetch imports (alias: `update`)                      |
+| `ace school skills`       | List a school's skills                                  |
+| `ace school validate`     | Check school config (alias: `check`)                    |
+| `ace skills`              | List/curate active skills (`ls`; `--all`, `--names`)    |
+| `ace explain <skill>`     | Show how a skill resolves (provenance + trace)          |
+| `ace config`              | Print/get/set config keys                               |
+| `ace mcp`                 | Manage MCP server registrations                         |
+| `ace fmt`                 | Pretty-print/clean ace.toml & school.toml (`format`)    |
 
 Run clone-scoped commands from `cd $(ace paths school)`.
 
