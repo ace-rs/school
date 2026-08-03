@@ -61,6 +61,24 @@ Imported skills are **copied**, not symlinked, from the import cache
 (Contrast: a subscribing *project* gets symlinks to its school's `skills/` — a different
 mechanism.)
 
+### Layouts an import can resolve
+
+`[[imports]]` finds skills in three places in the upstream repo:
+
+- `skills/<name>/`
+- `.claude/skills/<name>/`
+- the repo root, when the repo is a single skill (`SKILL.md` at the root)
+
+Anything else is unreachable — a repo that keeps each skill as its own directory at
+the repo root resolves at no skill name, and no `skills` pattern fixes it. Check the
+upstream layout before writing the decl; when it is not one of the three, stop
+retrying import paths and vendor instead.
+
+**Vendoring.** Copy the skill directory into this school's `skills/`, keep its
+license file and attribution, rewrite the frontmatter to house style, and record
+where it came from. A vendored skill is maintained by hand — `ace school pull` does
+not update it, so upstream revisions must be checked manually.
+
 ## Skills have no alias
 
 A skill's only invocation handle is its **directory identity** (path/basename) — e.g.
