@@ -19,8 +19,8 @@ first yes. The bottom (`scratch/`) charges a toll, so nothing lands there by def
 An instruction you were given, an approach that was agreed, a library that was picked, a
 convention or preference that was fixed — all of it is an edit to [`spec/`](spec/). Write
 it as it was given: the rule, at the length it was given, with no reason supplied and no
-note of what it was chosen over. "This project uses RESTful routes" is one sentence and
-the whole entry. There is no separate ruling artifact and no fifth folder.
+note of what it was chosen over. A one-sentence rule — "use RESTful routes" — is a
+complete entry. There is no separate ruling artifact and no fifth folder.
 
 **The spec is authoritative — read it before you work, and comply.** It owes your priors
 no justification. That a rule departs from mainstream practice or from what you expected
