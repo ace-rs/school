@@ -8,21 +8,21 @@ stopping is the exception.
 
 Standing rules for the whole run:
 
-- **Resolve forks by the basis, don't ask.** Apply the decision-basis from pre-flight,
-  record the choice in `.ace/save.ledger.md`, move on. Surface a fork only when the basis
-  is genuinely silent *and* the choice is expensive to reverse — and even then, in afk
-  that is a logged blocker, not a stall.
-- **Record decisions as you make them, not as questions** — into the `.ace/` trail, which
-  is the crash-safe restore + fork point.
-- **Stamp provenance; unmarked is yours.** A fork you resolve solo is `agent:inferred`
-  and stays provisional — it turns SETTLED only with the user's verbatim words, and you
-  never replay it later as their ruling. Going far is the goal; laundering your own calls
-  into the user's mouth is not.
-- **Never amend `docs/spec/` on your own initiative.** The spec is ratified design, and
-  ratification takes the user, who is away. Every call you make alone stays in
-  `.ace/save.ledger.md` as `agent:inferred` until they rule on it — that is what the
-  ledger is for. The one exception is an explicit ask: if writing or updating a spec *is*
-  the task they handed you, write it and route it by `docs/README.md` like any other work.
+- **Resolve open choices by the basis, don't ask.** Apply the decision-basis from
+  pre-flight, record the call in `.ace/save.ledger.md`, move on. Surface a choice only
+  when the basis is genuinely silent *and* it is expensive to reverse — and even then, in
+  afk that is a logged blocker, not a stall.
+- **Record the calls you make as you make them, not as questions** — into the `.ace/`
+  trail, which is the crash-safe restore point.
+- **Stamp provenance; unmarked is yours.** A call you make solo is `agent:inferred` and
+  stays provisional — it turns SETTLED only with the user's verbatim words, and you never
+  replay it later as theirs. Going far is the goal; putting your own calls in the user's
+  mouth is not.
+- **Never amend `docs/spec/` on your own initiative.** The spec holds what the user
+  stated, and they are away. Every call you make alone stays in `.ace/save.ledger.md` as
+  `agent:inferred` until they take it up, and is yours to withdraw when the work moves
+  past it. The one exception is an explicit ask: if writing or updating a spec *is* the
+  task they handed you, write it and route it by `docs/README.md` like any other work.
 - **`docs/` output follows the gate, unchanged.** Exploratory output a run genuinely
   produces — a research dump, a survey, a comparison — files in `docs/scratch/` with its
   "not spec because ___" line. Placement is chosen at plan time (step 5), as attended.
@@ -56,7 +56,8 @@ state, loaded skills, and in-progress tasks before starting at step 1.
 4. **Specs** — read the project's source of truth (`docs/spec/` and what it points at;
    start from `docs/spec/README.md` if it has an index). The spec is authoritative —
    comply rather than re-deciding what it settles, and treat a contradiction between spec
-   and ask as a fork for the decision-basis, not a licence to rewrite the spec. Extract
+   and ask as one for the decision-basis to resolve, not a licence to rewrite the spec.
+   Extract
    acceptance criteria; note gaps.
 5. **Draft plan** — list every change (specs first, then tests, then code), file by file.
    For any durable doc the slice produces, name its target `docs/` folder now by walking
@@ -73,7 +74,7 @@ state, loaded skills, and in-progress tasks before starting at step 1.
    writing either file and follow it — no user is present to notice a dropped line — and
    proceed. No confirm gate —
    the basis and the envelope replace it. If the plan exceeds the decision-basis (a
-   genuinely silent, expensive, irreversible fork), log a blocker and pick up the next
+   genuinely silent, expensive, irreversible choice), log a blocker and pick up the next
    unblocked slice.
 
 ## TDD execution
@@ -102,8 +103,8 @@ subagent per non-overlapping file group so parallel edits don't collide.
 15. **Checkpoint** — update the `.ace/` trail: what landed goes in `save.md`, the next
     step and any open blocker go in `save.ledger.md` with a status and a provenance, so a
     crash or compaction leaves a clean restore point. Follow `ace-save/trail.md`: revise
-    `save.md` in place, never regenerate it, never drop a line to keep it short. No `/ace-save` or
-    `/clear` between slices — the subagent boundary gives fresh context, the trail gives
+    `save.md` in place, never regenerate it, never drop a line to keep it short. No
+    `/ace-save` or `/clear` between slices — the subagent boundary gives fresh context, the trail gives
     continuity.
 
 ## Two-phase audit every 2–3 slices

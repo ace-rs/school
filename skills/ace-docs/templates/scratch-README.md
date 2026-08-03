@@ -6,8 +6,8 @@ home. Material lands here only when it fits nothing above it in the routing gate
 as a default.
 
 Belongs here *only* if it is genuinely exploratory. Anything settled — current or intended
-design, a ruling, a convention, our own exact surface — is `../spec/`; third-party lookup
-is `../vendor/`; a task walkthrough is `../guides/`.
+design, an instruction, a convention, our own exact surface — is `../spec/`; third-party
+lookup is `../vendor/`; a task walkthrough is `../guides/`.
 
 **Toll.** Open every scratch file with one line naming why it is not spec:
 

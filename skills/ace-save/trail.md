@@ -12,6 +12,16 @@ committed, and never recoverable from git. A line removed here is gone.
   save.ledger.md     in-flight items: status + provenance per item
 ```
 
+## Whose words are whose
+
+The user states; you derive. What they state lands in `docs/spec/` the way they
+stated it — the rule, plainly, at the length they gave it, with no reason
+supplied and no record of how it came up.
+
+What you derive is yours and provisional. Taken up, it becomes their sentence.
+Carried on past, it goes away and leaves nothing behind — withdrawing it is your
+own move, made without asking.
+
 ## What goes where
 
 Anything carrying a status is an item and belongs to `save.ledger.md`.
@@ -27,7 +37,7 @@ Never regenerate the file from scratch — a line you did not re-derive this
 session is a line silently lost.
 
 No history and no corrections-of-corrections: a dead line is absent, not
-struck through. A settled ruling lives in `docs/`; here it appears only as a
+struck through. A settled rule lives in `docs/`; here it appears only as a
 one-line pointer. An item with a status lives in `save.ledger.md`, never here.
 
 Past ~60 lines the file is telling you items are overdue to graduate. That is
@@ -42,51 +52,61 @@ the entry:
 
 ```markdown
 SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what
-  the ruling was, wrapped at 90 columns with a two-space indent.
+  they said, wrapped at 90 columns with a two-space indent.
   "their exact words"
 
-open · agent:inferred — **Another claim.** No quote line — nothing is ruled.
+open · agent:inferred — **Another claim.** No quote line — they haven't said it.
 ```
 
 Statuses group by whether the entry can leave the file:
 
-**No exit — the entry stays until the user rules on it.**
+**No exit — the entry stays until the user takes it up.**
 
 - `open` — raised, not yet put to the user.
-- `presented` — put to them; they advanced without ruling on substance.
+- `presented` — put to them; they advanced without answering on substance.
 - `proposed` — a specific fix offered, awaiting their yes or no. A standing
   rule may force the answer; cite the rule as the derivation and still wait.
 - `deferred` — real, deliberately not now.
 - `needs-disambiguation` — their words admit two readings; a question is
   pending.
 
-**Exits the ledger** — see *Graduating an item*.
+These hold an item carrying the user's words. An `agent:inferred` item at any of
+them is yours, and `withdrawn` is open to it at any time.
 
-- `SETTLED` — the user ruled it in. Verbatim words required.
-- `KILLED` — the user ruled it out. Verbatim words required.
+**Exits the ledger.**
+
+- `SETTLED` — the user said it. Verbatim words required. Graduates; see
+  *Graduating an item*.
+- `KILLED` — the user said no to it. Verbatim words required. Graduates; see
+  *Graduating an item*.
+- `withdrawn` — you dropped a derivation of your own, with no user input. Delete
+  the entry and write nothing anywhere. The reason is always that you no longer
+  hold it; file length is never the reason.
 
 Provenance: `user:verbatim` (their exact, quotable words) · `user:paraphrased`
 (their intent, my wording) · `agent:inferred` (I derived it — they never said
 it).
 
 Default provenance is `agent:inferred`: an item written without a quoted user
-phrase IS agent-derived, whatever else it's tagged. Settling is the burden of
-proof, not inferring — SETTLED/KILLED must embed the user's verbatim words
-inline; a ruling with no quoted phrase is malformed and reads as
-`agent:inferred`. Forgetting to down-rank a solo call fails safe — it stays a
-derivation. Ambiguity the model resolves stays `agent:inferred` until the user
-confirms — never folded into the record as stated fact.
+phrase IS agent-derived, whatever else it's tagged. Their words or it isn't
+theirs — SETTLED/KILLED must embed the user's verbatim words inline; an entry
+with no quoted phrase is malformed and reads as `agent:inferred`. Forgetting to
+down-rank a solo call fails safe — it stays a derivation. Ambiguity the model
+resolves stays `agent:inferred` until the user confirms — never folded into the
+record as stated fact.
 
-An `agent:inferred` item stays until the user rules on it. A long ledger means
-a lot is open with them: surface it at the next save. Never trim it for
-length.
+An `agent:inferred` item stays while you still mean it. Withdraw it once the
+work moves past it, you no longer hold it, or they carry on without taking it
+up. An item carrying their words stays until they take it up; surface those at
+the next save, and never trim one for length. A long ledger is derivations you
+are still holding — withdraw them.
 
 ## How a line leaves — both files
 
-A line goes only when it moves to a named destination, or when the thing it
-describes is finished or superseded. A killed item with nothing to amend in the
-spec is the one deletion with no destination — see *Graduating an item*. Say in
-the save report where each moved line went, and name any that were deleted.
+A line goes when it moves to a named destination, when the thing it describes is
+finished or superseded, or when you withdraw a derivation of your own. The last
+two leave with no destination. Say in the save report where each moved line
+went, and name any that were deleted.
 
 Never drop a line to hit a size. Never rank lines by importance to choose what
 to cut — how important a line looks is a judgment about where it belongs and
@@ -94,23 +114,22 @@ how tersely to write it, never about whether it survives.
 
 ## Graduating an item
 
-A ruled item leaves by landing its durable form through the `docs/README.md`
-gate — which means `spec/`, current design truth. Once it lands, trim the entry
-from the ledger and leave a one-line pointer in `save.md`. The ledger stays
-short because ruled items leave, not because they're rare.
+An item the user stated leaves by landing through the `docs/README.md` gate —
+which means `spec/`, current design truth. Write the rule as they said it, at
+the length they gave it: no reason they didn't supply, no note that a choice was
+made or what it was weighed against. Once it lands, trim the entry from the
+ledger and leave a one-line pointer in `save.md`. The ledger stays short because
+stated items leave and derivations get withdrawn, not because entries are rare.
 
-- `SETTLED` — lock the ruling in as a spec amendment.
-- `KILLED` — delete from the spec whatever the ruling kills. Where the idea
-  would otherwise be raised again, add a sentence or two of rationale so it
-  stays killed. An `agent:inferred` kill is the usual case: nobody is holding
-  the idea, so without the rationale the agent re-derives it next session.
-  Where nothing in the spec would resurface it, delete the entry and write
-  nothing.
+- `SETTLED` — write their sentence into the spec.
+- `KILLED` — delete from the spec whatever their words kill, and edit any
+  sentence that still teaches the killed thing. A derivation of yours was never
+  in the spec: delete the entry and write nothing.
 
-Only a ruling with the user's verbatim words graduates. What the item was
-tagged before the ruling doesn't matter — an `agent:inferred` item the user
-kills graduates on their words — but a derivation the user never ruled on
-never does, however confident it is.
+Only an item carrying the user's verbatim words graduates. What it was tagged
+beforehand doesn't matter — an `agent:inferred` item the user kills graduates on
+their words — but a derivation they never took up leaves by withdrawal instead,
+however confident it is.
 
 **No `docs/` in the repo.** The first time an item settles with nowhere to
 graduate to, recommend the user run `/ace-docs`, and wait for their go. Never

@@ -57,7 +57,7 @@ serves** — checked top-down, stop at the first fit:
   what to add) for `ace-school` to propose later. Don't run the branch/push/PR
   flow inline during a save. Never memory — there it dies with your machine
   instead of reaching the skill's subscribers.
-- **This repo's team** (decisions, specs, shared patterns) → `docs/` or the
+- **This repo's team** (settled rules, specs, shared patterns) → `docs/` or the
   issue tracker. Never memory — it doesn't reach teammates or other agents.
 - **You, everywhere** (how the agent should behave for you, your preferences) →
   your harness's user-level memory or instructions file — whatever persists

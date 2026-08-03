@@ -142,7 +142,7 @@ divergences (spec says X, code does Y) instead of papering over them.
 
 **Route by the gate.** Per `ace-docs`: how-it-works, intent, and our own exact surface
 (every config key, every endpoint) → `docs/spec/`; third-party lookup we lean on →
-`docs/vendor/`. Everything settled — conventions, preferences, rulings — amends
+`docs/vendor/`. Everything settled — conventions, preferences, instructions — amends
 `docs/spec/`; don't scaffold a decisions log.
 
 Run each spec through the normal `ace` planning phases (`/ace` → Specs → Draft Plan);

@@ -33,10 +33,10 @@ attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
   over uncommitted work, or force-overwrite of files you didn't create this run.
 - **Commit, don't push** — land green slices on the *current* branch so progress
   survives. Pushing is the canonical "needs a human" action; it waits.
-- **No unratified rulings in `docs/spec/`** — the spec is ratified design and
-  only the user ratifies. Calls you make alone stay in `.ace/save.ledger.md`
-  stamped `agent:inferred`. Writing a spec is allowed only when that was the
-  task handed to this run.
+- **Nothing of your own in `docs/spec/`** — the spec holds what the user stated,
+  in their words. Calls you make alone stay in `.ace/save.ledger.md` stamped
+  `agent:inferred`. Writing a spec is allowed only when that was the task handed
+  to this run.
 
 A boundary you'd have to cross to make progress is a blocker. Log it, don't cross
 it.
@@ -50,14 +50,13 @@ unattended body needs none. This phase is the *only* sanctioned asking window.
    *done* — the real deliverable in the real target (the repo actually changed, the thing
    actually live), never a /tmp render or staged plumbing. If the goal is ambiguous, this
    is the moment to ask.
-2. **Clear blockers — go HARD.** Surface and resolve every fork, missing input, and
-   decision now, while the human can answer. This is where all the asking is spent; the
-   body gets none. Apply **Earn the blocker** before flagging anything as needing the
-   human.
-3. **Establish the decision-basis.** State the philosophy the run resolves forks against,
-   derived from the repo's CLAUDE.md + the goal. This is what makes "no questions after
-   Go" safe rather than reckless: the body resolves forks against the basis and records
-   the choice, instead of stopping to ask.
+2. **Clear blockers — go HARD.** Surface and resolve every open choice and missing input
+   now, while the human can answer. This is where all the asking is spent; the body gets
+   none. Apply **Earn the blocker** before flagging anything as needing the human.
+3. **Establish the decision-basis.** State the philosophy the run resolves open choices
+   against, derived from the repo's CLAUDE.md + the goal. This is what makes "no questions
+   after Go" safe rather than reckless: the body resolves choices against the basis and
+   records the call, instead of stopping to ask.
 4. **State the AFK plan, then wait for explicit "Go."** Go is the last gate. After it: no
    questions, no go-gate — drive the loop to the envelope.
 
@@ -79,7 +78,7 @@ removed — no stop-to-ask, no stop-to-plan. Honor `$ARGUMENTS` as the focus if 
    > AFK heartbeat. If the run has stalled — waiting on a dead subagent, stopped between
    > turns, or paused to ask something the decision-basis or envelope already settles —
    > resume the loop now. You hold standing authority to make safe, reversible decisions
-   > on your own: resolve the fork by the basis, record it, keep going. Log only a
+   > on your own: resolve the choice by the basis, record it, keep going. Log only a
    > genuine blocker (basis-silent, expensive, irreversible). If the run is actually
    > complete, tear down this heartbeat and write the final summary.
 
@@ -117,8 +116,8 @@ dependency, test target — run this gate, and log only if both moves fail:
 
 **Keep making progress.** A finished goal or a clean checkpoint is where you pick up the
 next thing, not where you stop and report-and-ask. While there's work you can start inside
-the envelope and state rules — no unresolved decision, no unearnable blocker — start it
-and keep going. Resolve discretionary forks by the decision-basis, record the choice,
+the envelope and state rules — no unresolved choice, no unearnable blocker — start it
+and keep going. Resolve discretionary choices by the decision-basis, record the call,
 drive on.
 
 ## Stop conditions
@@ -136,10 +135,10 @@ human's morning read. Three parts:
   (the decision-basis doesn't resolve it, no prior discussion settles it, and the input
   can't be earned — it genuinely needs the human), and **what you'd do** (recommended
   resolution, so a one-word reply unblocks it).
-- **Calls made alone** — every fork the decision-basis resolved for you, one line each,
+- **Calls made alone** — every choice the decision-basis resolved for you, one line each,
   with the basis clause you applied. These are `agent:inferred` and still live in
-  `.ace/save.ledger.md`; this section is the ratification queue. Nothing here has
-  entered `docs/spec/` — the user's ruling is what moves it there, in a later attended
-  session.
+  `.ace/save.ledger.md`. Nothing here has entered `docs/spec/`; it goes there only if the
+  user later states it themselves, and is yours to withdraw otherwise. This section tells
+  them what the run did.
 - **Summary** — written when the run ends: what landed (commits, tasks done) and
   what's still queued. Don't re-list blockers or calls here; they're already above.
