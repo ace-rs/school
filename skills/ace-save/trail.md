@@ -84,8 +84,8 @@ them is yours, and `withdrawn` is open to it at any time.
   hold it; file length is never the reason.
 
 Provenance: `user:verbatim` (their exact, quotable words) · `user:paraphrased`
-(their intent, my wording) · `agent:inferred` (I derived it — they never said
-it).
+(their intent, your wording) · `agent:inferred` (you derived it — they never
+said it).
 
 Default provenance is `agent:inferred`: an item written without a quoted user
 phrase IS agent-derived, whatever else it's tagged. Their words or it isn't
@@ -95,11 +95,9 @@ down-rank a solo call fails safe — it stays a derivation. Ambiguity the model
 resolves stays `agent:inferred` until the user confirms — never folded into the
 record as stated fact.
 
-An `agent:inferred` item stays while you still mean it. Withdraw it once the
-work moves past it, you no longer hold it, or they carry on without taking it
-up. An item carrying their words stays until they take it up; surface those at
-the next save, and never trim one for length. A long ledger is derivations you
-are still holding — withdraw them.
+Withdraw a derivation once the work moves past it or they carry on without
+taking it up. Surface the items carrying their words at the next save, and never
+trim one for length. A long ledger is derivations you are still holding.
 
 ## How a line leaves — both files
 

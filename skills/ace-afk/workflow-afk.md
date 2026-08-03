@@ -23,12 +23,12 @@ Standing rules for the whole run:
   `agent:inferred` until they take it up, and is yours to withdraw when the work moves
   past it. The one exception is an explicit ask: if writing or updating a spec *is* the
   task they handed you, write it and route it by `docs/README.md` like any other work.
-- **`docs/` output follows the gate, unchanged.** Exploratory output a run genuinely
+- **`docs/` output follows the gate.** Exploratory output a run genuinely
   produces — a research dump, a survey, a comparison — files in `docs/scratch/` with its
   "not spec because ___" line. Placement is chosen at plan time (step 5), as attended.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up the
   next startable task — inside the envelope and state rules — not where you stop. Keep
-  going while there's work with no unresolved decision and no unearnable blocker.
+  going while there's work with no unresolved choice and no unearnable blocker.
 - **Earn the blocker.** Earn a missing input first — fetch it, stub it, build it
   yourself — before logging it as needing the human.
 - **Thin orchestrator — delegate by default.** You drive; you do not do the work. Every
@@ -104,8 +104,8 @@ subagent per non-overlapping file group so parallel edits don't collide.
     step and any open blocker go in `save.ledger.md` with a status and a provenance, so a
     crash or compaction leaves a clean restore point. Follow `ace-save/trail.md`: revise
     `save.md` in place, never regenerate it, never drop a line to keep it short. No
-    `/ace-save` or `/clear` between slices — the subagent boundary gives fresh context, the trail gives
-    continuity.
+    `/ace-save` or `/clear` between slices — the subagent boundary gives fresh context,
+    the trail gives continuity.
 
 ## Two-phase audit every 2–3 slices
 
