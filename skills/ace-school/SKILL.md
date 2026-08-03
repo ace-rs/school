@@ -63,16 +63,25 @@ mechanism.)
 
 ### Layouts an import can resolve
 
-`[[imports]]` finds skills in three places in the upstream repo:
+A `skills` pattern matches only what discovery found in the upstream repo, and
+discovery runs two stages against the repo root:
 
-- `skills/<name>/`
-- `.claude/skills/<name>/`
-- the repo root, when the repo is a single skill (`SKILL.md` at the root)
+1. **Direct skill.** `<root>/SKILL.md` exists → the repo is one skill, named after the
+   root basename. Discovery stops.
+2. **Priority dirs**, walked recursively, `SKILL.md` at any depth: `skills/`,
+   `skills/.curated/`, `skills/.experimental/`, `skills/.system/`. Only if all four
+   yield nothing does it fall back to `.claude/skills/`, `.codex/skills/`,
+   `.opencode/skills/`, `.cursor/skills/`, `.windsurf/skills/`, `.kiro/skills/`,
+   `.agents/skills/`.
 
-Anything else is unreachable — a repo that keeps each skill as its own directory at
-the repo root resolves at no skill name, and no `skills` pattern fixes it. Check the
-upstream layout before writing the decl; when it is not one of the three, stop
-retrying import paths and vendor instead.
+Nested identity is real: `skills/typescript/coding/SKILL.md` imports as
+`typescript/coding`. A skill directory is not recursed into — skills do not nest.
+
+There is no whole-repo walk. A repo that keeps each skill as its own directory at the
+root, with no root `SKILL.md` and no `skills/`, yields zero skills, and no pattern
+reaches it. That failure is a warning, not an error, so an import that silently pulls
+nothing means the source layout is wrong. Check the upstream layout before writing the
+decl; when it is not one of the two stages, stop retrying paths and vendor instead.
 
 **Vendoring.** Copy the skill directory into this school's `skills/`, keep its
 license file and attribution, rewrite the frontmatter to house style, and record
