@@ -92,5 +92,5 @@ Research dumps, settled rules, specs, usage docs, and references pile up with no
 live, so they scatter or rot. `ace-docs` scaffolds a `docs/` tree routed by a single
 gate — `vendor/` (third-party reference), `guides/` (how-to), `spec/` (our design and
 surface), `scratch/` (residual exploration) — and wires `CLAUDE.md`/`AGENTS.md` to point
-at it so humans and agents both find it. Everything settled amends `spec/`, which is authoritative;
-there is no decisions log.
+at it so humans and agents both find it. Everything settled amends `spec/`, which is
+authoritative; there is no decisions log.
