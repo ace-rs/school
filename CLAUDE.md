@@ -130,7 +130,9 @@ re-open it. If a spec is wrong, raise it with the user and amend the spec.
 
 **Everything settled is a `.docs/spec/` amendment** — an instruction you were given, an
 approach that was agreed, a library that was picked, a convention or preference that was
-fixed. Write it there, state the current rule, move on. There is no decisions log.
+fixed. Write it there as it was given: the rule, at the length it was given, with no
+reason supplied and no note of what it was chosen over. "This project uses RESTful routes"
+is one sentence and the whole entry. There is no decisions log.
 
 File new material by the gate, first match wins: third-party lookup → `vendor/`; a how-to
 → `guides/`; our own design or surface → `spec/`; unsettled exploration → `scratch/` (last
