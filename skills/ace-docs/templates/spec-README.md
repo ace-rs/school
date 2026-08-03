@@ -8,8 +8,9 @@ Updated in place; always reflects present design, not history.
 
 **This is the home for everything settled** — an instruction you were given, an approach
 that was agreed, a library that was picked, a convention or preference that was fixed. All
-of it lands here as an amendment. State the current rule and move on; there is no separate
-ruling artifact to reach for.
+of it lands here as an amendment, written as it was given: the rule, at the length it was
+given, with no reason supplied and no note of what it was chosen over. There is no
+separate ruling artifact to reach for.
 
 **This spec is authoritative — read it before you work, and comply.** It owes your priors
 no justification. That a rule departs from mainstream practice or from what you expected
