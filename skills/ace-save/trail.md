@@ -50,7 +50,10 @@ A single in-flight buffer across all open walks, not per-topic. The only home
 of item statuses. Every item is one entry — status, provenance, claim, and its
 evidence — in the same quoted-evidence grammar as the stamp chain
 (`ace/ledger.md`), with a different source: a stamp's `ev:` quotes tool output;
-an item's `ev:` quotes the user.
+an item's `ev:` quotes the user. The chain's two-line cap does not apply here —
+the conversation an item quotes dies with the session, and this file is the
+copy that survives. Quote the user's words at whatever length preserves them;
+never trim `ev:` for size.
 
 ```markdown
 SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what

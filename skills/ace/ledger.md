@@ -20,6 +20,10 @@ Every numbered step ends with a **stamp** — one line:
   verbatim from this step's own output is no evidence, and a stamp without evidence is
   no stamp. Where the work product is prose just presented (a plan, a summary), the
   stamp points at it (`ev: "plan above, 4 files"`) — it never restates it.
+
+  The two-line cap holds only while the quoted source survives alongside the stamp.
+  In a durable record whose source dies with the session — the `.ace/` trail quoting
+  conversation — `ev:` runs as long as the words require; never trim it for size.
 - **Chained entry.** A step opens by reprinting the previous step's stamp line,
   verbatim. No stamp to reprint → the step cannot be entered; go back and produce it.
 - **Stamp-named succession.** The only step you may open is the one the last stamp
