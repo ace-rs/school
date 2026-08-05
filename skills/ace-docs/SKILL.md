@@ -39,7 +39,7 @@ Don't run when:
 - The repo uses a different convention with a strong reason (e.g. a framework that owns
   `docs/` for generated output). Suggest the shape but defer.
 
-## Ledger
+## Stamp chain
 
 The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
 skill's directory, sibling to this one — and follow its contract: close every step with

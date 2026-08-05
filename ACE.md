@@ -9,10 +9,6 @@ Invoke one by name — `/ace`, `/ace-save`, `/ace-docs` — or just describe the
 and let the agent pick; every skill declares triggers for that. `ace-realign` also
 self-engages without being asked, on a repeated violation of the same rule.
 
-This file covers the `ace-*` workflow skills only. The school also ships `skill-creator`
-and `skill-reviewer` for authoring and reviewing skills — see
-[`README.md`](README.md) for the full roster.
-
 | Skill         | Reach for it when                           |
 |---------------|---------------------------------------------|
 | `ace-init`    | first-time onboarding of a repo into ACE    |
@@ -24,6 +20,7 @@ and `skill-reviewer` for authoring and reviewing skills — see
 | `ace-school`  | a fix should reach every project            |
 | `ace-connect` | two local agents need to talk               |
 | `ace-docs`    | durable artifacts are scattering            |
+| `ace-skill`   | a skill needs writing or revising           |
 
 ## `ace-init` — onboard a repo into ACE
 
@@ -94,3 +91,11 @@ gate — `vendor/` (third-party reference), `guides/` (how-to), `spec/` (our des
 surface), `scratch/` (residual exploration) — and wires `CLAUDE.md`/`AGENTS.md` to point
 at it so humans and agents both find it. Everything settled amends `spec/`, which is
 authoritative; there is no decisions log.
+
+## `ace-skill` — write skills agents actually follow
+
+A skill needs creating or revising, and prose instructions alone won't hold — models
+skim, skip steps, and mint their own exemptions. `ace-skill` authors skills in the
+shape that survives that: a menu of operations up front, numbered steps per operation,
+and an enforcement mechanism binding the steps (the stamp-chain ledger by default). It
+also retrofits enforcement onto existing skills and tunes descriptions for triggering.

@@ -32,7 +32,7 @@ start it unprompted.
 
 `$ARGUMENTS` narrows focus if provided (e.g. "skills only").
 
-## Ledger
+## Stamp chain
 
 The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
 skill's directory, sibling to this one — and follow its contract: close every step with

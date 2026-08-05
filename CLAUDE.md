@@ -108,14 +108,15 @@ Apply this on **every** skill edit:
 
 ## Skill writing house style
 
-Load the `skill-creator` skill first for its workflow guidance when authoring or
-revising any skill under `skills/`.
+Load the `ace-skill` skill first when authoring or revising any skill under `skills/` —
+it carries the house method: a menu of operations up front, numbered steps per
+operation, and an enforcement mechanism binding the steps (`skills/ace/ledger.md`, the
+stamp-chain contract). Its house style checklist is the review gate for every skill
+edit.
 
-House style overrides skill-creator on one point, and it governs the skill **body**:
-**prefer terse imperative rules over why-clauses.** skill-creator advises explaining the
-*why* behind each rule; in practice why-clauses rarely change model behavior — agents skim
-them. Stick to imperatives, with reasoning kept to a single framing sentence only when the
-rule is genuinely non-obvious.
+Skill bodies **prefer terse imperative rules over why-clauses** — why-clauses rarely
+change model behavior; agents skim them. Reasoning gets a single framing sentence only
+when the rule is genuinely non-obvious.
 
 ## Durable artifacts
 

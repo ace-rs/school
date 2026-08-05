@@ -20,7 +20,7 @@ The audit lives in `ace/workflow.md` as the `Audit` step. Two ways in:
 - **Standalone quality pass** — deliberately re-audit a large body of work that
   already landed, to catch issues and maximize quality even though nothing slipped.
 
-## Ledger
+## Stamp chain
 
 The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
 skill's directory, sibling to this one — and follow its contract: close every step with
@@ -34,7 +34,8 @@ user's verbatim words.
 
    - **Code** — load each language's coding skill, plus any framework or infrastructure
      skill relevant to the changed files.
-   - **Skills (`skills/<name>/SKILL.md`)** — load `skill-reviewer` if the session has it.
+   - **Skills (`skills/<name>/SKILL.md`)** — load `ace-skill` if the session has it;
+     its house style checklist is the review gate.
    - **Docs, config, or anything else** — audit against the repo's own instructions file
      (`CLAUDE.md` / `AGENTS.md`) and the conventions it points at.
 

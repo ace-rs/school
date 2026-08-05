@@ -30,12 +30,13 @@ Do not touch code. Only at a target you're already writing this run, prune stale
 entries you notice while there (completed tasks, superseded prefs, resolved
 questions, contradicted learnings) — don't open stores just to sweep.
 
-## Ledger
+## Stamp chain
 
-The two numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
-skill's directory, sibling to this one — and follow its contract: close every step with
-its one-line stamp, open the next by reprinting it, no skips. The closing report opens
-by reprinting step 2's stamp.
+The two numbered steps below run as a stamp chain — this governs the steps of this run
+and has nothing to do with `.ace/save.ledger.md`, the state file this skill writes.
+Read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
+its contract: close every step with its one-line stamp, open the next by reprinting it,
+no skips. The closing report opens by reprinting step 2's stamp.
 
 ## 1. Resume breadcrumb
 
