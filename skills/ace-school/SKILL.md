@@ -163,16 +163,16 @@ Step 2's approval is a Wait: proceed only with the user's approving words quoted
 
 ## Writing good skill content
 
-Anthropic's `skill-creator` skill is the authoritative reference for skill mechanics
-(frontmatter, file layout, progressive disclosure, eval loops). The lessons below are
-school-specific — recurring findings in school PR reviews.
+The `ace-skill` skill is the authoritative reference for authoring and revising
+skills — load it and work through its operations; its house style checklist is the
+review gate. The lessons below are school-specific — recurring findings in school PR
+reviews.
 
 0. **Check the school's house rules first.** Before authoring or editing any skill,
    read the school repo's `CLAUDE.md` and any durable record-keeping the school
    maintains (spec dir, notes, research dir — whatever exists) for house-style
-   overrides on top of `skill-creator`. Each school may override skill-creator
-   differently (tone, structure, imperative-vs-why phrasing, etc.). House rules
-   win over skill-creator defaults.
+   overrides. Each school may override the base method differently (tone, structure,
+   imperative-vs-why phrasing, etc.). House rules win over `ace-skill` defaults.
 
 1. **Generic by default.** Strip named repos, clients, deploy targets, and vendor names.
    Use placeholders (`site-web`, `site-cms`, `acme-*`). Project-specific context belongs
