@@ -125,7 +125,10 @@ lands in the clone — which is a real git working copy, branchable and committa
 
 ## Proposing changes
 
-When skill edits need to go upstream:
+When skill edits need to go upstream, the numbered steps below run as a stamp chain:
+read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
+its contract (one-line stamp to close each step, reprint it to open the next, no skips).
+Step 2's approval is a Wait: proceed only with the user's approving words quoted.
 
 1. Run `ace diff` to review changes.
 2. Summarize findings — combine the diff output with your own context about what was

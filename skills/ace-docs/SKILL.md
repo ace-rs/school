@@ -39,6 +39,13 @@ Don't run when:
 - The repo uses a different convention with a strong reason (e.g. a framework that owns
   `docs/` for generated output). Suggest the shape but defer.
 
+## Ledger
+
+The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
+skill's directory, sibling to this one — and follow its contract: close every step with
+its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
+user's verbatim words.
+
 ## Steps
 
 1. **Check what exists.** `ls docs/` if it exists. If any target sub-dir already lives

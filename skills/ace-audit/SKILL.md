@@ -20,6 +20,13 @@ The audit lives in `ace/workflow.md` as the `Audit` step. Two ways in:
 - **Standalone quality pass** — deliberately re-audit a large body of work that
   already landed, to catch issues and maximize quality even though nothing slipped.
 
+## Ledger
+
+The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
+skill's directory, sibling to this one — and follow its contract: close every step with
+its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
+user's verbatim words.
+
 ## Audit procedure
 
 1. **Load the skills that govern what changed.** `git diff --name-only` to see the files,

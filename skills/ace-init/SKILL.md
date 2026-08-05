@@ -32,6 +32,14 @@ start it unprompted.
 
 `$ARGUMENTS` narrows focus if provided (e.g. "skills only").
 
+## Ledger
+
+The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
+skill's directory, sibling to this one — and follow its contract: close every step with
+its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
+user's verbatim words. Step 5's approval and the Phase 2 gate are Waits: each is
+crossed only with the user's approving words quoted in the entry.
+
 ## Phase 1 — Lay down the structure
 
 ### 1. Study the repo

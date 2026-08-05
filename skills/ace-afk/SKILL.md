@@ -46,6 +46,11 @@ it.
 Run this while the human is still reachable. It front-loads every decision so the
 unattended body needs none. This phase is the *only* sanctioned asking window.
 
+The four steps run as a stamp chain: read `ace/ledger.md` — in the `ace` skill's
+directory, sibling to this one — and follow its contract (one-line stamp to close each
+step, reprint it to open the next, no skips). Step 4 is a Wait: the run body opens only
+with the user's "Go" quoted in its entry.
+
 1. **Restate the understood end-goal.** "Understood: <goal>." Include the definition of
    *done* — the real deliverable in the real target (the repo actually changed, the thing
    actually live), never a /tmp render or staged plumbing. If the goal is ambiguous, this
