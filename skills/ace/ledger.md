@@ -1,7 +1,7 @@
 # The step ledger
 
 The stamp-chain contract for any skill whose body is a numbered procedure. A skill
-adopts it with a `## Ledger` section pointing here; the rules below then bind that
+adopts it with a `## Stamp chain` section pointing here; the rules below then bind that
 skill's numbered steps.
 
 ## The stamp

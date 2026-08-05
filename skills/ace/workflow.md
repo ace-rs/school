@@ -2,33 +2,17 @@
 
 ## The stamp chain
 
-Every step in this workflow ends with a **stamp** — one line:
+Every step in this workflow runs under the stamp-chain contract in `ledger.md`, in
+this skill's directory — read it and follow it: evidence quoted, never re-pasted;
+chained entry; stamp-named succession; no skip vocabulary; exemptions only in the
+user's verbatim words. This workflow's stamp adds a `files:` field:
 
 ```
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
-- **Evidence is quoted, never re-pasted.** The full artifact — plan text, failing-test
-  output, command results — appears exactly once, where the step produced it: the tool
-  output or prose already in the transcript. `ev:` quotes at most two decisive lines
-  from it, verbatim — the failing assertion, the pass count, the commit hash. A line
-  you cannot quote verbatim from this step's own output is no evidence, and a stamp
-  without evidence is no stamp. Where the step's work product is prose just presented
-  (a plan), the stamp follows it and points at it (`ev: "plan above, 4 files"`) — it
-  never restates it.
-- **No skip vocabulary.** There is no "skipped", "not applicable", "inferred done", or
-  "effectively covered" — those statuses do not exist in this workflow. Every step runs
-  for every task. A step whose honest execution is small still runs and leaves real
-  evidence: the test plan for a docs change is a real plan (render, link-check,
-  spec-vs-code consistency), not a waiver.
-- **Chained entry.** Every step opens by reprinting the previous step's stamp line,
-  verbatim. No stamp to reprint → the step cannot be entered; go back and produce it.
-  Orientation picks the entry step exactly once (with its own stamp citing the evidence
-  for the pick); from then on the next step is read off the last stamp, never
-  re-derived.
-- **Stamp-named succession.** The only step you may open is the one the last stamp
-  names, drawn from the fixed order below. "What's next" is never a judgment call after
-  entry — it is written in the stamp line you must reprint to proceed.
+Two rules are this workflow's own:
+
 - **File-set binding.** The simplified plan (step 6) is the binding file-set: every
   path the task covers, enumerated once, in the plan prose its stamp points at; the
   test plan (step 7) covers those same paths per class. Later stamps list only the
@@ -43,10 +27,6 @@ Every step in this workflow ends with a **stamp** — one line:
   full cycle. A class that seems absent is a mis-scoped task, not an exemption: a spec
   edit with no code chain means spec and code now disagree, which is itself the code
   task. Absence is never inferred.
-- **Exemptions need the user's verbatim words.** The only valid deviation from a step
-  cites the user's in-session words, quoted in the stamp. A self-minted rationale
-  ("it's a spec, no test needed") quotes nobody and is void on its face. The agent has
-  no authority to mint an exemption.
 
 ## Orientation
 
@@ -61,8 +41,9 @@ only freedom is picking the **entry point**, once, with a stamp citing the evide
 - **Tests failing for the expected reason?** → enter at green (10).
 - **Fresh session, clean tree?** → enter at task discovery (1).
 - **Just committed?** → enter at checkpoint (15), then loop to task discovery.
-- **A Monitor you didn't start this session is still running?** → likely an ace-connect
-  engine that outlived a `/clear` (context wiped, Monitor and slug survive). Load
+- **A background listener you didn't start this session is still running (e.g. a
+  Monitor task, on a harness that has one)?** → likely an ace-connect engine that
+  outlived a `/clear` (context wiped, listener and slug survive). Load
   `ace-connect` to recover its wire format and mode before touching `.ace/connect.log`.
 
 Entering mid-chain, reconstruct the artifacts your entry step depends on into the
@@ -181,7 +162,8 @@ stamps — file-set, evidence, next — or its slice is not done.
 
 13. **Audit** — open by reprinting the verify stamp. First clause is mechanical: walk
     `git diff --stat` and confirm **every changed file appears in the plan's file-set
-    and inside a complete stamp chain** (plan → test plan → red → green → verify). A
+    and inside a complete stamp chain** (plan → test plan → red → green → refactor →
+    verify). A
     file outside the chain is the laundering breach — return to step 5 for it. Then the
     content pass: re-read every changed file (not just diffs); verify code matches
     spec, the simplified plan was followed, conventions and loaded skill rules
@@ -208,9 +190,10 @@ stamps — file-set, evidence, next — or its slice is not done.
 
    - **Light (default)** — update the `.ace/` trail or tasks. What was done goes in
      `save.md`; next steps and open questions go in `save.ledger.md`, each with a
-     status and a provenance. Read `ace-save/trail.md` before writing either file and
-     follow it — revise `save.md` in place, never regenerate it, and never drop a line
-     to keep the file short. Just enough that the next loop or a surprise compaction
+     status and a provenance. Read `ace-save/trail.md` — in the `ace-save` skill's
+     directory, sibling to this one — before writing either file and follow it —
+     revise `save.md` in place, never regenerate it, and never drop a line to keep
+     the file short. Just enough that the next loop or a surprise compaction
      doesn't lose the thread. Stamp ev: the trail files written; next: task discovery
      (1).
 

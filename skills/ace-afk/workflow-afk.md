@@ -8,25 +8,18 @@ stopping is the exception.
 
 ## The stamp chain
 
-Identical to the attended workflow, and *more* binding here — with no human watching,
-the stamps are the only witness. Every step ends with a **stamp** — one line:
+The contract is `ace/ledger.md` — in the `ace` skill's directory, sibling to this
+one. Read it and follow it, and hold it *more* binding here: with no human watching,
+the stamps are the only witness. Evidence may also live in a subagent summary or a
+`.ace/` trail entry — the stamp points at it there, never restates it. The stamp adds
+a `files:` field:
 
 ```
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
-- **Evidence is quoted, never re-pasted.** The full artifact exists exactly once, where
-  the step produced it — the tool output or subagent summary in the transcript, or the
-  `.ace/` trail entry it was recorded to. `ev:` quotes at most two decisive lines from
-  it, verbatim. A line you cannot quote verbatim from this step's own output is no
-  evidence, and a stamp without evidence is no stamp. Where the work product is prose
-  or a trail entry, the stamp points at it — never restates it.
-- **No skip vocabulary.** "Skipped", "not applicable", "inferred done" do not exist.
-  Every step runs for every slice; a small step still runs and leaves real evidence.
-- **Chained entry.** Every step opens by reprinting the previous step's stamp line,
-  verbatim; no stamp, no entry. Orientation picks the entry point once, stamped with
-  its evidence; from then on the next step is read off the last stamp, never
-  re-derived.
+On top of the contract:
+
 - **File-set binding.** The simplified plan (step 6) is the binding file-set,
   enumerated once in the plan its stamp points at; the test plan (step 7) covers the
   same paths per class. Later stamps list only the files touched that step and cite
@@ -38,9 +31,10 @@ the stamps are the only witness. Every step ends with a **stamp** — one line:
 - **Three chains, always.** Spec + tests + code is the shape of every real slice; a
   class that seems absent is a mis-scoped slice, not an exemption. Absence is never
   inferred.
-- **Exemptions need the user's verbatim words** — here that means the pre-flight
-  decision-basis, quoted. A deviation the basis doesn't cover in its own words is not
-  yours to mint: log it as a blocker and pick up the next unblocked slice.
+- **Exemptions mean the decision-basis.** The contract's "user's verbatim words" is,
+  after Go, the pre-flight decision-basis, quoted. A deviation the basis doesn't
+  cover in its own words is not yours to mint: log it as a blocker and pick up the
+  next unblocked slice.
 - **Subagents return stamps.** A delegated slice or step is done only when the
   subagent's summary contains the stamps — file-set, evidence, next — for the steps it
   executed. A summary without stamps means the slice is not done; re-run it, don't
@@ -127,7 +121,8 @@ reconstructed, enter earlier.
    per-class validation plan above; next: record the plan.
 8. **Record the plan** — open by reprinting the test-plan stamp. The narrative goes in
    `.ace/save.md`, each open slice in `.ace/save.ledger.md` with a status and a
-   provenance. Read `ace-save/trail.md` before writing either file and follow it — no
+   provenance. Read `ace-save/trail.md` — in the `ace-save` skill's directory, sibling
+   to this one — before writing either file and follow it — no
    user is present to notice a dropped line. No confirm gate — the basis and the
    envelope replace it. If the plan exceeds the decision-basis (a genuinely silent,
    expensive, irreversible choice), log a blocker and pick up the next unblocked slice.
@@ -163,7 +158,8 @@ produced; a stamp-less return means the step did not happen.
 
 13. **Audit** — open by reprinting the verify stamp. First clause is mechanical: walk
     `git diff --stat` and confirm every changed file appears in the plan's file-set and
-    inside a complete stamp chain (plan → test plan → red → green → verify); a file
+    inside a complete stamp chain (plan → test plan → red → green → refactor →
+    verify); a file
     outside the chain is a laundering breach — return to step 5 for it. Then the
     content pass: re-read every changed file (not just diffs). Categorize findings:
     **Violation** (clear skill/spec rule broken or chain/coverage breach — blocks, must
