@@ -47,15 +47,17 @@ sake, and if nothing can move, leave it long and say so in the report.
 ## `.ace/save.ledger.md` — items
 
 A single in-flight buffer across all open walks, not per-topic. The only home
-of item statuses. Every item carries a status AND a provenance, both leading
-the entry:
+of item statuses. Every item is one entry — status, provenance, claim, and its
+evidence — in the same quoted-evidence grammar as the stamp chain
+(`ace/ledger.md`), with a different source: a stamp's `ev:` quotes tool output;
+an item's `ev:` quotes the user.
 
 ```markdown
 SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what
-  they said, wrapped at 90 columns with a two-space indent.
-  "their exact words"
+  they said, wrapped at 90 columns with a two-space indent. | ev: "their exact
+  words"
 
-open · agent:inferred — **Another claim.** No quote line — they haven't said it.
+open · agent:inferred — **Another claim.** No ev — they haven't said it.
 ```
 
 Statuses group by whether the entry can leave the file:
@@ -89,8 +91,8 @@ said it).
 
 Default provenance is `agent:inferred`: an item written without a quoted user
 phrase IS agent-derived, whatever else it's tagged. Their words or it isn't
-theirs — SETTLED/KILLED must embed the user's verbatim words inline; an entry
-with no quoted phrase is malformed and reads as `agent:inferred`. Forgetting to
+theirs — SETTLED/KILLED must carry the user's verbatim words in `ev:`; an entry
+with no `ev:` quote is malformed and reads as `agent:inferred`. Forgetting to
 down-rank a solo call fails safe — it stays a derivation. Ambiguity the model
 resolves stays `agent:inferred` until the user confirms — never folded into the
 record as stated fact.
