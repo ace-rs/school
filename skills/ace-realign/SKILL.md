@@ -54,6 +54,10 @@ When triggered:
    (e.g. "stop realigning", "you can drop the realign", "clear"). Do not
    self-terminate the protocol — it persists across tasks and topic switches.
 
+The realign line is this protocol's binding device: once armed, a message
+missing the `> Realign:` line is itself a violation — print it in the next
+message and continue. Never let the omission end the protocol.
+
 If the user says "Realign" again while the protocol is already active, treat it
 as a new violation: identify the new rule, and from then on repeat **both**
 rules in every message (stack them, do not replace).

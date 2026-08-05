@@ -77,7 +77,9 @@ removed — no stop-to-ask, no stop-to-plan. Honor `$ARGUMENTS` as the focus if 
    a cron / scheduled-prompt feature, a recurring self-message, or an external timer that
    injects a line into the session. Roughly every 10 minutes; pick an off-round interval
    if the harness offers one.
-2. Note the job's id or handle. Step 4 needs it.
+2. Note the job's id or handle. Step 4 needs it, and the run body's first stamp must
+   quote it — a first stamp quoting no job id means the heartbeat never armed; go
+   back and arm it.
 3. Fire this text each time:
 
    > AFK heartbeat. If the run has stalled — waiting on a dead subagent, stopped between

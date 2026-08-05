@@ -22,8 +22,10 @@ bounce into the void.
 
 **One rule: start before you do anything.** Asked to "tell X" before you've
 started? Start first, then tell — the peer decides whether to reply, and the
-reply needs your engine running. Single-user trust boundary. No auth, no
-encryption, no persistence, fire-and-forget.
+reply needs your engine running. The binding is mechanical: no `send.sh` or
+`discover.sh` call may appear in the transcript before `start.sh`'s own output —
+the start output is the evidence you're on the bus. Single-user trust boundary.
+No auth, no encryption, no persistence, fire-and-forget.
 
 ## Scripts
 
@@ -194,8 +196,10 @@ the Monitor *description* — static, identical for every message — while the
 `from=/to=/body=` line goes only into your context. So the user attending the
 session sees no sender, no verb, no body until you write one.
 
-Emit exactly one line, before acting. It is the user's only view of the message,
-so it carries the substance — not a pointer to it:
+Emit exactly one line, before acting — this print-first line is the binding
+device for the receive steps: no 📬 line in the transcript, no action taken on
+the message. It is the user's only view of the message, so it carries the
+substance — not a pointer to it:
 
 ```
 📬 <peer> → <VERB>: <what it says, enough to act on> · <what you did>
