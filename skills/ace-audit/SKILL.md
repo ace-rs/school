@@ -7,6 +7,7 @@ description: >
   audit, or check work against skill compliance. DO NOT TRIGGER for the normal in-`/ace`
   audit step (the workflow runs it), routine coding, or when there's no landed diff or
   body of work to review.
+argument-hint: "[scope for a standalone pass, e.g. paths or a commit range]"
 ---
 
 # ACE Audit
@@ -29,8 +30,11 @@ user's verbatim words.
 
 ## Audit procedure
 
-1. **Load the skills that govern what changed.** `git diff --name-only` to see the files,
-   then branch on what they are:
+1. **Find the files, then load the skills that govern them.** Recovery: `git diff
+   --name-only` (add `--cached` for staged work) names the files. Standalone, on a
+   clean tree: take the scope from `$ARGUMENTS`; with no `$ARGUMENTS`, use the
+   unpushed range (`git log @{u}..HEAD --name-only`); with neither, ask the user to
+   name the body of work. Then branch on what the files are:
 
    - **Code** — load each language's coding skill, plus any framework or infrastructure
      skill relevant to the changed files.

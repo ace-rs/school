@@ -46,7 +46,7 @@ Ten skills, all loaded by default for any school that imports this one:
 | ------------- | -------------------------------------------------------- |
 | `ace`         | Start or resume the ACE workflow at session boundaries   |
 | `ace-afk`     | Unattended autonomous mode inside a safety envelope      |
-| `ace-audit`   | Recover when a diff landed without passing through audit |
+| `ace-audit`   | Audit landed work — recovery or standalone quality pass  |
 | `ace-connect` | Local agent-to-agent bridge over unix sockets            |
 | `ace-docs`    | Scaffold a `docs/` tree routed by a single gate          |
 | `ace-init`    | One-time onboarding of a repo into ACE                   |
