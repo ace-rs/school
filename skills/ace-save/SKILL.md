@@ -77,7 +77,8 @@ in the working tree (→ note in the breadcrumb for `ace-school` to propose late
 don't branch/push/PR during a save) and non-trivial design calls (→ the school's
 `docs/spec/`).
 
-Skip anything that doesn't apply; don't invent learnings.
+A destination with nothing to route stays untouched; never invent a learning to
+fill one.
 
 Report what was saved and where. Only confirm safe to `/clear` if state
 persisted successfully.
