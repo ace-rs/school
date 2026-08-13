@@ -3,8 +3,9 @@ name: ace-school
 description: >
   ACE school management — proposing skill changes and creating PRs to the school
   repo. TRIGGER when: user wants to propose changes to skills, create a school PR,
-  run `ace diff`, or asks about school structure/workflow. DO NOT TRIGGER for:
-  normal coding tasks or project-specific work.
+  run `ace diff`, or asks about school structure/workflow — also when `ace school
+  pull` fails or the school clone is dirty. DO NOT TRIGGER for: normal coding tasks
+  or project-specific work.
 ---
 
 # ACE School Management
@@ -123,24 +124,37 @@ Run clone-scoped commands from `cd $(ace paths school)`.
 Skill files in the project are symlinks into the school clone, so an edit through one
 lands in the clone — which is a real git working copy, branchable and committable.
 
-## Proposing changes
+The clone is shared: every project on this machine that subscribes to the school reads
+it, and an uncommitted change there blocks `ace school pull` for all of them. An edit
+through a symlink dirties it immediately, so a session that edits a skill must end with
+those edits either proposed upstream (steps below) or reverted — never parked
+uncommitted in the clone.
 
-When skill edits need to go upstream, the numbered steps below run as a stamp chain:
-read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
-its contract (one-line stamp to close each step, reprint it to open the next, no skips).
-Step 2's approval is a Wait: proceed only with the user's approving words quoted.
+## Stamp chain
+
+The numbered steps in *Proposing changes* run as a stamp chain: read `ace/ledger.md` —
+in the `ace` skill's directory, sibling to this one — and follow its contract (one-line
+stamp to close each step, reprint it to open the next, no skips). Step 2's approval is a
+Wait: proceed only with the user's approving words quoted.
+
+## Proposing changes
 
 1. Run `ace diff` to review changes.
 2. Summarize findings — combine the diff output with your own context about what was
    changed and why during this session. Present the summary to the user and wait for
    explicit approval before proceeding.
-3. `cd $(ace paths school)` to enter the school cache directory.
+3. `cd $(ace paths school)` to enter the school clone.
 4. `git checkout -b ace/{short-description}` — create a feature branch.
 5. Stage and commit with a descriptive message.
 6. `git push -u origin {branch}` — push to the school remote.
 7. Create a PR to the school repo. Use GitHub MCP if available.
-8. Do **NOT** reset the cache to main — that destroys uncommitted work across all
-   branches.
+8. Commit everything that belongs to the proposal onto the branch. Session context that
+   didn't make the PR goes into the *project's* durable record, never left uncommitted
+   in the clone. Do **NOT** reset the clone — cleanliness comes from committing to the
+   branch, not from discarding work.
+9. `git checkout main` — leave the clone pristine so `ace school pull` keeps working
+   for every project while the PR is in flight.
+10. After the PR merges: pull main and delete the feature branch.
 
 ## Good school PR guidelines
 
