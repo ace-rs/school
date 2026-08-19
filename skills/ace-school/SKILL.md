@@ -25,6 +25,11 @@ Projects subscribe via `ace setup`, which clones the school into ACE's data dir 
 with `ace paths school`; typically `~/.local/share/ace/…`, **not** the cache) and symlinks
 `skills/` into the project.
 
+If `ace paths school` resolves to the current project because `ace.toml` sets
+`school = "."`, that checkout is the authoritative school repository for the task.
+Do not edit or synchronize `~/.local/share/ace/<name>/` or `~/.cache/ace/` unless the
+user explicitly names those paths.
+
 ## `school.toml` schema
 
 | Field            | Type   | Notes                                                   |
