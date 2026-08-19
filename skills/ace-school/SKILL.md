@@ -4,7 +4,7 @@ description: >
   ACE school management — proposing skill changes and creating PRs to the school
   repo. TRIGGER when: user wants to propose changes to skills, create a school PR,
   run `ace diff`, or asks about school structure/workflow — also when `ace school
-  pull` fails or the school clone is dirty. DO NOT TRIGGER for: normal coding tasks
+  pull` fails or the school checkout is dirty. DO NOT TRIGGER for: normal coding tasks
   or project-specific work.
 ---
 
@@ -21,9 +21,15 @@ projects. Structure:
 - `skills/<name>/SKILL.md` — one directory per skill
 - `CLAUDE.md`, `docs/` — house rules and durable record
 
-Projects subscribe via `ace setup`, which clones the school into ACE's data dir (find it
-with `ace paths school`; typically `~/.local/share/ace/…`, **not** the cache) and symlinks
-`skills/` into the project.
+Projects subscribe via `ace setup`. Run `ace paths school` to locate the authoritative
+school repository. A normal subscription stores that checkout in ACE's data dir
+(typically `~/.local/share/ace/…`, **not** the cache) and symlinks its `skills/` into the
+project.
+
+If `ace.toml` sets `school = "."`, `ace paths school` resolves to the current project.
+That checkout is authoritative. Do not edit or synchronize
+`~/.local/share/ace/<name>/` or `~/.cache/ace/` unless the user explicitly names those
+paths.
 
 ## `school.toml` schema
 
@@ -104,7 +110,7 @@ second directory, not a frontmatter field.
 | Command                   | Purpose                                                 |
 |---------------------------|---------------------------------------------------------|
 | `ace setup <school>`      | Subscribe a project: clone school + wire it in          |
-| `ace diff`                | Show uncommitted changes in the school clone            |
+| `ace diff`                | Show uncommitted changes in the school checkout         |
 | `ace paths [key]`         | Resolved paths (`school`, `cache`, `project`, …)        |
 | `ace import <owner/repo>` | Import skills from another school (`--skill`, `--all`)  |
 | `ace school init`         | Scaffold a new school                                   |
@@ -117,18 +123,20 @@ second directory, not a frontmatter field.
 | `ace mcp`                 | Manage MCP server registrations                         |
 | `ace fmt`                 | Pretty-print/clean ace.toml & school.toml (`format`)    |
 
-Run clone-scoped commands from `cd $(ace paths school)`.
+Run school-repository commands from `cd "$(ace paths school)"`.
 
 ## Editing skills
 
-Skill files in the project are symlinks into the school clone, so an edit through one
-lands in the clone — which is a real git working copy, branchable and committable.
+`ace paths school` selects the checkout to edit. If it resolves to the current project,
+edit that project's `skills/<name>/SKILL.md` directly. Otherwise, project skill files
+are symlinks into the resolved checkout, so an edit through one lands there. The
+resolved checkout is a real git working copy, branchable and committable.
 
-The clone is shared: every project on this machine that subscribes to the school reads
-it, and an uncommitted change there blocks `ace school pull` for all of them. An edit
-through a symlink dirties it immediately, so a session that edits a skill must end with
-those edits either proposed upstream (steps below) or reverted — never parked
-uncommitted in the clone.
+Keep the resolved checkout clean. A data-dir checkout is shared by every project on the
+machine that subscribes to that school, and an uncommitted change there blocks
+`ace school pull` for all of them. Finish a skill-editing session with the changes either
+proposed upstream (steps below) or reverted. Never park uncommitted changes in the
+checkout.
 
 ## Stamp chain
 
@@ -143,16 +151,16 @@ Wait: proceed only with the user's approving words quoted.
 2. Summarize findings — combine the diff output with your own context about what was
    changed and why during this session. Present the summary to the user and wait for
    explicit approval before proceeding.
-3. `cd $(ace paths school)` to enter the school clone.
+3. `cd "$(ace paths school)"` to enter the authoritative school checkout.
 4. `git checkout -b ace/{short-description}` — create a feature branch.
 5. Stage and commit with a descriptive message.
 6. `git push -u origin {branch}` — push to the school remote.
 7. Create a PR to the school repo. Use GitHub MCP if available.
 8. Commit everything that belongs to the proposal onto the branch. Session context that
    didn't make the PR goes into the *project's* durable record, never left uncommitted
-   in the clone. Do **NOT** reset the clone — cleanliness comes from committing to the
-   branch, not from discarding work.
-9. `git checkout main` — leave the clone pristine so `ace school pull` keeps working
+   in the checkout. Do **NOT** reset the checkout — cleanliness comes from committing to
+   the branch, not from discarding work.
+9. `git checkout main` — leave the checkout pristine so `ace school pull` keeps working
    for every project while the PR is in flight.
 10. After the PR merges: pull main and delete the feature branch.
 
