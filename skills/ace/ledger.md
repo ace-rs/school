@@ -12,6 +12,36 @@ Every numbered step ends with a **stamp** — one line:
 ⛓ <n> <step> | ev: "<decisive line>" | next: <n+1>
 ```
 
+Keep this canonical stamp plain text. When the output surface is a known ANSI-capable
+terminal, print a display-only rendering with one muted base and one highlight color:
+
+`ESC` below means the literal escape byte (`0x1b`), not the visible letters `E`, `S`,
+and `C`.
+
+- Start the line with `ESC[38;5;250m` for muted light gray.
+- Wrap only `⛓ <n>`, the literal `ev:`, and the literal `next:` in cyan with
+  `ESC[38;5;6m`.
+- Restore muted light gray with `ESC[38;5;250m` after every cyan span. Never use
+  `ESC[39m` between spans.
+- End the line with `ESC[39m`.
+
+Keep the step name, evidence, separators, and any other fields in the muted base color.
+On Markdown, logs, files, or an unknown surface, print only the canonical stamp. Never
+put ANSI escapes in the canonical stamp, a chained reprint, subagent handoff, or `.ace/`
+file. The display rendering never opens or closes a step.
+
+Canonical example:
+
+```
+⛓ 4 Specs | ev: "docs/spec/widget.md read" | next: draft plan
+```
+
+Display example (annotations name styling; do not print the angle-bracket labels):
+
+```
+<cyan>⛓ 4<muted> Specs | <cyan>ev:<muted> "docs/spec/widget.md read" | <cyan>next:<muted> draft plan
+```
+
 ## The rules
 
 - **Evidence is quoted, never re-pasted.** The full artifact — command output, prose

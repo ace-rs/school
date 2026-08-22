@@ -18,6 +18,10 @@ a `files:` field:
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
+Apply `ace/ledger.md`'s display-only styling rule to this extended stamp. Keep `files:`,
+the step name, separators, evidence, and values in the muted base color. Highlight only
+`⛓ <step number>`, the literal `ev:`, and the literal `next:` in cyan.
+
 On top of the contract:
 
 - **File-set binding.** The simplified plan (step 6) is the binding file-set,

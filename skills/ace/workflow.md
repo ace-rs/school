@@ -11,6 +11,10 @@ user's verbatim words. This workflow's stamp adds a `files:` field:
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
+Apply `ledger.md`'s display-only styling rule to this extended stamp. Keep `files:`,
+the step name, separators, evidence, and values in the muted base color. Highlight only
+`⛓ <step number>`, the literal `ev:`, and the literal `next:` in cyan.
+
 Two rules are this workflow's own:
 
 - **File-set binding.** The simplified plan (step 6) is the binding file-set: every
