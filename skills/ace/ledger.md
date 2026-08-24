@@ -12,8 +12,8 @@ Every numbered step ends with a **stamp** — one line:
 ⛓ <n> <step> | ev: "<decisive line>" | next: <n+1>
 ```
 
-Keep this canonical stamp plain text. When the output surface is a known ANSI-capable
-terminal, print a display-only rendering with one muted base and one highlight color:
+Keep this canonical stamp plain text. On a known ANSI-capable terminal, the protocol
+requires printing a display-only rendering with one muted base and one highlight color:
 
 `ESC` below means the literal escape byte (`0x1b`), not the visible letters `E`, `S`,
 and `C`.
@@ -26,9 +26,9 @@ and `C`.
 - End the line with `ESC[39m`.
 
 Keep the step name, evidence, separators, and any other fields in the muted base color.
-On Markdown, logs, files, or an unknown surface, print only the canonical stamp. Never
-put ANSI escapes in the canonical stamp, a chained reprint, subagent handoff, or `.ace/`
-file. The display rendering never opens or closes a step.
+On Markdown, logs, files, or an unknown surface, the protocol requires printing only the
+canonical stamp. Never put ANSI escapes in the canonical stamp, a chained handoff,
+subagent handoff, or `.ace/` file. Emit exactly one representation of each stamp.
 
 Canonical example:
 
@@ -54,11 +54,13 @@ Display example (annotations name styling; do not print the angle-bracket labels
   The two-line cap holds only while the quoted source survives alongside the stamp.
   In a durable record whose source dies with the session — the `.ace/` trail quoting
   conversation — `ev:` runs as long as the words require; never trim it for size.
-- **Chained entry.** A step opens by reprinting the previous step's stamp line,
-  verbatim. No stamp to reprint → the step cannot be entered; go back and produce it.
+- **Chained entry.** Open a step by reprinting the previous step's stamp verbatim. If
+  that stamp was already emitted immediately before the step boundary, reuse that
+  emission as the entry token instead of printing a second copy. No stamp to reprint or
+  reuse → the step cannot be entered; go back and produce it.
 - **Stamp-named succession.** The only step you may open is the one the last stamp
   names. "What's next" is never a judgment call — it is written in the line you must
-  reprint to proceed.
+  reprint or reuse to proceed.
 - **No skip vocabulary.** "Skipped", "not applicable", "inferred done", "effectively
   covered" do not exist. Every step runs; a step whose honest execution is small still
   runs and leaves real evidence.

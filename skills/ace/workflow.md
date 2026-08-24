@@ -4,7 +4,7 @@
 
 Every step in this workflow runs under the stamp-chain contract in `ledger.md`, in
 this skill's directory — read it and follow it: evidence quoted, never re-pasted;
-chained entry; stamp-named succession; no skip vocabulary; exemptions only in the
+mandatory reprint-or-reuse entry; stamp-named succession; no skip vocabulary; exemptions only in the
 user's verbatim words. This workflow's stamp adds a `files:` field:
 
 ```

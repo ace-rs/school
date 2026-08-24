@@ -35,8 +35,9 @@ questions, contradicted learnings) — don't open stores just to sweep.
 The two numbered steps below run as a stamp chain — this governs the steps of this run
 and has nothing to do with `.ace/save.ledger.md`, the state file this skill writes.
 Read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
-its contract: close every step with its one-line stamp, open the next by reprinting it,
-no skips. The closing report opens by reprinting step 2's stamp.
+its contract: close every step with one emitted stamp; reprint the prior stamp to enter
+the named next step, reusing an immediately preceding emission instead of duplicating it;
+no skips. The closing report follows step 2 by the same rule.
 
 ## 1. Resume breadcrumb
 

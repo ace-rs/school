@@ -44,8 +44,9 @@ Every skill is therefore built from three parts:
 ## Stamp chain
 
 The chosen operation's steps run as a stamp chain. Read `ace/ledger.md` and follow its
-contract: close every step with its one-line stamp, open the next by reprinting it, no
-skips, exemptions only in the user's verbatim words.
+contract: close every step with one emitted stamp; reprint the prior stamp to enter the
+named next step, reusing an immediately preceding emission instead of duplicating it;
+no skips, exemptions only in the user's verbatim words.
 
 ## Create a skill
 

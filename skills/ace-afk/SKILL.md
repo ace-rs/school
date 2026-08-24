@@ -47,8 +47,9 @@ Run this while the human is still reachable. It front-loads every decision so th
 unattended body needs none. This phase is the *only* sanctioned asking window.
 
 The four steps run as a stamp chain: read `ace/ledger.md` — in the `ace` skill's
-directory, sibling to this one — and follow its contract (one-line stamp to close each
-step, reprint it to open the next, no skips). Step 4 is a Wait: the run body opens only
+directory, sibling to this one — and follow its contract (one emitted stamp to close each
+step; reprint the prior stamp to enter the named next step, reusing an immediately preceding
+emission instead of duplicating it; no skips). Step 4 is a Wait: the run body opens only
 with the user's "Go" quoted in its entry.
 
 1. **Restate the understood end-goal.** "Understood: <goal>." Include the definition of
