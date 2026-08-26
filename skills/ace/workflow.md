@@ -21,11 +21,13 @@ Two rules are this workflow's own:
   path the task covers, enumerated once, in the plan prose its stamp points at; the
   test plan (step 7) covers those same paths per class. Later stamps list only the
   files touched that step and cite the rest as `files: <touched> per ⛓ simplify`. From
-  step 9 on, you may only touch files in the binding list. Touching an unlisted file is
-  not a small overrun to note — it is the gate: stop the edit, return to step 5, and
-  re-plan with the file included. A rationale like "docs-only" or "no tests needed for
-  this part" covers exactly the paths listed under it and says nothing about any other
-  file.
+  step 9 on, you may only touch files in the binding list. Touching an unlisted file
+  activates a file-set rebind. Do not touch the new path. Close the current step with
+  `next: draft plan (5)`, complete steps 5–7 with the
+  expanded set, then use step 8's rebind branch. A changed goal, scope, or acceptance
+  criterion is a task change, not a file-set correction: surface it and wait for the
+  user. A rationale like "docs-only" or "no tests needed for this part" covers exactly
+  the paths listed under it and says nothing about any other file.
 - **Three chains, always.** The normal task is spec + tests + code — the workflow
   mandates spec-first, so all three classes exist in every real task and each runs the
   full cycle. A class that seems absent is a mis-scoped task, not an exemption: a spec
@@ -122,10 +124,15 @@ unverified; a claim about your own failure is a causal claim like any other.
    another class's paths. Stamp ev: points at the per-class, per-path validation plan
    above; next: confirm.
 
-8. **Confirm** — open by reprinting or reusing the test-plan stamp. Present the simplified plan and
-   test plan. **Stop.** Don't edit files, don't run commands, don't implement. Wait for
-   explicit approval. If the user refines or redirects, return to step 5. Stamp: the
-   user's approving words quoted; next: red.
+8. **Confirm or notify** — open by reprinting or reusing the test-plan stamp.
+
+   - **Initial plan:** present the simplified plan and test plan. Stop and wait for
+     explicit approval. Stamp with the user's approving words; next: red.
+   - **File-set rebind after initial approval:** present the revised plan and test plan
+     as a notification. Do not wait. Stamp with the notification above; next: red.
+
+   If the user redirects either plan, return to step 5. A changed goal, scope, or
+   acceptance criterion always uses the initial-plan branch.
 
 ## TDD execution
 
@@ -144,9 +151,9 @@ stamps — file-set, evidence, next — or its slice is not done.
 
 10. **Green** — open by reprinting or reusing the red stamp. Make the smallest change that
     satisfies those tests, touching only files in the plan's file-set. A file you need
-    but didn't list means the plan was wrong, not that the list was advisory: stop,
-    return to step 5. Stamp: files touched; ev: the passing narrow-test summary line;
-    next: refactor.
+    but didn't list means the plan was wrong, not that the list was advisory: activate
+    the file-set rebind and close this step with `next: draft plan (5)`. Otherwise,
+    stamp: files touched; ev: the passing narrow-test summary line; next: refactor.
 
 11. **Refactor** — open by reprinting or reusing the green stamp. Clean up without changing behavior,
     within the same file-set; prefer deletions; elegant just-enough. Don't cut
@@ -168,10 +175,11 @@ stamps — file-set, evidence, next — or its slice is not done.
     `git diff --stat` and confirm **every changed file appears in the plan's file-set
     and inside a complete stamp chain** (plan → test plan → red → green → refactor →
     verify). A
-    file outside the chain is the laundering breach — return to step 5 for it. Then the
-    content pass: re-read every changed file (not just diffs); verify code matches
-    spec, the simplified plan was followed, conventions and loaded skill rules
-    respected. Categorize every finding:
+    file outside the chain is the laundering breach — activate the file-set rebind and
+    close this step with `next: draft plan (5)`. Otherwise, continue to the content
+    pass: re-read every changed file (not just diffs); verify code matches spec, the
+    simplified plan was followed, conventions and loaded skill rules respected.
+    Categorize every finding:
 
    - **Violation** — clear skill or spec rule broken, or a chain/coverage breach.
      Blocks; must be fixed.
