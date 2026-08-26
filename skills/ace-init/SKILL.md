@@ -26,8 +26,9 @@ Assumes `ace setup` already ran. If the repo has no ACE config, point the user a
 `ace setup` first.
 
 **Propose-then-wait, in one batch.** The study is read-only — run it directly. Collect
-everything Phase 1 would write into a single plan file, get approval on the whole, then
-apply it in one pass — never file-by-file. The Phase 2 spec run is separately gated; never
+everything Phase 1 would write in `.ace/init-plan.md`, get approval on the whole, then
+apply it in one pass — never file-by-file. The plan is gitignored working state and is
+deleted after the approved batch lands. The Phase 2 spec run is separately gated; never
 start it unprompted.
 
 `$ARGUMENTS` narrows focus if provided (e.g. "skills only").
@@ -37,12 +38,18 @@ start it unprompted.
 The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
 skill's directory, sibling to this one — and follow its contract: close every step with
 its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
-user's verbatim words. Step 5's approval and the Phase 2 gate are Waits: each is
+user's verbatim words. Phase 1 step 6 and Phase 2 step 1 are Waits: each is
 crossed only with the user's approving words quoted in the entry.
 
 ## Phase 1 — Lay down the structure
 
-### 1. Study the repo
+### 1. **Open plan**
+
+Create `.ace/init-plan.md`. Verify whether `/.ace/` is gitignored; when it is not, record
+the `.gitignore` addition in the plan instead of editing the tracked file before approval.
+Record every Phase 1 finding and proposed write in the plan until step 8 removes it.
+
+### 2. **Study repo**
 
 Build a picture of what this is and what the user is building. Cover:
 
@@ -53,24 +60,24 @@ Build a picture of what this is and what the user is building. Cover:
   commit-message style, branching.
 - **Activity** — `git log --oneline -20` and `git status` for what's in flight.
 
-Keep it a skim — the deep pass is Phase 2. Record findings in the plan file as you go;
+Keep it a skim — the deep pass is Phase 2. Record findings in `.ace/init-plan.md` as you go;
 later steps add to it.
 
-### 2. Plan the instructions file
+### 3. **Plan instructions**
 
 The harness instructions file is where an agent reads "what is this repo" every session —
-`CLAUDE.md`, `AGENTS.md`, or the harness's equivalent. From the step-1 study, plan to
+`CLAUDE.md`, `AGENTS.md`, or the harness's equivalent. From the step-2 study, plan to
 write or refresh:
 
 - A tight "what this repo is" overview.
 - Conventions worth pinning — build/test commands, house style, branching.
-- A pointer to `docs/` if it exists or gets scaffolded (step 4).
-- Which skills are active and why (see step 3).
+- A pointer to `docs/` if it exists or gets scaffolded (step 5).
+- Which skills are active and why (see step 4).
 
 Place ACE additions near existing "where things go" guidance, not scattered. If no
 instructions file exists, the plan records which to create. Add all of this to the plan.
 
-### 3. Plan the skills selection
+### 4. **Plan skills**
 
 A school ships every skill it bundles by default. Trim to what this repo needs.
 
@@ -97,7 +104,7 @@ Record the chosen set in the plan with a one-line rationale per add or drop, map
 study (e.g. "drop `frontend-design` — no UI here"). `ace skills` lists what's active;
 `ace config` shows the resolved set.
 
-### 4. Plan durable docs
+### 5. **Plan docs**
 
 From the study, decide whether durable docs are warranted — architecture, a domain model,
 or non-obvious design history worth persisting. If so, the plan notes that `docs/` should
@@ -109,53 +116,70 @@ so a tree that never gets filled is never created. If there's little to document
 
 That overview is the high-level cut; the detailed specs come in Phase 2.
 
-### 5. Confirm and apply
+### 6. **Confirm plan**
 
 Once the scan is done, finalize the plan file and present it as a whole — findings plus
-every proposed change. On approval, apply it in one batch: edit the instructions file and
-write the skills config, then run `ace link` so the newly selected skills are symlinked
-into the harness's skill folder. On harnesses that auto-reload skills from the filesystem
-(Claude, codex, opencode), they go live in the running session immediately — no relaunch
-needed; on a harness that doesn't, tell the user to relaunch to pick them up. Report what
-landed and remove the plan file. If durable docs are warranted, flag the `ace-docs`
-scaffold and (if applicable) a Phase 2 spec run as recommended follow-ups; don't start
-either here.
+every proposed change. Wait for approval of the complete batch.
+
+### 7. **Apply plan**
+
+Open by quoting the approval. Edit the instructions file and write the skills config in
+one batch, then run `ace link` so the selected skills are symlinked into the harness's
+skill folder. On harnesses that auto-reload skills from the filesystem, they go live in
+the running session immediately. On other harnesses, tell the user to relaunch. If durable
+docs are warranted, report the `ace-docs` scaffold and Phase 2 spec run as follow-ups;
+start neither here.
+
+### 8. **Remove plan**
+
+Delete `.ace/init-plan.md` after all approved writes and `ace link` complete. Report the
+files changed and the link result.
 
 ## Phase 2 — Full spec run
 
-A spec run distills what the code already does into durable explainers, so a later human
-or agent reads the spec instead of deep-scanning the code again. It needs a deep scan, not
-Phase 1's skim. Run it only when the project lacks specs and would benefit, and only on
-explicit approval.
-Suggest it; never start one unprompted.
+A spec run distills what the code already does into durable explainers. It needs a deep
+scan, not Phase 1's skim. Run it only when the project lacks specs and would benefit.
 
-On a large codebase this means *many* specs, not one — scope it rather than trying to spec
-the whole system in a sitting.
+### 1. **Scope run**
 
-**Decompose first.** List the spec-able units before writing any. Typical cuts:
+List the spec-able units and order them by dependency, change frequency, risk, and current
+understanding. A large codebase needs several specs and may need several sessions. Present
+the ordered scope and wait for explicit approval. Typical units:
 
 - **Subsystem / service** — e.g. `auth`, `billing`, `ingest-pipeline`; one spec each.
 - **Domain model** — the core entities, their invariants and lifecycles.
 - **Key flow** — checkout, onboarding, a nightly job — end-to-end across modules.
 - **Integration boundary** — each external API, queue, or webhook contract.
 
-**Prioritize.** Spec the load-bearing and highest-risk units first — most depended on,
-most changed, or least understood. A big system is multi-session — order so the first
-session stands alone.
+### 2. **Prepare docs**
 
-**Go deep per unit.** Capture what a skim can't: intended behavior and contracts, data
-shapes and invariants, error and edge-case handling, and the *why* behind non-obvious
-choices. Reverse-spec against the implementation. Reconcile each claim and flag
-divergences (spec says X, code does Y) instead of papering over them.
+Open by quoting the approved scope. Read the existing `docs/` gate; when none exists, run
+`ace-docs` before writing the first unit. Route system behavior, intent, and the project's
+exact surface to `docs/spec/`; route third-party lookup to `docs/vendor/`.
 
-**Route by the gate.** Per `ace-docs`: how-it-works, intent, and our own exact surface
-(every config key, every endpoint) → `docs/spec/`; third-party lookup we lean on →
-`docs/vendor/`. Everything settled — conventions, preferences, instructions — amends
-`docs/spec/`; don't scaffold a decisions log.
+### 3. **Study unit**
 
-Run each spec through the normal `ace` planning phases (`/ace` → Specs → Draft Plan);
-scaffold `docs/` first via `ace-docs`. If a full run is too big for now, write the
-highest-priority spec as a seed and stop.
+Deep-read the implementation for the next approved unit. Capture behavior, contracts,
+data shapes, invariants, errors, edge cases, and non-obvious intent.
+
+### 4. **Reconcile claims**
+
+Check every proposed claim against the implementation. Flag divergences between intended
+and implemented behavior instead of papering over them.
+
+### 5. **Write spec**
+
+Run the unit through the normal `ace` planning phases, then write it through the
+`ace-docs` gate. Everything settled amends `docs/spec/`; never scaffold a decisions log.
+
+### 6. **Review unit**
+
+Verify the document against the implementation and the approved scope. Fix every mismatch.
+
+### 7. **Continue run**
+
+Return to step 3 for the next approved unit. When the approved scope is exhausted, report
+the specs written and stop. A smaller approved scope may end after one seed spec.
 
 ## Close
 
