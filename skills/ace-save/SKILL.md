@@ -32,32 +32,34 @@ questions, contradicted learnings) — don't open stores just to sweep.
 
 ## Stamp chain
 
-The two numbered steps below run as a stamp chain — this governs the steps of this run
+The five numbered steps below run as a stamp chain — this governs the steps of this run
 and has nothing to do with `.ace/save.ledger.md`, the state file this skill writes.
 Read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
 its contract: close every step with one emitted stamp; reprint the prior stamp to enter
 the named next step, reusing an immediately preceding emission instead of duplicating it;
-no skips. The closing report follows step 2 by the same rule.
+no skips.
 
-## 1. Resume breadcrumb
+## 1. **Load contracts**
 
-Survey the conversation and `git status`, then persist to the storage cascade:
+Read the storage cascade in `ace/workflow.md` and the trail format in
+`ace-save/trail.md`. The latter defines the layout, status and provenance enums, removal
+rules, and graduation into `docs/`.
+
+## 2. **Survey state**
+
+Survey the conversation, `git status`, and the one or two stores already in use. Include
+`$ARGUMENTS` when provided. Do not mutate any store in this step.
+
+## 3. **Persist breadcrumb**
+
+Persist to the storage cascade:
 - **Tasks / next steps** → the most fitting store the cascade names (issue
   tracker if one's in use, `.ace/save.md` otherwise) — where the next `/ace`
   looks for pending work.
 - **Narrative** — what was done, where you stopped, open questions — enough that
   a fresh session picks up the thread.
-Include `$ARGUMENTS` if provided.
 
-## Trail format — state, not story
-
-The trail is `.ace/save.md` (current truth) and `.ace/save.ledger.md` (items
-with a status and a provenance), both gitignored. Read `ace-save/trail.md` —
-next to this file — before writing either one, and follow it. It holds the
-layout, the status and provenance enums, how a line may leave a file, and how
-a settled item graduates into `docs/`.
-
-## 2. Route durable knowledge
+## 4. **Route knowledge**
 
 A learning that outlived the task goes to exactly one place, by **who it
 serves** — checked top-down, stop at the first fit:
@@ -78,8 +80,9 @@ in the working tree (→ note in the breadcrumb for `ace-school` to propose late
 don't branch/push/PR during a save) and non-trivial design calls (→ the school's
 `docs/spec/`).
 
-A destination with nothing to route stays untouched; never invent a learning to
-fill one.
+A destination with nothing to route stays untouched; never invent a learning to fill one.
+
+## 5. **Report**
 
 Report what was saved and where. Only confirm safe to `/clear` if state
 persisted successfully.
