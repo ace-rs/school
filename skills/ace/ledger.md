@@ -9,37 +9,27 @@ skill's numbered steps.
 Every numbered step ends with a **stamp** — one line:
 
 ```
-⛓ <n> <step> | ev: "<decisive line>" | next: <n+1>
+⛓ <n> <step> | ev: "<decisive line>" | next: <n+1> <step>
 ```
 
-Keep this canonical stamp plain text. On a known ANSI-capable terminal, the protocol
-requires printing a display-only rendering with one muted base and one highlight color:
+Keep this canonical stamp plain text. Every procedure defines stamp names through its
+numbered steps. The step number plus its bolded prefix is the stamp identity. `next:` uses
+that full identity for the following step. An explicit branch uses the full identity of
+its stated destination. The final step uses `next: done` unless the procedure names a
+loop destination. `ev:` quotes the decisive result of the action named by the prefix.
 
-`ESC` below means the literal escape byte (`0x1b`), not the visible letters `E`, `S`,
-and `C`.
+Keep each prefix concise and single-action. A prefix that needs `and`, or cannot be made
+concise, contains more than one action; split the step.
 
-- Start the line with `ESC[38;5;250m` for muted light gray.
-- Wrap only `⛓ <n>`, the literal `ev:`, and the literal `next:` in cyan with
-  `ESC[38;5;6m`.
-- Restore muted light gray with `ESC[38;5;250m` after every cyan span. Never use
-  `ESC[39m` between spans.
-- End the line with `ESC[39m`.
+On a Markdown conversation surface, emit the canonical stamp once inside a plain fenced
+block. On logs, files, handoffs, terminals, and unknown surfaces, emit the canonical line
+as plain text. Never emit ANSI escapes. Put one blank line before and after every stamp;
+never attach it directly to prose, tool output, or the next step's text.
 
-Keep the step name, evidence, separators, and any other fields in the muted base color.
-On Markdown, logs, files, or an unknown surface, the protocol requires printing only the
-canonical stamp. Never put ANSI escapes in the canonical stamp, a chained handoff,
-subagent handoff, or `.ace/` file. Emit exactly one representation of each stamp.
-
-Canonical example:
+Emit exactly one representation:
 
 ```
-⛓ 4 Specs | ev: "docs/spec/widget.md read" | next: draft plan
-```
-
-Display example (annotations name styling; do not print the angle-bracket labels):
-
-```
-<cyan>⛓ 4<muted> Specs | <cyan>ev:<muted> "docs/spec/widget.md read" | <cyan>next:<muted> draft plan
+⛓ 4 Specs | ev: "docs/spec/widget.md read" | next: 5 Draft plan
 ```
 
 ## The rules

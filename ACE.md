@@ -96,6 +96,6 @@ authoritative; there is no decisions log.
 
 A skill needs creating or revising, and prose instructions alone won't hold — models
 skim, skip steps, and mint their own exemptions. `ace-skill` authors skills in the
-shape that survives that: a menu of operations up front, numbered steps per operation,
+shape that survives that: a menu before operational detail, numbered steps per operation,
 and an enforcement mechanism binding the steps (the stamp-chain ledger by default). It
 also retrofits enforcement onto existing skills and tunes descriptions for triggering.

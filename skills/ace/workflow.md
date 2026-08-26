@@ -11,9 +11,8 @@ user's verbatim words. This workflow's stamp adds a `files:` field:
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
-Apply `ledger.md`'s display-only styling rule to this extended stamp. Keep `files:`,
-the step name, separators, evidence, and values in the muted base color. Highlight only
-`⛓ <step number>`, the literal `ev:`, and the literal `next:` in cyan.
+Apply `ledger.md`'s display rule to this extended stamp: fenced on Markdown conversation
+surfaces and plain text everywhere else. Emit no ANSI escapes.
 
 Two rules are this workflow's own:
 
@@ -23,7 +22,7 @@ Two rules are this workflow's own:
   files touched that step and cite the rest as `files: <touched> per ⛓ simplify`. From
   step 9 on, you may only touch files in the binding list. Touching an unlisted file
   activates a file-set rebind. Do not touch the new path. Close the current step with
-  `next: draft plan (5)`, complete steps 5–7 with the
+  `next: 5 Draft plan`, complete steps 5–7 with the
   expanded set, then use step 8's rebind branch. A changed goal, scope, or acceptance
   criterion is a task change, not a file-set correction: surface it and wait for the
   user. A rationale like "docs-only" or "no tests needed for this part" covers exactly
@@ -74,19 +73,16 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 1. **Cleanup** — check `git status` and `git diff`. Uncommitted or staged changes from
    prior work: present them and ask whether to commit, stash, or discard. Don't proceed
-   to task selection with a dirty working tree. Stamp ev: the decisive `git status`
-   line, clean or resolved; next: surface.
+   to task selection with a dirty working tree.
 
 2. **Surface** — open by reprinting or reusing the cleanup stamp. Read the storage cascade in order
    (below); collect pending tasks, open questions, and blockers. Present them as a
-   list. If nothing found, suggest tasks or state "nothing pending." Stamp ev: points
-   at the list above and names the cascade sources read; next: propose.
+   list. If nothing found, suggest tasks or state "nothing pending."
 
 3. **Propose** — open by reprinting or reusing the surface stamp. Suggest the natural next task from
    what was surfaced, and identify which skills to load. **Stop.** Don't load skills,
-   don't start execution. Wait for the user to confirm or refine. On confirm ("ok",
-   "go", "do it", or a task pick), stamp with the user's confirming words quoted;
-   next: specs. `/ace` need not be invoked again.
+   don't start execution. Wait for the user to confirm or refine. The confirmation opens
+   Specs and quotes the user's words. `/ace` need not be invoked again.
 
 ## Planning
 
@@ -95,8 +91,7 @@ unverified; a claim about your own failure is a causal claim like any other.
    at; start from `docs/spec/README.md` if it has an index). The spec is authoritative —
    comply with it rather than re-deciding a question it already settles. Compare against
    the ask; note gaps, contradictions, outdated sections; extract the acceptance
-   criteria. Don't edit yet. Stamp ev: the spec files read, pointing at the criteria
-   above; next: draft plan.
+   criteria. Don't edit yet.
 
 5. **Draft plan** — open by reprinting or reusing the specs stamp. Explore the space: alternatives,
    trade-offs, edge cases. List every change — spec updates first, then tests, then
@@ -104,15 +99,13 @@ unverified; a claim about your own failure is a causal claim like any other.
    bound to. For any durable doc this task produces, name its target `docs/` folder now
    by walking the routing gate in `docs/README.md` — decide placement at plan time, not
    when filing. If ambiguous, ask. If too large, propose a breakdown first. Identify
-   which skills to load. Stamp ev: points at the file-by-file plan above; next:
-   simplify plan.
+   which skills to load.
 
 6. **Simplify plan** — open by reprinting or reusing the draft-plan stamp. Cut anything unnecessary;
    prefer deletions; merge combinable steps. Aim for elegant just-enough — not the
    minimum possible, not the perfect solution, an elegant fit for the ask. Don't cut
    requirements or edge cases the spec or user called out — simplify the *how*, not the
-   *what*. Stamp ev: points at the surviving file-by-file plan above (the binding
-   file-set); next: test plan.
+   *what*.
 
 7. **Test plan** — open by reprinting or reusing the simplify stamp. Define validation before
    implementation, **per change-class in the plan** (spec, tests, code): tests to
@@ -121,15 +114,14 @@ unverified; a claim about your own failure is a causal claim like any other.
    red/green shape doesn't fit a class (a docs edit has no failing test), the class
    still gets a real verification plan — render, link-check, consistency against
    code — named here, per path. No class is left without a plan; no plan waives
-   another class's paths. Stamp ev: points at the per-class, per-path validation plan
-   above; next: confirm.
+   another class's paths.
 
 8. **Confirm or notify** — open by reprinting or reusing the test-plan stamp.
 
    - **Initial plan:** present the simplified plan and test plan. Stop and wait for
-     explicit approval. Stamp with the user's approving words; next: red.
+     explicit approval. The approval opens Red and quotes the user's words.
    - **File-set rebind after initial approval:** present the revised plan and test plan
-     as a notification. Do not wait. Stamp with the notification above; next: red.
+     as a notification. Do not wait; the notification opens Red.
 
    If the user redirects either plan, return to step 5. A changed goal, scope, or
    acceptance criterion always uses the initial-plan branch.
@@ -146,28 +138,24 @@ stamps — file-set, evidence, next — or its slice is not done.
    update tests first, touching only files in the test-plan's file-set; run the narrow
    target; confirm it fails for the expected reason. For a class whose plan named a
    substitute verification, execute the substitute's setup now. If something unexpected
-   comes up, stop and surface it — don't work around it silently. Stamp: files touched;
-   ev: the failing assertion line (or the substitute's decisive line); next: green.
+   comes up, stop and surface it — don't work around it silently.
 
 10. **Green** — open by reprinting or reusing the red stamp. Make the smallest change that
     satisfies those tests, touching only files in the plan's file-set. A file you need
     but didn't list means the plan was wrong, not that the list was advisory: activate
-    the file-set rebind and close this step with `next: draft plan (5)`. Otherwise,
-    stamp: files touched; ev: the passing narrow-test summary line; next: refactor.
+    the file-set rebind and close this step with `next: 5 Draft plan`.
 
 11. **Refactor** — open by reprinting or reusing the green stamp. Clean up without changing behavior,
     within the same file-set; prefer deletions; elegant just-enough. Don't cut
     requirements or edge cases the spec or user called out. If no cleanup is needed,
     the stamp says so explicitly with the reason — that is a run with small evidence,
-    not a skip. Stamp ev: a one-line cleanup summary (or the explicit no-cleanup
-    finding) plus the still-passing test line; next: verify.
+    not a skip.
 
 12. **Verify** — open by reprinting or reusing the refactor stamp. Run the planned narrow and broad
     checks from step 7, every class, every path. A missing test case → add the test and
     loop red/green/refactor again (the loop re-enters at 9 with a stamp noting why). If
     a planned check can't run, record why in the stamp and substitute the closest
-    useful verification. Stamp ev: one decisive line per planned check, from its actual
-    output; next: audit.
+    useful verification.
 
 ## Review and close
 
@@ -176,7 +164,7 @@ stamps — file-set, evidence, next — or its slice is not done.
     and inside a complete stamp chain** (plan → test plan → red → green → refactor →
     verify). A
     file outside the chain is the laundering breach — activate the file-set rebind and
-    close this step with `next: draft plan (5)`. Otherwise, continue to the content
+    close this step with `next: 5 Draft plan`. Otherwise, continue to the content
     pass: re-read every changed file (not just diffs); verify code matches spec, the
     simplified plan was followed, conventions and loaded skill rules respected.
     Categorize every finding:
@@ -193,12 +181,10 @@ stamps — file-set, evidence, next — or its slice is not done.
    the fixes, then restart the whole audit from its mechanical clause without stopping
    or handing control back. Never close the step from a dirty pass or a partial rescan.
    Proceed only after a fresh full-scope pass finds zero Violations and requires no
-   changes. Stamp ev: final-pass finding counts by bucket, Violation = 0 and no changes;
-   next: commit.
+   changes.
 
-14. **Commit** — open by reprinting or reusing the audit stamp (empty Violation bucket). Commit using
-    the repository's existing commit conventions and message format. Stamp ev: the
-    commit hash and subject line; next: checkpoint.
+14. **Commit** — open by reprinting or reusing the audit stamp (empty Violation bucket).
+    Commit using the repository's existing commit conventions and message format.
 
 15. **Checkpoint** — open by reprinting or reusing the commit stamp. Persist progress before looping
     back to task discovery. Two modes:
@@ -209,8 +195,7 @@ stamps — file-set, evidence, next — or its slice is not done.
      directory, sibling to this one — before writing either file and follow it —
      revise `save.md` in place, never regenerate it, and never drop a line to keep
      the file short. Just enough that the next loop or a surprise compaction
-     doesn't lose the thread. Stamp ev: the trail files written; next: task discovery
-     (1).
+     doesn't lose the thread.
 
    - **Full save + clear** — when the just-finished work was context-heavy, escalate.
      Heaviness lives in the change *or* the conversation: many files touched, large

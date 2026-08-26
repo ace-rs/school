@@ -30,11 +30,13 @@ user's verbatim words.
 
 ## Audit procedure
 
-1. **Find the files, then load the skills that govern them.** Recovery: `git diff
+1. **Find files.** Recovery: `git diff
    --name-only` (add `--cached` for staged work) names the files. Standalone, on a
    clean tree: take the scope from `$ARGUMENTS`; with no `$ARGUMENTS`, use the
    unpushed range (`git log @{u}..HEAD --name-only`); with neither, ask the user to
-   name the body of work. Then branch on what the files are:
+   name the body of work.
+
+2. **Load governing skills.** Branch on what the files are:
 
    - **Code** — load each language's coding skill, plus any framework or infrastructure
      skill relevant to the changed files.
@@ -46,16 +48,17 @@ user's verbatim words.
    Never skip this step because no language skill fits; every diff has a governing
    surface.
 
-2. **Resolve design-level violations before local patching.** Check the loaded skills
+3. **Resolve design.** Check the loaded skills
    for structural violations — a missing transaction boundary, a stringly-typed field
    that should be an enum, a helper reaching across module boundaries. Apply the design
    those governing surfaces require. Ask one narrow question only when they leave
    materially different valid designs with no rule ranking them. After the answer,
-   resolve the choice and continue. Stamp ev: the design result; next: audit pass.
+   resolve the choice and continue.
 
-3. **Run a full-scope audit pass.** Run the `ace/workflow.md` Audit step and categorize
+4. **Audit full scope.** Run the `ace/workflow.md` Audit step and categorize
    every finding. When the pass finds a Violation, fix every Violation, rerun the
-   affected checks, and stamp `next: design check (2)`. Restart at step 2 without
+   affected checks, and stamp `next: 3 Resolve design`. Restart at step 3 without
    handing off a findings report or rescanning only the patched files. Only a fresh
-   full-scope pass with zero Violations closes the loop. Then commit using the
-   repository's existing commit conventions and message format.
+   full-scope pass with zero Violations closes the loop.
+
+5. **Commit.** Commit using the repository's existing conventions and message format.
