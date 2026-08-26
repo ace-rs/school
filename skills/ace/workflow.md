@@ -188,10 +188,13 @@ stamps — file-set, evidence, next — or its slice is not done.
    - **Out of scope** — pre-existing, not introduced by this change. Note in the
      report; don't fix unless asked.
 
-   Run tests and lints if available and not already covered by verification. If
-   anything's off, fix it and re-audit — the audit converges, it doesn't just
-   terminate. Don't proceed until the Violation bucket is empty. Stamp ev: finding
-   counts by bucket, Violation = 0; next: commit.
+   Run tests and lints if available and not already covered by verification. Treat the
+   audit as a convergence loop: complete a full-scope pass, fix every Violation, verify
+   the fixes, then restart the whole audit from its mechanical clause without stopping
+   or handing control back. Never close the step from a dirty pass or a partial rescan.
+   Proceed only after a fresh full-scope pass finds zero Violations and requires no
+   changes. Stamp ev: final-pass finding counts by bucket, Violation = 0 and no changes;
+   next: commit.
 
 14. **Commit** — open by reprinting or reusing the audit stamp (empty Violation bucket). Commit using
     the repository's existing commit conventions and message format. Stamp ev: the

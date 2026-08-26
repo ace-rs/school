@@ -46,10 +46,16 @@ user's verbatim words.
    Never skip this step because no language skill fits; every diff has a governing
    surface.
 
-2. **Check for design-level violations before patching.** If the loaded skills surface
-   structural issues — a missing transaction/consistency boundary, a stringly-typed field
-   that should be an enum, a helper reaching across module boundaries — surface a redesign
-   question to the user. LLM rewrite cost is near-zero; sunk-cost reasoning doesn't apply.
+2. **Resolve design-level violations before local patching.** Check the loaded skills
+   for structural violations — a missing transaction boundary, a stringly-typed field
+   that should be an enum, a helper reaching across module boundaries. Apply the design
+   those governing surfaces require. Ask one narrow question only when they leave
+   materially different valid designs with no rule ranking them. After the answer,
+   resolve the choice and continue. Stamp ev: the design result; next: audit pass.
 
-3. **Run the `ace/workflow.md` Audit step.** Audit, categorize, fix, re-audit until clean.
-   Commit using the repository's existing commit conventions and message format.
+3. **Run a full-scope audit pass.** Run the `ace/workflow.md` Audit step and categorize
+   every finding. When the pass finds a Violation, fix every Violation, rerun the
+   affected checks, and stamp `next: design check (2)`. Restart at step 2 without
+   handing off a findings report or rescanning only the patched files. Only a fresh
+   full-scope pass with zero Violations closes the loop. Then commit using the
+   repository's existing commit conventions and message format.
