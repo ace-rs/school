@@ -48,20 +48,23 @@ user's verbatim words.
 
 ## Steps
 
-1. **Check what exists.** `ls docs/` if it exists. If any target sub-dir already lives
+1. **Check existing docs.** `ls docs/` if it exists. If any target sub-dir already lives
    there, stop and discuss before overwriting.
 
-2. **Create the tree.** Four folders, no `docs/decisions/` (see the escape hatch below):
+2. **Select folders.** `spec/` is required because every settled rule lands there. Add
+   `guides/`, `vendor/`, and `scratch/` only when the repo will use them. An empty folder
+   with its README is a valid signpost; never manufacture content to fill one.
+
+3. **Create tree.** Create the selected folders, never `docs/decisions/`:
 
    ```sh
    mkdir -p docs/guides docs/vendor docs/spec docs/scratch
    ```
 
-   A repo may take a subset — a library often needs only `spec/` + `scratch/`. Create only
-   the folders the repo will use; an empty dir with its README is a valid signpost, but
-   don't manufacture content to fill one.
+   Remove unselected paths from the command before running it.
 
-3. **Drop the five READMEs** from this skill's `templates/` directory, verbatim:
+4. **Install READMEs.** Use this map. The root row is required; copy only the per-folder
+   rows selected in step 2:
 
    - `templates/root-README.md` → `docs/README.md`
    - `templates/guides-README.md` → `docs/guides/README.md`
@@ -69,15 +72,17 @@ user's verbatim words.
    - `templates/spec-README.md` → `docs/spec/README.md`
    - `templates/scratch-README.md` → `docs/scratch/README.md`
 
-   Each README carries its folder's routing test, format, and lifecycle. `docs/README.md`
-   carries the gate. Copy them as-is; let the user customize after.
+   Each README carries its folder's routing test, format, and lifecycle. The copied
+   `docs/README.md` carries the gate: remove rows and lifecycle links for unselected
+   folders while preserving the selected predicates' relative order. Copy per-folder
+   templates as-is; let the user customize after.
 
    `docs/spec/README.md` ships with an index table and one placeholder row. Leave the
    placeholder row in place — it shows the shape the next writer must follow.
 
    `templates/decisions-README.md` ships only if the escape hatch is cut open.
 
-4. **Wire up the harness instructions file** — `CLAUDE.md`, `AGENTS.md`, or both. This is
+5. **Wire instructions.** Update `CLAUDE.md`, `AGENTS.md`, or both. This is
    the only surface that loads on its own, so it carries every rule that must hold at all
    times plus the instruction that makes the per-folder READMEs reachable. Insert it near
    other "where things go" guidance (Repo layout / Conventions). If neither file exists,
@@ -120,16 +125,16 @@ user's verbatim words.
    to maintain it loads on every session. This block is the only surface that loads on
    its own — drop either line and the rule stops binding.
 
-5. **Commit.** One commit:
+6. **Commit.** Make one commit. Use this subject and describe the selected folders in the
+   body:
 
    ```
    Scaffold docs/ — single-gate routing
 
-   Four folders routed by one gate: vendor/ (third-party reference), guides/
-   (how-to), spec/ (our design + surface), scratch/ (residual exploration).
-   Everything settled amends spec/; there is no decisions log. Each sub-dir has a
-   README defining its test, and spec/README.md indexes every spec file. CLAUDE.md
-   (or AGENTS.md) points at it as the schema/index.
+   Durable folders routed by one gate. Everything settled amends spec/; there is no
+   decisions log. Each selected sub-dir has a README defining its test, and
+   spec/README.md indexes every spec file when spec/ is selected. CLAUDE.md (or
+   AGENTS.md) points at the gate.
    ```
 
 ## The escape hatch: `docs/decisions/`
@@ -148,12 +153,6 @@ change.
 
 ## Gotchas
 
-- **Don't pre-fill any dir with example content.** An empty dir + README beats a sample to
-  delete.
-- **Don't shorten the instructions-file block past its four bolded rules.** It is the
-  only surface that loads unprompted; anything cut from it stops binding.
-- **Don't drop the spec index because the folder is small.** A folder starts small; the
-  index is the habit that keeps it findable once it isn't.
 - **Don't symlink scattered docs.** Move them so `git log --follow` keeps history.
   Migrating existing docs in is a separate task — propose it, don't fold it into the
   scaffold.
