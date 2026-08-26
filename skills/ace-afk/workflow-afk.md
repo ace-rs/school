@@ -1,10 +1,7 @@
 # ACE Workflow — Unattended (AFK)
 
-This is the ace workflow with every propose/confirm gate removed, for unattended runs
-under `ace-afk`. The gates are replaced by the afk **envelope** (no push/publish/deploy,
-no global-state mutation, no working-tree destruction, commit-don't-push) and the
-pre-flight **decision-basis** established before the run. Forward motion is the default;
-stopping is the exception.
+Run under `ace-afk`'s operating envelope and pre-flight decision-basis. Forward motion is
+the default; stopping is the exception.
 
 ## The stamp chain
 
@@ -18,9 +15,8 @@ a `files:` field:
 ⛓ <step> | files: <paths touched this step> | ev: "<decisive line>" | next: <step>
 ```
 
-Apply `ace/ledger.md`'s display-only styling rule to this extended stamp. Keep `files:`,
-the step name, separators, evidence, and values in the muted base color. Highlight only
-`⛓ <step number>`, the literal `ev:`, and the literal `next:` in cyan.
+Apply `ace/ledger.md`'s display rule to this extended stamp: fenced on Markdown conversation
+surfaces and plain text everywhere else. Emit no ANSI escapes.
 
 On top of the contract:
 
@@ -56,20 +52,25 @@ Standing rules for the whole run:
   stays provisional — it turns SETTLED only with the user's verbatim words, and you
   never replay it later as theirs. Going far is the goal; putting your own calls in the
   user's mouth is not.
-- **Never amend `docs/spec/` on your own initiative.** The spec holds what the user
-  stated, and they are away. Every call you make alone stays in `.ace/save.ledger.md`
-  as `agent:inferred` until they take it up, and is yours to withdraw when the work
-  moves past it. The one exception is an explicit ask: if writing or updating a spec
-  *is* the task they handed you, write it and route it by `docs/README.md` like any
-  other work.
 - **`docs/` output follows the gate.** Exploratory output a run genuinely produces — a
   research dump, a survey, a comparison — files in `docs/scratch/` with its "not spec
   because ___" line. Placement is chosen at plan time (step 5), as attended.
 - **Keep making progress.** A finished goal or clean checkpoint is where you pick up
   the next startable task — inside the envelope and state rules — not where you stop.
   Keep going while there's work with no unresolved choice and no unearnable blocker.
-- **Earn the blocker.** Earn a missing input first — fetch it, stub it, build it
-  yourself — before logging it as needing the human.
+- **Preserve context.** Enable the harness's automatic context rollover when supported.
+  Keep the driver thin enough that a long run survives repeated context windows.
+- **Earn the blocker.** Before logging a missing input, run both gates:
+  - **Acquire input.** Obtain the real sample, fixture, dependency, dataset, or test target
+    inside the operating envelope.
+  - **Create a faithful substitute.** When the real input cannot be obtained, create the
+    smallest substitute that preserves the relevant behavior and acceptance criteria. Do
+    not weaken requirements, fabricate evidence, or let temporary scaffolding become
+    shipped behavior merely to keep moving. If fidelity cannot be preserved, log the
+    missing input as a blocker.
+
+  The blocker entry cites the failed acquisition and the failed or quality-reducing
+  substitution. Without both citations, the blocker cannot be logged.
 - **Thin orchestrator — delegate by default.** You drive; you do not do the work. Every
   edit, search, and research step goes to a subagent in fresh context, and you keep
   only its summary — which must carry the stamps. Delegate even a single sequential
@@ -90,14 +91,12 @@ reconstructed, enter earlier.
 
 1. **Cleanup** — check `git status`/`git diff`. Uncommitted coherent work from a prior
    slice: commit it on the current branch (envelope: commit, don't push). Don't proceed
-   on a dirty tree. Stamp ev: the decisive `git status` line; next: surface.
+   on a dirty tree.
 2. **Surface** — open by reprinting the cleanup stamp. Read the storage cascade; collect
-   pending tasks, open questions, blockers. Stamp ev: points at the list above and
-   names the sources read; next: select.
+   pending tasks, open questions, blockers.
 3. **Select** — open by reprinting the surface stamp. Pick the next task by the
    decision-basis and record it. No propose-and-wait; the basis decides. Identify which
-   skills the slice needs. Stamp ev: the pick and the basis clause that decided it;
-   next: specs.
+   skills the slice needs.
 
 ## Planning
 
@@ -106,23 +105,19 @@ reconstructed, enter earlier.
    index). The spec is authoritative — comply rather than re-deciding what it settles,
    and treat a contradiction between spec and ask as one for the decision-basis to
    resolve, not a licence to rewrite the spec. Extract acceptance criteria; note gaps.
-   Stamp ev: the spec files read, pointing at the criteria above; next: draft plan.
 5. **Draft plan** — open by reprinting the specs stamp. List every change (specs first,
    then tests, then code), **file by file, path by path** — this list is the binding
    file-set. For any durable doc the slice produces, name its target `docs/` folder now
    by walking the gate in `docs/README.md`. In an unattended run the gate resolves to
    `docs/scratch/` for exploratory output and to `.ace/` for everything else;
-   `docs/spec/` is reachable only if writing it was the ask. Stamp ev: points at the
-   file-by-file plan above; next: simplify plan.
+   `docs/spec/` is reachable only if writing it was the ask.
 6. **Simplify plan** — open by reprinting the draft-plan stamp. Cut to an elegant
-   just-enough fit; prefer deletions; don't cut spec/called-out edge cases. Stamp ev:
-   points at the surviving plan above (the binding file-set); next: test plan.
+   just-enough fit; prefer deletions; don't cut spec/called-out edge cases.
 7. **Test plan** — open by reprinting the simplify stamp. Define validation before
    implementing, **per change-class** (spec, tests, code), per path: TDD by default
    (failing test first); where red/green doesn't fit a class, that class still gets a
    real named verification — render, link-check, consistency against code. No class is
-   left without a plan; no plan waives another class's paths. Stamp ev: points at the
-   per-class validation plan above; next: record the plan.
+   left without a plan; no plan waives another class's paths.
 8. **Record the plan** — open by reprinting the test-plan stamp. The narrative goes in
    `.ace/save.md`, each open slice in `.ace/save.ledger.md` with a status and a
    provenance. Read `ace-save/trail.md` — in the `ace-save` skill's directory, sibling
@@ -130,7 +125,6 @@ reconstructed, enter earlier.
    user is present to notice a dropped line. No confirm gate — the basis and the
    envelope replace it. If the plan exceeds the decision-basis (a genuinely silent,
    expensive, irreversible choice), log a blocker and pick up the next unblocked slice.
-   Stamp ev: the trail files written; next: red.
 
 ## TDD execution
 
@@ -142,21 +136,17 @@ produced; a stamp-less return means the step did not happen.
 
 9. **Red** — open by reprinting the recorded plan stamp. Add/update tests first, touching
    only listed files; confirm they fail for the expected reason; execute a class's
-   named substitute where red/green doesn't fit. Stamp: files touched; ev: the failing
-   assertion line (or the substitute's decisive line); next: green.
+   named substitute where red/green doesn't fit.
 10. **Green** — open by reprinting the red stamp. Smallest change that satisfies the
-    tests, touching only listed files; an unlisted file needed → stop, return to step
-    5. Stamp: files touched; ev: the passing narrow-test summary line; next: refactor.
+    tests, touching only listed files; an unlisted file needed → stop and close with
+    `next: 5 Draft plan`.
 11. **Refactor** — open by reprinting the green stamp. Clean up without behavior change
     within the file-set; prefer deletions; elegant just-enough. No cleanup needed → the
-    stamp says so with the reason (a run with small evidence, not a skip). Stamp ev: a
-    one-line cleanup summary (or the no-cleanup finding) plus the passing-test line;
-    next: verify.
+    stamp says so with the reason (a run with small evidence, not a skip).
 12. **Verify** — open by reprinting the refactor stamp. Run the planned narrow + broad
     checks, every class, every path; loop red/green/refactor on a missing case (re-
     entering at 9 with a stamp noting why); substitute the closest useful check if one
-    can't run, recording why. Stamp ev: one decisive line per planned check; next:
-    audit.
+    can't run, recording why.
 
 ## Review and close
 
@@ -169,20 +159,18 @@ produced; a stamp-less return means the step did not happen.
     **Violation** (clear skill/spec rule broken or chain/coverage breach — blocks, must
     fix), **Borderline** (judgment call the skill permits — flag once, leave),
     **Out-of-scope** (pre-existing, not introduced here — note, don't fix). Fix every
-    Violation and re-audit; the audit converges. Run tests + lints. Stamp ev: finding
-    counts by bucket, Violation = 0; next: commit.
+    Violation and re-audit; the audit converges. Run tests + lints.
 14. **Commit** — open by reprinting the audit stamp. Commit on the current branch using
     the repo's commit convention. **Envelope: do not push, publish, release, or
-    deploy** — those wait for the human. Stamp ev: the commit hash and subject line;
-    next: checkpoint.
+    deploy** — those wait for the human.
 15. **Checkpoint** — open by reprinting the commit stamp. Update the `.ace/` trail: what
     landed goes in `save.md`, the next step and any open blocker go in
     `save.ledger.md` with a status and a provenance, so a crash or compaction leaves a
     clean restore point. Follow `ace-save/trail.md`: revise `save.md` in place, never
     regenerate it, never drop a line to keep it short. No `/ace-save` or `/clear`
     between slices — the subagent boundary gives fresh context, the trail gives
-    continuity. Stamp ev: the trail files written; next: task discovery (1), or
-    Loop-or-stop.
+    continuity. Close with `next: 1 Cleanup` while slices remain or `next: done` when none
+    remain.
 
 ## Two-phase audit every 2–3 slices
 
@@ -196,8 +184,8 @@ don't let them stall forward motion.
 Verify passes + slices remain → spawn the next. Stop only at a genuine blocker
 (basis-silent + expensive + irreversible, logged), a failed verify the subagent
 couldn't fix, or an empty plan — leaving `.ace/save.md` describing where the run
-stopped and `.ace/save.ledger.md` holding the next step as an item. On stop, write the
-run summary to `.ace/afk.log`.
+stopped and `.ace/save.ledger.md` holding the next step as an item. On stop, return to
+`ace-afk`; it disarms the heartbeat before writing `.ace/afk.log`.
 
 ## Storage cascade
 
