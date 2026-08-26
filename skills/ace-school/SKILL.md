@@ -140,29 +140,46 @@ checkout.
 
 ## Stamp chain
 
-The numbered steps in *Proposing changes* run as a stamp chain: read `ace/ledger.md` —
-in the `ace` skill's directory, sibling to this one — and follow its contract (one-line
-stamp to close each step, reprint it to open the next, no skips). Step 2's approval is a
-Wait: proceed only with the user's approving words quoted.
+The numbered steps in each operation run as a stamp chain. Read `ace/ledger.md` — in the
+`ace` skill's directory, sibling to this one — and follow its contract. Proposal step 2
+waits for approval; step 10 waits for a checkout selection. The next step quotes the
+user's words at either gate.
+
+## Menu
+
+| Operation             | Steps   | Use when                              |
+|-----------------------|---------|---------------------------------------|
+| Propose changes       | 1–11    | local school edits should become a PR |
+| Clean merged proposal | 1–3     | that PR has merged                    |
 
 ## Proposing changes
 
-1. Run `ace diff` to review changes.
-2. Summarize findings — combine the diff output with your own context about what was
-   changed and why during this session. Present the summary to the user and wait for
-   explicit approval before proceeding.
-3. `cd "$(ace paths school)"` to enter the authoritative school checkout.
-4. `git checkout -b ace/{short-description}` — create a feature branch.
-5. Stage and commit with a descriptive message.
-6. `git push -u origin {branch}` — push to the school remote.
-7. Create a PR to the school repo. Use GitHub MCP if available.
-8. Commit everything that belongs to the proposal onto the branch. Session context that
-   didn't make the PR goes into the *project's* durable record, never left uncommitted
-   in the checkout. Do **NOT** reset the checkout — cleanliness comes from committing to
-   the branch, not from discarding work.
-9. `git checkout main` — leave the checkout pristine so `ace school pull` keeps working
-   for every project while the PR is in flight.
-10. After the PR merges: pull main and delete the feature branch.
+1. **Review diff.** Run `ace diff` to review changes.
+2. **Confirm proposal.** Summarize findings — combine the diff output with your own
+   context about what changed and why during this session. Present the summary to the user
+   and wait for explicit approval before proceeding.
+3. **Enter checkout.** Open by quoting the approval. Run
+   `cd "$(ace paths school)"` to enter the authoritative school checkout.
+4. **Create branch.** Run `git checkout -b ace/{short-description}`.
+5. **Commit proposal.** Stage and commit everything that belongs to the proposal.
+   Put session context that does not belong in the PR into the project's durable record.
+   Do not reset the checkout; cleanliness comes from committing, not discarding work.
+6. **Verify branch.** Confirm the proposal branch contains every intended commit and
+   the working tree is clean.
+7. **Push branch.** Run `git push -u origin {branch}` once the branch is complete.
+8. **Create PR.** Create the PR through the repository's configured hosting workflow.
+9. **Report PR.** Present the PR title, URL, branch, and current checkout state.
+10. **Choose checkout.** Ask whether to retain the proposal branch so subscribing
+    projects keep using the fixed skill until merge, or return the checkout to pristine
+    main. This is a Wait.
+11. **Set checkout.** Open by quoting the user's choice. Retain the proposal branch
+    and confirm it is clean, or run `git checkout main` and confirm main is clean.
+
+## Cleaning a merged proposal
+
+1. **Confirm merge.** Verify that the proposal PR merged.
+2. **Update main.** Check out main and pull the merged commit.
+3. **Delete branch.** Delete the merged local feature branch.
 
 ## Good school PR guidelines
 
@@ -183,43 +200,7 @@ Wait: proceed only with the user's approving words quoted.
   ambiguity or sets a precedent. Don't assume any specific directory exists — check
   what the school actually has.
 
-## Writing good skill content
+## Authoring skills
 
-The `ace-skill` skill is the authoritative reference for authoring and revising
-skills — load it and work through its operations; its house style checklist is the
-review gate. The lessons below are school-specific — recurring findings in school PR
-reviews.
-
-0. **Check the school's house rules first.** Before authoring or editing any skill,
-   read the school repo's `CLAUDE.md` and any durable record-keeping the school
-   maintains (spec dir, notes, research dir — whatever exists) for house-style
-   overrides. Each school may override the base method differently (tone, structure,
-   imperative-vs-why phrasing, etc.). House rules win over `ace-skill` defaults.
-
-1. **Generic by default.** Strip named repos, clients, deploy targets, and vendor names.
-   Use placeholders (`site-web`, `site-cms`, `acme-*`). Project-specific context belongs
-   in a downstream `CLAUDE.md`, not in a skill that ships to every subscriber.
-
-2. **Keep concrete examples — just rename them.** LLMs anchor better on examples than on
-   pure abstract rules. Don't delete a code block to "make it generic"; swap the names.
-   A renamed example is more useful than a rule without an example.
-
-3. **Project-specific numbers as examples, not rules.** "Debounce 30s per project
-   convention" is a rule that rots across subscribers; "debounce it — e.g. 30s" is a
-   starting point they can adjust. Likewise, specific CI vendors (Buildkite, GitHub
-   Actions) should read as "your CI".
-
-4. **Pushy descriptions, in as few words as possible.** Agents under-trigger skills, so a
-   description has to push — but every description sits in context all session for every
-   subscriber, whether the skill fires or not. Both hold at once.
-
-   Push with concrete verbatim phrases a user would actually type, plus the
-   `/slash-command` form and an explicit negative boundary. Where under-triggering is the
-   real risk, add one short nudge clause — "even if the user doesn't name it" — not a
-   sentence. Cut anything that doesn't change the trigger decision: restatements of the
-   skill name, a second example of a trigger already listed, descriptions of what the body
-   does.
-
-5. **Progressive disclosure.** Keep `SKILL.md` under ~500 lines. Push depth into
-   `references/*.md` with a quick-map table in `SKILL.md` (task → reference file) so the
-   model knows where to look without loading everything upfront.
+Load `ace-skill`, read the school's instructions and durable design record, and follow the
+operation that matches the change. The school's rules override the base method.

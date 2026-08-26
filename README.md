@@ -152,4 +152,4 @@ ace config | grep -A3 '\[\[backends\]\]'
 ACE Home stays small and broadly applicable, so a skill PR here has to be
 generic enough to benefit every ACE user. See
 [`skills/ace-school/SKILL.md`](skills/ace-school/SKILL.md) for the full
-school-PR workflow and house-style notes.
+school-PR workflow and its `ace-skill` authoring handoff.
