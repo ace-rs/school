@@ -81,17 +81,25 @@ Standing rules for the whole run:
 
 Same as the attended workflow: figure out where you already are from conversation, git
 state, loaded skills, and in-progress tasks. The step order is fixed; orientation's
-only freedom is picking the entry point, once, with a stamp citing the evidence.
+only freedom is picking the entry point, once, with a stamp citing the evidence. A dirty
+tree containing one coherent slice with reconstructable prerequisite evidence enters at
+Verify (12), Audit (13), or Commit (14), at the earliest unproven step. A dirty tree with
+mixed or incoherent changes, or prerequisite evidence that cannot be reconstructed,
+enters at Cleanup (1).
+
 Entering mid-chain, reconstruct the artifacts the entry step depends on into the
-transcript from what orientation found (the recorded plan in the trail, the
-failing-test output, the diff), then stamp pointing at them; if they can't be
-reconstructed, enter earlier.
+transcript from what orientation found (the recorded plan in the trail, the failing-test
+output, the diff), then stamp pointing at them. Enter Commit only when evidence of
+verification and a fresh zero-Violation audit can be reconstructed. If the evidence
+cannot be reconstructed, enter Cleanup.
 
 ## Task discovery
 
-1. **Cleanup** — check `git status`/`git diff`. Uncommitted coherent work from a prior
-   slice: commit it on the current branch (envelope: commit, don't push). Don't proceed
-   on a dirty tree.
+1. **Cleanup** — check `git status`/`git diff`. A clean tree closes with
+   `next: 2 Surface`. For mixed or incoherent changes, or changes whose prerequisite
+   evidence cannot be reconstructed, do not edit, separate, stash, discard, or commit
+   them. Log the exact state as a blocker and close with `next: done`; control returns to
+   the `ace-afk` handoff. Cleanup never commits.
 2. **Surface** — open by reprinting the cleanup stamp. Read the storage cascade; collect
    pending tasks, open questions, blockers.
 3. **Select** — open by reprinting the surface stamp. Pick the next task by the
@@ -161,8 +169,8 @@ produced; a stamp-less return means the step did not happen.
     **Out-of-scope** (pre-existing, not introduced here — note, don't fix). Fix every
     Violation and re-audit; the audit converges. Run tests + lints.
 14. **Commit** — open by reprinting the audit stamp. Commit on the current branch using
-    the repo's commit convention. **Envelope: do not push, publish, release, or
-    deploy** — those wait for the human.
+    the repo's commit convention, closing this coherent, completed slice. **Envelope: do
+    not push, publish, release, or deploy** — those wait for the human.
 15. **Checkpoint** — open by reprinting the commit stamp. Update the `.ace/` trail: what
     landed goes in `save.md`, the next step and any open blocker go in
     `save.ledger.md` with a status and a provenance, so a crash or compaction leaves a

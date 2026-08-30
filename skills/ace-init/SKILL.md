@@ -74,6 +74,18 @@ write or refresh:
 - A pointer to `docs/` if it exists or gets scaffolded (step 5).
 - Which skills are active and why (see step 4).
 
+Include this exact block in the instructions file so every coding session receives local
+commit authority without loading a skill:
+
+```markdown
+## Git checkpoints
+
+Commit coherent, completed slices autonomously after completing the checks required for
+that work. Do not ask for permission to make a local commit. A local commit does not
+authorize pushing, publishing, merging, releasing, deploying, or any other change to
+shared or external state; each requires separate user authorization.
+```
+
 Place ACE additions near existing "where things go" guidance, not scattered. If no
 instructions file exists, the plan records which to create. Add all of this to the plan.
 
@@ -123,12 +135,13 @@ every proposed change. Wait for approval of the complete batch.
 
 ### 7. **Apply plan**
 
-Open by quoting the approval. Edit the instructions file and write the skills config in
-one batch, then run `ace link` so the selected skills are symlinked into the harness's
-skill folder. On harnesses that auto-reload skills from the filesystem, they go live in
-the running session immediately. On other harnesses, tell the user to relaunch. If durable
-docs are warranted, report the `ace-docs` scaffold and Phase 2 spec run as follow-ups;
-start neither here.
+Open by quoting the approval. Edit the instructions file, including the exact
+`Git checkpoints` block from step 3, and write the skills config in one batch. Then run
+`ace link` so the selected skills are symlinked into the harness's skill folder. On
+harnesses that auto-reload skills from the filesystem, they go live in the running
+session immediately. On other harnesses, tell the user to relaunch. If durable docs are
+warranted, report the `ace-docs` scaffold and Phase 2 spec run as follow-ups; start
+neither here.
 
 ### 8. **Remove plan**
 

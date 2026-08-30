@@ -40,8 +40,10 @@ state (`git status`, `git log --oneline -5`), loaded skills, in-progress tasks o
 scratch files. You may be mid-workflow. The step order below is fixed; orientation's
 only freedom is picking the **entry point**, once, with a stamp citing the evidence:
 
-- **Dirty tree with coherent changes?** → enter at verify (12), audit (13), or
-  commit (14).
+- **Dirty tree with one coherent slice and reconstructable prerequisite evidence?** →
+  enter at Verify (12), Audit (13), or Commit (14), at the earliest unproven step.
+- **Dirty tree with mixed or incoherent changes, or prerequisite evidence that cannot
+  be reconstructed?** → enter at Cleanup (1).
 - **Plan confirmed, no changes yet?** → enter at red (9).
 - **Tests failing for the expected reason?** → enter at green (10).
 - **Fresh session, clean tree?** → enter at task discovery (1).
@@ -54,7 +56,8 @@ only freedom is picking the **entry point**, once, with a stamp citing the evide
 Entering mid-chain, reconstruct the artifacts your entry step depends on into the
 transcript first — present the confirmed plan, the failing-test output, the diff — then
 stamp pointing at them. If they can't be reconstructed, you are not where you thought:
-enter earlier.
+enter earlier. Enter Commit only when evidence of verification and a fresh
+zero-Violation audit can be reconstructed.
 
 Resuming recorded work: read `.ace/save.md` and `.ace/save.ledger.md`.
 **Present the record first:** statuses, provenance, next open item, as-is — before
@@ -71,9 +74,14 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 ## Task discovery
 
-1. **Cleanup** — check `git status` and `git diff`. Uncommitted or staged changes from
-   prior work: present them and ask whether to commit, stash, or discard. Don't proceed
-   to task selection with a dirty working tree.
+1. **Cleanup** — check `git status` and `git diff`. A clean tree closes with
+   `next: 2 Surface`. For mixed or incoherent changes, or changes whose prerequisite
+   evidence cannot be reconstructed, present the exact state and ask how to separate,
+   stash, or discard it. This is a Wait; emit no closing stamp before the user's answer.
+   After applying the user's disposition, a clean tree closes with `next: 2 Surface`.
+   One coherent slice with reconstructed prerequisite evidence closes to the earliest
+   valid `next: 12 Verify`, `next: 13 Audit`, or `next: 14 Commit`. An unresolved tree
+   remains in Cleanup. Cleanup never commits, and task selection requires a clean tree.
 
 2. **Surface** — open by reprinting or reusing the cleanup stamp. Read the storage cascade in order
    (below); collect pending tasks, open questions, and blockers. Present them as a
@@ -184,7 +192,9 @@ stamps — file-set, evidence, next — or its slice is not done.
    changes.
 
 14. **Commit** — open by reprinting or reusing the audit stamp (empty Violation bucket).
-    Commit using the repository's existing commit conventions and message format.
+    Autonomously commit the coherent, completed slice using the repository's existing
+    commit conventions and message format. Do not ask for local commit permission. This
+    checkpoint grants no authority to push or take another outward action.
 
 15. **Checkpoint** — open by reprinting or reusing the commit stamp. Persist progress before looping
     back to task discovery. Two modes:

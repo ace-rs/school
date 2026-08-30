@@ -9,6 +9,12 @@ Invoke one by name — `/ace`, `/ace-save`, `/ace-docs` — or just describe the
 and let the agent pick; every skill declares triggers for that. `ace-realign` also
 self-engages without being asked, on a repeated violation of the same rule.
 
+The attended and AFK workflows verify and audit each completed, coherent slice before
+committing it locally. On resume, coherent dirty work with reconstructable evidence
+re-enters that chain; unresolved dirty state is surfaced for attended disposition or
+logged as a blocker that stops the AFK run. A local commit is a checkpoint, not a push
+or permission for any other outward action.
+
 | Skill         | Reach for it when                           |
 |---------------|---------------------------------------------|
 | `ace-init`    | first-time onboarding of a repo into ACE    |
