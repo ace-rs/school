@@ -71,9 +71,10 @@ unverified; a claim about your own failure is a causal claim like any other.
 
 ## Task discovery
 
-1. **Cleanup** — check `git status` and `git diff`. Uncommitted or staged changes from
-   prior work: present them and ask whether to commit, stash, or discard. Don't proceed
-   to task selection with a dirty working tree.
+1. **Cleanup** — check `git status` and `git diff`. Commit coherent uncommitted or
+   staged logical slices autonomously; enter at verify, audit, or commit according to
+   the available chain. Present mixed or incoherent changes and ask whether to commit,
+   stash, or discard. Don't proceed to task selection with a dirty working tree.
 
 2. **Surface** — open by reprinting or reusing the cleanup stamp. Read the storage cascade in order
    (below); collect pending tasks, open questions, and blockers. Present them as a
