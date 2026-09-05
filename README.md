@@ -55,8 +55,12 @@ Eight skills, all loaded by default for any school that imports this one:
 You don't have to take all eight. Skill selection is managed by the `ace` CLI
 — `ace skills include <pat>` / `ace skills exclude <pat>`, or the `skills`
 array in `ace.toml` — so a project can narrow the set without forking the
-school. Declaring a skill of the same name in your own school shadows the one
-here. See [ace-rs.dev](https://ace-rs.dev) for the full CLI reference.
+school. Keep `ace` and `ace-save` whenever any ACE Home skill remains: the other skills
+read their workflow, ledger, or trail files from disk even when those skills are not
+loaded. Keep `ace-docs` when `ace-init` will scaffold docs or run specs, and keep
+`ace-skill` when `ace-school` will author or revise skills. Declaring a skill of the same
+name in your own school shadows the one here. See [ace-rs.dev](https://ace-rs.dev) for the
+full CLI reference.
 
 Top-level docs:
 

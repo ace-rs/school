@@ -46,8 +46,8 @@ also keep the separate F1 authorization. Do not print per-step markers.
   commits, and current working-tree state. Keep this to a skim; F1–F7 own the deep scan.
 - **S4. Plan always-loaded instructions.** Record the exact proposed edits to
   `CLAUDE.md`, `AGENTS.md`, or the repo's equivalent. Cover what the repo is, the commands
-  and conventions a later agent needs, the active skill selection, and the `docs/`
-  pointer when applicable. If no instruction file exists, name the file to create.
+  and conventions a later agent needs, the active skill selection, and the durable-docs
+  root pointer when applicable. If no instruction file exists, name the file to create.
 
   Include this block in the plan and label it **Proposed future commit autonomy policy**:
 
@@ -77,9 +77,19 @@ also keep the separate F1 authorization. Do not print per-step markers.
   result. Do not apply either form before S7. Use `ace skills` to inspect the active set
   and `ace config` to inspect the resolved config.
 
+  Preserve the supporting skill directories each selected skill reads; a directory being
+  available does not mean its skill is loaded. Keep both `ace` and `ace-save` whenever
+  any ACE Home skill remains. Keep `ace-docs` when the plan includes a scaffold or spec
+  run. Keep `ace-skill` when the repo will use `ace-school` to author or revise skills.
+  Record each required inclusion in the plan.
+
   Decide whether the repo needs durable architecture, domain, or design docs. When it
-  does, record an `ace-docs` scaffold and a `docs/spec/` project overview as future work.
-  Do not scaffold docs during S1–S8. When it does not, record `no docs`.
+  does, identify the durable-docs root named by the repo's always-loaded instructions. If
+  none is named, inspect `docs/` and `.docs/`. Record an ambiguous pair of unnamed roots,
+  an existing root with `README.md`, an incomplete root missing `README.md`, or an
+  `ace-docs` scaffold plus a `docs/spec/` project overview as future work. Do not
+  scaffold or repair docs during S1–S8. When the repo needs no durable docs and has no
+  existing root, record `no docs`.
 - **S6. Review and wait.** Finalize `.ace/init-plan.md` with the S3 findings and every
   proposed write. Present the complete batch. Call out the commit-autonomy block, its
   local-only authority, and the user's option to revise or omit it. Wait for explicit
@@ -106,18 +116,23 @@ design or replace reconciliation against the code.
   frequency, risk, and current understanding. Use subsystems, domain models, key flows,
   and integration boundaries as units. Present the ordered scope and wait for explicit
   approval. This is a Wait.
-- **F2. Prepare docs.** Open by quoting the approved scope. Read the existing `docs/`
-  gate. If none exists, run `ace-docs` before writing the first unit. Route project
-  behavior and its exact surface to `docs/spec/`; route retained third-party lookup to
-  `docs/vendor/`.
+- **F2. Prepare docs.** Open by quoting the approved scope. Resolve the durable-docs root
+  from the current always-loaded instructions. If none is named, inspect `docs/` and
+  `.docs/`. If both exist without one being named, report the ambiguity and stop. If a
+  present root lacks `README.md` or `spec/README.md`, report the incomplete tree and stop.
+  If no root exists, run `ace-docs` before writing the first unit and use its scaffolded
+  root. Read the root gate. Route project behavior and its exact surface to that root's
+  `spec/`; route retained third-party lookup to its `vendor/` only when the gate names
+  that destination. Report a missing destination and stop; do not create it or route the
+  artifact elsewhere.
 - **F3. Study one unit.** Deep-read the implementation for the next approved unit. Gather
   behavior, contracts, data shapes, invariants, errors, edge cases, and non-obvious
   intent.
 - **F4. Reconcile claims.** Check every proposed claim against the implementation. Report
   intended and implemented behavior separately when they diverge.
 - **F5. Write the spec.** Run the unit through the normal `ace` planning phases, then
-  write through the `ace-docs` gate. Amend `docs/spec/` for everything settled. Never
-  scaffold a decisions log as a default.
+  write through the durable-docs gate selected in F2. Amend that root's `spec/` for
+  everything settled. Never scaffold a decisions log as a default.
 - **F6. Review the unit.** Verify every claim against the implementation and approved
   scope. Fix every mismatch. Keep the changed spec, source references, and clean review
   as evidence.

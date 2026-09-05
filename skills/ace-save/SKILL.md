@@ -52,8 +52,8 @@ serves:
   covers) → record a pending school change in `.ace/save.ledger.md` with status,
   provenance, target skill, and proposed addition. Do not run the branch, push, or PR flow
   during a save.
-- **This repo's team** (settled rules, specs, shared patterns) → `docs/` or a
-  repository-local task file.
+- **This repo's team** (settled rules, specs, shared patterns) → the durable-docs root
+  named by the repo's always-loaded instructions, or a repository-local task file.
 - **You, everywhere** (how the agent should behave for you, your preferences) →
   a user-level instructions file only when the user explicitly authorizes that
   out-of-repository write.
@@ -64,11 +64,11 @@ authority naming that destination. Without it, keep the item in the local breadc
 its provenance and the intended destination. Never silently substitute global memory.
 
 Also record school-bound artifacts in `.ace/save.ledger.md`: skill edits already in the
-working tree and non-trivial design calls intended for the school's `docs/spec/`. Graduate
-a design call into `docs/spec/` only when it carries the user's verbatim evidence required
-by `trail.md`, the school checkout is the current repository, and the save request
-authorizes that local record. Otherwise keep it in the ledger. Never enter or mutate
-another checkout during a save.
+working tree and non-trivial design calls intended for the school's durable-docs `spec/`.
+Graduate a design call into the resolved root's `spec/` only when it carries the user's
+verbatim evidence required by `trail.md`, the school checkout is the current repository,
+and the save request authorizes that local record. Otherwise keep it in the ledger. Never
+enter or mutate another checkout during a save.
 
 A destination with nothing to route stays untouched. Never invent a learning to fill one.
 

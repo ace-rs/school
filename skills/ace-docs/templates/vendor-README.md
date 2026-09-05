@@ -4,7 +4,8 @@ Store retained lookup facts about third-party tools and services: framework comm
 external API signatures, CLI flags, config keys, and error codes.
 
 Route the project's own config, CLI, API, and schema to `../spec/`. Route task
-walkthroughs to `../guides/`.
+walkthroughs to `../guides/` when that folder exists. Otherwise report the missing
+destination and stop.
 
 Link to the authoritative upstream source. Keep only the slice the project reuses and
 project-specific gotchas. Do not mirror an entire external surface.

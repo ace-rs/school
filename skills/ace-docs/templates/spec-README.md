@@ -11,8 +11,9 @@ the user did not state. Do not create a separate ruling artifact.
 and amend it. Do not reopen, annotate, or route around a spec because it differs from a
 common default or personal preference.
 
-Route third-party lookup to `../vendor/`. Route unsettled research, surveys, and drafts
-to `../scratch/`.
+Route third-party lookup to `../vendor/` when that folder exists. Route unsettled
+research, surveys, and drafts to `../scratch/` when that folder exists. If the matching
+folder is absent, report the missing destination and stop; do not file the artifact here.
 
 ## Index
 

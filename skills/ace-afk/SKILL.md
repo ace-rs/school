@@ -29,8 +29,8 @@ Stay inside every boundary below:
 - **Commit, don't push** — land green slices on the *current* branch so progress
   survives only when repository instructions already authorize autonomous local commits.
   Otherwise retain the reviewed diff. Pushing always waits.
-- **Nothing of your own in `docs/spec/`** — the spec holds what the user stated,
-  in their words. Calls you make alone stay in `.ace/save.ledger.md` marked
+- **Nothing of your own in the durable-docs root's `spec/`** — the spec holds what the
+  user stated, in their words. Calls you make alone stay in `.ace/save.ledger.md` marked
   `agent:inferred`. Writing a spec is allowed only when that was the task handed
   to this run.
 
@@ -96,9 +96,9 @@ user's next-session read with three sections:
   resolution, so a one-word reply unblocks it).
 - **Calls made alone** — every choice the decision-basis resolved for you, one line each,
   with the basis clause you applied. These are `agent:inferred` and still live in
-  `.ace/save.ledger.md`. Nothing here has entered `docs/spec/`; it goes there only if the
-  user later states it themselves, and is yours to withdraw otherwise. This section tells
-  them what the run did.
+  `.ace/save.ledger.md`. Nothing here has entered the durable-docs root's `spec/`; it goes
+  there only if the user later states it themselves, and is yours to withdraw otherwise.
+  This section tells them what the run did.
 - **Summary** — written when the run ends: what landed (commits, tasks done) and
    what's still queued. Don't re-list blockers or calls here; they're already above.
 

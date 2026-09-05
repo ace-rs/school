@@ -144,9 +144,9 @@ File new material by the gate, first match wins: third-party lookup → `vendor/
 → `guides/`; our own design or surface → `spec/`; unsettled exploration → `scratch/` (last
 resort, opened with a "not spec because ___" line). Nothing defaults to `scratch/`.
 
-**Before writing into a `.docs/` folder, read that folder's `README.md` first.** It holds
-the folder's filing test, filename format, and lifecycle rules, and they are binding.
-Nothing else surfaces them.
+**Before writing under `.docs/`, read `.docs/README.md`, then the destination folder's
+`README.md`.** The root file defines the routing gate. The folder file defines its filing
+test, filename format, and lifecycle rules. Both are binding.
 
 **`.docs/spec/README.md` indexes every spec file — keep it current.** Read the index
 before adding a spec file, so you amend the existing doc on a subject instead of writing a

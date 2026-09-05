@@ -3,7 +3,9 @@
 Store only unsettled exploration that fails every earlier predicate in the docs gate:
 research dumps, surveys, investigations, drafts, and transcripts. Route settled design,
 instructions, conventions, and the project's exact surface to `../spec/`. Route retained
-third-party lookup to `../vendor/` and task walkthroughs to `../guides/`.
+third-party lookup to `../vendor/` when that folder exists and task walkthroughs to
+`../guides/` when that folder exists. If the matching folder is absent, report the
+missing destination and stop; do not keep the artifact here.
 
 Start every scratch file with a truthful reason it is not a spec:
 

@@ -17,7 +17,7 @@ Install a docs tree and the always-loaded instructions that make its rules reach
 
 | Operation                | Steps | Use when                                           |
 |--------------------------|-------|----------------------------------------------------|
-| Route an artifact        | R1–R2 | an existing `docs/` tree already defines the gate  |
+| Route an artifact        | R1–R2 | an existing durable-docs root defines the gate     |
 | Scaffold durable docs    | S1–S7 | the repo has no durable-docs convention            |
 | Open the decisions hatch | D1–D5 | a substantial losing argument needs its own record |
 
@@ -32,19 +32,29 @@ Do not print per-step markers.
 
 ## Route an artifact
 
-- **R1. Read the gate.** Read `docs/README.md`, then the README of the first folder whose
-  predicate matches the artifact. If either file is missing, report the missing routing
-  text and stop; do not infer a replacement taxonomy.
+- **R1. Read the gate.** Find the durable-docs root named by the repo's always-loaded
+  instructions and inspect that path. If none is named, inspect `docs/` and `.docs/`. If
+  neither exists, report that no routing gate exists and stop. If both exist without one
+  being named, report the ambiguous root and stop. Treat a present root without
+  `README.md` as incomplete; report the missing gate and stop. With one complete root,
+  read its `README.md`, then the README of the first folder whose predicate matches the
+  artifact. If the gate names no matching folder or either README is missing, report the
+  missing destination or routing text and stop. Do not infer a replacement taxonomy,
+  create a folder, or route the artifact to another predicate.
 - **R2. Report the route.** Name the destination and the exact predicate that selected
   it. A routing request is complete with this assessment. Do not create, move, or edit
   files unless the user separately asks for that write.
 
 ## Scaffold durable docs
 
-- **S1. Inspect the repo.** Read its always-loaded instructions and inspect `docs/` when
-  present. If any target path already exists, report its current shape and stop before
-  overwriting it. If an established docs convention differs from this one, present the
-  conflict and wait for a migration request.
+- **S1. Inspect the repo.** Read its always-loaded instructions and identify any named
+  durable-docs root. Inspect that path, plus `docs/` and `.docs/` when present. If a
+  present root lacks `README.md`, report the incomplete tree and stop. If more than one
+  root exists and the instructions select none, report the ambiguity and stop. If a
+  complete root exists, use **Route an artifact** for routing requests; do not scaffold a
+  second root. If an established convention differs from this one, present the conflict
+  and wait for a migration request. If any scaffold target exists, report its current
+  shape and stop before overwriting it.
 - **S2. Select folders.** Always select `spec/`. Select `vendor/` for retained third-party
   lookup, `guides/` for task walkthroughs, and `scratch/` for genuinely unsettled
   exploration. Never create empty content merely to justify a folder.
@@ -54,9 +64,11 @@ Do not print per-step markers.
 - **S4. Create the approved tree.** Open by quoting the user's choice when S3 waited.
   Create `docs/` and only the selected folders. Never create `docs/decisions/` during
   scaffolding.
-- **S5. Install the templates.** Copy this skill's templates using the map below. Copy
-  each selected folder template as-is. In the root template, remove gate rows and
-  lifecycle links for folders not selected; preserve the remaining predicates' order.
+- **S5. Install the templates.** Copy this skill's templates using the map below. In the
+  root template, remove gate rows and lifecycle references for folders not selected,
+  renumber the remaining rows, and preserve the predicates' order. Keep each folder
+  template's missing-sibling branches intact. They stop artifacts whose proper
+  destination was not selected from being misfiled.
 
   | Source                        | Destination                | Condition           |
   |-------------------------------|----------------------------|---------------------|
@@ -93,9 +105,9 @@ Do not print per-step markers.
   `scratch/` (last resort, opened with a "not spec because ___" line). Nothing defaults
   to `scratch/`.
 
-  **Before writing into a `docs/` folder, read that folder's `README.md` first.** It
-  holds the folder's filing test, filename format, and lifecycle rules, and they are
-  binding. Nothing else surfaces them.
+  **Before writing under `docs/`, read `docs/README.md`, then the destination folder's
+  `README.md`.** The root file defines the routing gate. The folder file defines its
+  filing test, filename format, and lifecycle rules. Both are binding.
 
   **`docs/spec/README.md` indexes every spec file — keep it current.** Read the index
   before adding a spec file, so you amend the existing doc on a subject instead of
@@ -104,9 +116,11 @@ Do not print per-step markers.
   ```
 
 - **S7. Validate and close.** Confirm that every selected folder has its README, no
-  unselected folder or gate row remains, the spec index has its placeholder row, and the
-  always-loaded instructions contain the exact four bold rules. If repository instructions
-  authorize autonomous local commits, commit the scaffold as one coherent slice.
+  unselected folder or gate row remains, every omitted category stops instead of routing
+  elsewhere, the spec index has its placeholder row, and the always-loaded instructions
+  contain the exact four bold rules including the `docs/README.md` pointer. If repository
+  instructions authorize autonomous local commits, commit the scaffold as one coherent
+  slice.
   Otherwise, report the reviewed files and wait for explicit commit approval. Report the
   changed paths, selected folders, validation result, and pending gate. After approval,
   open by quoting it, commit the scaffold, and report the commit hash.
@@ -115,34 +129,38 @@ Do not print per-step markers.
 
 - **D1. Test the exception.** Confirm that an argument actually happened, two positions
   were considered, one lost, and the losing case is too detailed to preserve as one
-  sentence. If any condition fails, report that the artifact routes to `docs/spec/`.
-  Amend the spec only when the user requested that write, then report the result and
-  stop. When every condition holds, continue to D2.
+  sentence. Apply only R1's root-selection checks, then read the resolved root's
+  `README.md` and `spec/README.md`; do not route the argument through the normal gate. If
+  any exception condition fails, report that the artifact belongs in that root's `spec/`.
+  Amend the spec only when the user requested that write, then report the result and stop.
+  When every condition holds, continue to D2.
 - **D2. Confirm the write.** Present the qualifying argument, the spec file to amend, and
   the proposed decision-record path. Wait for explicit approval to open the folder. This
   is a Wait.
-- **D3. Install the folder.** Open by quoting the approval. If `docs/decisions/` exists,
-  read its README and stop on any conflict; never overwrite it. Otherwise create the
-  folder and copy `templates/decisions-README.md` to `docs/decisions/README.md`. Do not
-  add the folder to the routing gate.
+- **D3. Install the folder.** Open by quoting the approval. If the resolved root's
+  `decisions/` exists, read its README and stop on any conflict; never overwrite it.
+  Otherwise create the folder and copy `templates/decisions-README.md` to its `README.md`.
+  Do not add the folder to the routing gate.
 - **D4. Make the exception reachable.** Insert this exact block in the repo's
-  always-loaded instructions and after the gate in `docs/README.md`:
+  always-loaded instructions and after the gate in the resolved root's `README.md`.
+  Replace `{docs-root}` with that root's path:
 
   ```markdown
   **Decision records are an exception, not a routing destination.** If
-  `docs/decisions/` exists, read its `README.md` before writing there. Every decision
-  record adds a substantial losing argument to an accompanying `docs/spec/` amendment;
-  never route an artifact there from the normal gate.
+  `{docs-root}/decisions/` exists, read its `README.md` before writing there. Every
+  decision record adds a substantial losing argument to an accompanying
+  `{docs-root}/spec/` amendment; never route an artifact there from the normal gate.
   ```
 
-  Then write `docs/decisions/YYYY-MM-DD-slug.md` in the template's format and amend the
-  authoritative `docs/spec/` file in the same change.
-- **D5. Validate and close.** Confirm that the current rule is in `docs/spec/`, the losing
-  argument is in the decision record, both reachable pointers are installed, and no gate
-  names `decisions/`. If repository instructions authorize autonomous local commits,
-  commit all surfaces together. Otherwise, report the reviewed files and wait for explicit
-  commit approval. Report the paths, validation result, and pending gate. After approval,
-  open by quoting it, commit all surfaces together, and report the commit hash.
+  Then write `{docs-root}/decisions/YYYY-MM-DD-slug.md` in the template's format and
+  amend the authoritative `{docs-root}/spec/` file in the same change.
+- **D5. Validate and close.** Confirm that the current rule is in the resolved root's
+  `spec/`, the losing argument is in the decision record, both reachable pointers are
+  installed, and no gate names `decisions/`. If repository instructions authorize
+  autonomous local commits, commit all surfaces together. Otherwise, report the reviewed
+  files and wait for explicit commit approval. Report the paths, validation result, and
+  pending gate. After approval, open by quoting it, commit all surfaces together, and
+  report the commit hash.
 
 ## Migration boundary
 

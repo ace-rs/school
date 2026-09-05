@@ -19,7 +19,8 @@ chosen library, format, name, or default does not qualify.
 **Read the relevant spec before working, and comply.** Raise a wrong spec with the user
 and amend it. Do not use a decision record to route around the spec.
 
-Route unsettled research, surveys, drafts, and transcripts to `../scratch/`.
+Route unsettled research, surveys, drafts, and transcripts to `../scratch/` when that
+folder exists. Otherwise report the missing destination and stop; do not keep it here.
 
 ## Format
 

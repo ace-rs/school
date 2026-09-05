@@ -3,6 +3,12 @@
 File durable artifacts by this gate. Walk it from top to bottom and stop at the first
 matching predicate. Nothing defaults to `scratch/`.
 
+This scaffold may omit categories the repository does not use. Third-party lookup belongs
+in `vendor/`, task-oriented how-tos in `guides/`, system design and exact surfaces in
+`spec/`, and residual unsettled exploration in `scratch/`. If the matching folder has no
+gate row, report the missing destination and stop. Do not use another predicate or create
+the folder.
+
 ## Where does this go?
 
 1. Third-party facts kept for lookup about a framework, external API, or CLI? →
@@ -27,8 +33,7 @@ common default or personal preference.
 Record agreed but unimplemented behavior in `spec/` and mark the affected section as
 intended or target. Remove abandoned behavior from the spec.
 
-Files in `vendor/`, `guides/`, and `spec/` are living documents updated in place.
-Files in `scratch/` are dated and disposable under that folder's lifecycle rules.
+Folders named by the gate define their lifecycle in their own `README.md`.
 
 **Read a folder's `README.md` before writing there.** It defines the folder's filing
 test, filename format, and lifecycle. The repository's always-loaded instructions point

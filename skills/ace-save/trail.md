@@ -19,10 +19,10 @@ belongs in `save.md`.
 
 ## Words and provenance
 
-The user states; the agent derives. Put a rule the user states in `docs/spec/` exactly as
-stated: no added reason and no record of alternatives. Keep an agent derivation
-provisional. It becomes the user's statement only when the user takes it up in their own
-words.
+The user states; the agent derives. Put a rule the user states in the durable-docs root's
+`spec/` exactly as stated: no added reason and no record of alternatives. Keep an agent
+derivation provisional. It becomes the user's statement only when the user takes it up
+in their own words.
 
 Use one provenance value on every ledger item:
 
@@ -43,8 +43,8 @@ place. Never regenerate it from scratch. Preserve every line that this session d
 re-establish or close.
 
 Keep no history or correction trail. Remove a dead line instead of striking it through.
-Keep settled rules in `docs/`; retain only a one-line pointer here. Keep every item with a
-status in `save.ledger.md`, never here.
+Keep settled rules in the repository's durable-docs root; retain only a one-line pointer
+here. Keep every item with a status in `save.ledger.md`, never here.
 
 Past about 60 lines, inspect whether material should graduate. This is a review signal,
 not a size limit. Never shorten the file merely to meet a length target.
@@ -105,13 +105,17 @@ that carries the user's words. Surface those items at the next save and retain t
 
 - **G1. Verify evidence.** Require the user's verbatim words in `ev:`. Without them, keep
   the item as `agent:inferred` and stop graduation.
-- **G2. Route through docs.** If a `KILLED` item was never in the spec, delete the ledger
-  entry, write nothing, and finish without G3. Otherwise require an existing `docs/`
-  destination. When none exists, recommend `ace-docs`, wait for the user's approval, and
-  keep the item in the ledger. This is a Wait; never scaffold `docs/` during `ace-save`.
-  When the destination exists, read `docs/README.md` and the destination folder's README.
-  For `SETTLED`, write the user's rule into `docs/spec/`. For `KILLED`, remove what the
-  user's words kill from the spec and update every sentence that still teaches it.
+- **G2. Route through durable docs.** If a `KILLED` item was never in the spec, delete the
+  ledger entry, write nothing, and finish without G3. Otherwise find the durable-docs root
+  named by the repo's always-loaded instructions. If none is named, inspect `docs/` and
+  `.docs/`. If both exist without one being named, report the ambiguity and keep the item
+  in the ledger. A present root without `README.md`, or without `spec/README.md`, is
+  incomplete: report the missing file and keep the item in the ledger. When no root
+  exists, recommend `ace-docs`, wait for the user's approval, and keep the item in the
+  ledger. This is a Wait; never scaffold docs during `ace-save`. With one complete root,
+  read its `README.md` and `spec/README.md`. For `SETTLED`, write the user's rule into
+  that root's `spec/`. For `KILLED`, remove what the user's words kill from the spec and
+  update every sentence that still teaches it.
 - **G3. Close the ledger entry.** After the docs change succeeds, remove the item from
   `save.ledger.md` and leave a one-line pointer in `save.md`.
 
