@@ -21,12 +21,10 @@ The audit lives in `ace/workflow.md` as the `Audit` step. Two ways in:
 - **Standalone quality pass** — deliberately re-audit a large body of work that
   already landed, to catch issues and maximize quality even though nothing slipped.
 
-## Stamp chain
+## Procedure evidence
 
-The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
-skill's directory, sibling to this one — and follow its contract: close every step with
-its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
-user's verbatim words.
+Read `ace/ledger.md` in the `ace` skill's directory. Run the steps in order and retain
+the scope, checks, findings, and final clean pass as evidence.
 
 ## Audit procedure
 
@@ -57,7 +55,7 @@ user's verbatim words.
 
 4. **Audit full scope.** Run the `ace/workflow.md` Audit step and categorize
    every finding. When the pass finds a Violation, fix every Violation, rerun the
-   affected checks, and stamp `next: 3 Resolve design`. Restart at step 3 without
+   affected checks, then restart at step 3 without
    handing off a findings report or rescanning only the patched files. Only a fresh
    full-scope pass with zero Violations closes the loop.
 

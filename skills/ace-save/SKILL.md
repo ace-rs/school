@@ -30,14 +30,11 @@ Do not touch code. Only at a target you're already writing this run, prune stale
 entries you notice while there (completed tasks, superseded prefs, resolved
 questions, contradicted learnings) — don't open stores just to sweep.
 
-## Stamp chain
+## Procedure evidence
 
-The five numbered steps below run as a stamp chain — this governs the steps of this run
-and has nothing to do with `.ace/save.ledger.md`, the state file this skill writes.
-Read `ace/ledger.md` — in the `ace` skill's directory, sibling to this one — and follow
-its contract: close every step with one emitted stamp; reprint the prior stamp to enter
-the named next step, reusing an immediately preceding emission instead of duplicating it;
-no skips.
+Read `ace/ledger.md` in the `ace` skill's directory. Run the five steps in order and keep
+their decisive results. This procedure is separate from `.ace/save.ledger.md`, the state
+file it writes.
 
 ## 1. **Load contracts**
 

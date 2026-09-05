@@ -33,8 +33,7 @@ needs to behave consistently across projects. A school can ship:
 
 ACE Home is the *baseline*: it ships the small set of skills required to make
 ACE itself useful, including `ace-skill` for authoring skills in house style —
-menu-first structure, numbered steps, and an enforcement mechanism that makes
-agents actually follow them.
+menu-first structure, clear steps, explicit approval gates, and useful evidence.
 Anything team- or project-specific belongs in your school, not here — import this one and
 layer your own skills on top.
 

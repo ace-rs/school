@@ -33,13 +33,11 @@ start it unprompted.
 
 `$ARGUMENTS` narrows focus if provided (e.g. "skills only").
 
-## Stamp chain
+## Procedure evidence
 
-The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
-skill's directory, sibling to this one — and follow its contract: close every step with
-its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
-user's verbatim words. Phase 1 step 6 and Phase 2 step 1 are Waits: each is
-crossed only with the user's approving words quoted in the entry.
+Read `ace/ledger.md` in the `ace` skill's directory. Run each phase in order and retain
+its review result. Phase 1 step 6 and Phase 2 step 1 are Waits; continue only after the
+user approves.
 
 ## Phase 1 — Lay down the structure
 
@@ -60,8 +58,8 @@ Build a picture of what this is and what the user is building. Cover:
   commit-message style, branching.
 - **Activity** — `git log --oneline -20` and `git status` for what's in flight.
 
-Keep it a skim — the deep pass is Phase 2. Record findings in `.ace/init-plan.md` as you go;
-later steps add to it.
+Keep it a skim — the deep pass is Phase 2. Record findings in `.ace/init-plan.md` as you
+go; later steps add to it.
 
 ### 3. **Plan instructions**
 

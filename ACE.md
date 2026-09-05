@@ -11,8 +11,8 @@ self-engages without being asked, on a repeated violation of the same rule.
 
 The attended and AFK workflows verify and audit each completed, coherent slice before
 committing it locally. On resume, coherent dirty work with reconstructable evidence
-re-enters that chain; unresolved dirty state is surfaced for attended disposition or
-logged as a blocker that stops the AFK run. A local commit is a checkpoint, not a push
+resumes at the first unverified phase; unresolved dirty state is surfaced for disposition
+or logged as a blocker that stops the AFK run. A local commit is a checkpoint, not a push
 or permission for any other outward action.
 
 | Skill         | Reach for it when                           |
@@ -38,12 +38,10 @@ Run it when adopting ACE, then hand off to the workflow.
 
 ## `ace` — nudge the workflow forward
 
-ACE runs a defined workflow — plan, write, test, audit, and the rest. `ace` advances it
-one step: invoke it again and again and the agent walks the stages itself, so you don't
-hand-direct each phase ("now plan", "now test", "now write"). At a session boundary it
-also reads persisted state to resume mid-workflow instead of restarting. It's a nudge
-along the process, not a task-discovery tool — and it stays quiet when "go"/"continue"
-point at the in-flight step rather than the next one.
+ACE follows six phases: Orient, Plan, Implement, Verify, Audit, and Close. `ace` resumes
+from the available evidence and continues until an approval gate, blocker, or completed
+task. Plans include validation; results cite checks and audit findings. Chat updates
+report outcomes, blockers, and decisions without per-step stamps.
 
 ## `ace-afk` — run unattended, overnight
 
@@ -100,8 +98,6 @@ authoritative; there is no decisions log.
 
 ## `ace-skill` — write skills agents actually follow
 
-A skill needs creating or revising, and prose instructions alone won't hold — models
-skim, skip steps, and mint their own exemptions. `ace-skill` authors skills in the
-shape that survives that: a menu before operational detail, numbered steps per operation,
-and an enforcement mechanism binding the steps (the stamp-chain ledger by default). It
-also retrofits enforcement onto existing skills and tunes descriptions for triggering.
+`ace-skill` authors skills with a menu before operational detail, clear steps, explicit
+approval gates, and evidence for results. It also clarifies existing procedures and tunes
+descriptions for triggering.

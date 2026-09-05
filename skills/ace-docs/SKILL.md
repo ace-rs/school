@@ -39,12 +39,10 @@ Don't run when:
 - The repo uses a different convention with a strong reason (e.g. a framework that owns
   `docs/` for generated output). Suggest the shape but defer.
 
-## Stamp chain
+## Procedure evidence
 
-The numbered steps below run as a stamp chain. Read `ace/ledger.md` — in the `ace`
-skill's directory, sibling to this one — and follow its contract: close every step with
-its one-line stamp, open the next by reprinting it, no skips, exemptions only in the
-user's verbatim words.
+Read `ace/ledger.md` in the `ace` skill's directory. Run the steps in order and retain the
+existing-tree check, selected folders, and final validation as evidence.
 
 ## Steps
 

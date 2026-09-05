@@ -117,9 +117,8 @@ Apply this on **every** skill edit:
 
 Load the `ace-skill` skill first when authoring or revising any skill under `skills/` —
 it carries the house method: a menu of operations up front, numbered steps per
-operation, and an enforcement mechanism binding the steps (`skills/ace/ledger.md`, the
-stamp-chain contract). Its house style checklist is the review gate for every skill
-edit.
+operation, explicit approval gates, and evidence for results (`skills/ace/ledger.md`).
+Its house style checklist is the review gate for every skill edit.
 
 Skill bodies **prefer terse imperative rules over why-clauses** — why-clauses rarely
 change model behavior; agents skim them. Reasoning gets a single framing sentence only

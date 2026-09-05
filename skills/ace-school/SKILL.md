@@ -138,12 +138,11 @@ machine that subscribes to that school, and an uncommitted change there blocks
 proposed upstream (steps below) or reverted. Never park uncommitted changes in the
 checkout.
 
-## Stamp chain
+## Procedure evidence
 
-The numbered steps in each operation run as a stamp chain. Read `ace/ledger.md` — in the
-`ace` skill's directory, sibling to this one — and follow its contract. Proposal step 2
-waits for approval; step 10 waits for a checkout selection. The next step quotes the
-user's words at either gate.
+Read `ace/ledger.md` in the `ace` skill's directory. Run the selected operation in order
+and retain its review and remote results. Proposal step 2 waits for approval; step 10
+waits for a checkout selection. Continue only after the user answers either gate.
 
 ## Menu
 

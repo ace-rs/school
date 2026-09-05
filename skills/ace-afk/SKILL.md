@@ -34,7 +34,7 @@ attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
 - **Commit, don't push** — land green slices on the *current* branch so progress
   survives. Pushing is the canonical "needs a human" action; it waits.
 - **Nothing of your own in `docs/spec/`** — the spec holds what the user stated,
-  in their words. Calls you make alone stay in `.ace/save.ledger.md` stamped
+  in their words. Calls you make alone stay in `.ace/save.ledger.md` marked
   `agent:inferred`. Writing a spec is allowed only when that was the task handed
   to this run.
 
@@ -46,11 +46,8 @@ it.
 Run this while the human is still reachable. It front-loads every decision so the
 unattended body needs none. This phase is the *only* sanctioned asking window.
 
-The five steps run as a stamp chain: read `ace/ledger.md` — in the `ace` skill's
-directory, sibling to this one — and follow its contract (one emitted stamp to close each
-step; reprint the prior stamp to enter the named next step, reusing an immediately preceding
-emission instead of duplicating it; no skips). Step 5 is a Wait: the run body opens only
-with the user's "Go" quoted in its entry.
+Read `ace/ledger.md` in the `ace` skill's directory and keep the decisive result of each
+step. Step 5 is a Wait: the run body opens only after the user's explicit Go.
 
 1. **Restate goal.** "Understood: <goal>." Include the definition of
    *done* — the real deliverable in the real target (the repo actually changed, the thing
@@ -84,7 +81,7 @@ emitted. The final summary cannot start until deletion of that handle is emitted
 2. **Arm heartbeat.** Schedule the prompt on the harness's recurring timer or an external
    timer that injects a line into the session. Use roughly 10 minutes; choose an off-round
    interval when the timer supports one.
-3. **Record handle.** Emit the job id or handle. The run body's first stamp quotes it.
+3. **Record handle.** Emit the job id or handle before starting the run body.
 4. **Disarm heartbeat.** When the run ends, delete the recorded job and emit the deletion
    result before writing the final summary.
 
@@ -94,9 +91,10 @@ rest. A hard hang in the middle of one operation is the harness's own timeout to
 ## Run the loop
 
 After Go, complete Heartbeat steps 1–3, then read `workflow-afk.md` in this skill's
-directory and drive it autonomously. It is the ace workflow with every propose/confirm gate
-removed. Honor `$ARGUMENTS` as the focus. When the workflow stops, complete Heartbeat step
-4 before writing the handoff summary.
+directory and drive it autonomously. It is the ACE workflow with its attended approval
+gates replaced by the decision-basis and operating envelope. Honor `$ARGUMENTS` as the
+focus. When the workflow stops, complete Heartbeat step 4 before writing the handoff
+summary.
 
 ## The handoff report — `.ace/afk.log`
 
