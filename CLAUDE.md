@@ -41,8 +41,7 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
 - Skills must stay **generic**. No project-specific content.
 - For every skill edit, edit directly only when the active model is the requested
   frontier model. Otherwise use the harness subagent tool to spawn the best available
-  frontier model: `fable 5` for Claude and `5.6 sol` for Codex. Never use `ace-connect`
-  for this delegation.
+  frontier model: `fable 5` for Claude and `5.6 sol` for Codex.
 - Give the subagent the complete task context, the applicable house rules, the full
   `ace-skill` instructions, and the user's raw feedback pasted verbatim. Do not
   paraphrase, summarize, or reinterpret the user's feedback before passing it on.
@@ -50,7 +49,7 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
   the full PR workflow.
 - **Commit prefix is the skill name, not `skills:`.** Almost every edit here touches a
   skill, so `skills:` carries no information — prefix with the skill being changed:
-  `ace-connect: fix the opencode bridge`, `ace-audit: tighten the checklist`. Edits
+  `ace-save: clarify trail routing`, `ace-audit: tighten the checklist`. Edits
   spanning several skills use a shared theme prefix. Non-skill edits: `docs:` for the
   user-facing docs (`README.md`, `ACE.md`), `meta:` for repo-level instruction and config
   files (`CLAUDE.md`, `.gitignore`, `school.toml`, `ace.toml`).

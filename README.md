@@ -39,22 +39,21 @@ layer your own skills on top.
 
 ## What lives here
 
-Ten skills, all loaded by default for any school that imports this one:
+Nine skills, all loaded by default for any school that imports this one:
 
-| Skill         | What it does                                             |
-| ------------- | -------------------------------------------------------- |
-| `ace`         | Start or resume the ACE workflow at session boundaries   |
-| `ace-afk`     | Unattended autonomous mode inside a safety envelope      |
-| `ace-audit`   | Audit landed work — recovery or standalone quality pass  |
-| `ace-connect` | Local agent-to-agent bridge over unix sockets            |
-| `ace-docs`    | Scaffold a `docs/` tree routed by a single gate          |
-| `ace-init`    | One-time onboarding of a repo into ACE                   |
-| `ace-realign` | Repeat a rule you keep breaking until it sticks          |
-| `ace-save`    | Persist session state before `/clear` or context switch  |
-| `ace-school`  | Manage school edits and PRs                              |
-| `ace-skill`   | Author or revise a skill in house style                  |
+| Skill         | What it does                                            |
+|---------------|---------------------------------------------------------|
+| `ace`         | Start or resume the ACE workflow at session boundaries  |
+| `ace-afk`     | Unattended autonomous mode inside a safety envelope     |
+| `ace-audit`   | Audit landed work — recovery or standalone quality pass |
+| `ace-docs`    | Scaffold a `docs/` tree routed by a single gate         |
+| `ace-init`    | One-time onboarding of a repo into ACE                  |
+| `ace-realign` | Repeat a rule you keep breaking until it sticks         |
+| `ace-save`    | Persist session state before `/clear` or context switch |
+| `ace-school`  | Manage school edits and PRs                             |
+| `ace-skill`   | Author or revise a skill in house style                 |
 
-You don't have to take all ten. Skill selection is managed by the `ace` CLI
+You don't have to take all nine. Skill selection is managed by the `ace` CLI
 — `ace skills include <pat>` / `ace skills exclude <pat>`, or the `skills`
 array in `ace.toml` — so a project can narrow the set without forking the
 school. Declaring a skill of the same name in your own school shadows the one

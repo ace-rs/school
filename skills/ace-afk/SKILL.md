@@ -98,8 +98,7 @@ summary.
 
 ## The handoff report — `.ace/afk.log`
 
-One file in `.ace/` (same convention as `ace-connect`'s `.ace/connect.log`) — the
-human's morning read. Three parts:
+One file in `.ace/` — the human's morning read. Three parts:
 
 - **Blockers** — appended live as they arise. Each entry records enough to unblock
   in one read: **what** (task and where it stopped), **why it can't be self-unblocked**

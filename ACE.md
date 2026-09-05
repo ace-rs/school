@@ -15,18 +15,17 @@ resumes at the first unverified phase; unresolved dirty state is surfaced for di
 or logged as a blocker that stops the AFK run. A local commit is a checkpoint, not a push
 or permission for any other outward action.
 
-| Skill         | Reach for it when                           |
-|---------------|---------------------------------------------|
-| `ace-init`    | first-time onboarding of a repo into ACE    |
-| `ace`         | moving the workflow forward a step          |
-| `ace-afk`     | running unattended, no one watching         |
-| `ace-save`    | before a `/clear`, exit, or switch          |
-| `ace-audit`   | work landed unreviewed, or a quality pass   |
-| `ace-realign` | a rule keeps getting broken                 |
-| `ace-school`  | a fix should reach every project            |
-| `ace-connect` | two local agents need to talk               |
-| `ace-docs`    | durable artifacts are scattering            |
-| `ace-skill`   | a skill needs writing or revising           |
+| Skill         | Reach for it when                         |
+|---------------|-------------------------------------------|
+| `ace-init`    | first-time onboarding of a repo into ACE  |
+| `ace`         | moving the workflow forward a step        |
+| `ace-afk`     | running unattended, no one watching       |
+| `ace-save`    | before a `/clear`, exit, or switch        |
+| `ace-audit`   | work landed unreviewed, or a quality pass |
+| `ace-realign` | a rule keeps getting broken               |
+| `ace-school`  | a fix should reach every project          |
+| `ace-docs`    | durable artifacts are scattering          |
+| `ace-skill`   | a skill needs writing or revising         |
 
 ## `ace-init` — onboard a repo into ACE
 
@@ -79,13 +78,6 @@ You learned or fixed something that shouldn't die locally — a tooling fact, a 
 pattern, a skill gap every subscriber would hit. `ace-school` proposes the change back to
 the shared school via PR so it reaches every project that imports it, instead of rotting
 in one repo or one machine's memory.
-
-## `ace-connect` — let two local agents talk
-
-You've got two agents on the same machine (say Claude Code and Codex) and you're relaying
-messages between terminals by hand. `ace-connect` gives them a unix-socket bridge to
-message each other directly — fire-and-forget, single-user trust boundary, no auth or
-persistence. Not for intra-session, MCP, or cross-machine messaging.
 
 ## `ace-docs` — give durable artifacts a home
 
