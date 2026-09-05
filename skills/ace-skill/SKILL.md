@@ -17,8 +17,12 @@ Print `## ace-skill` as the first line.
 Give every skill three parts:
 
 1. **A menu** before operational detail. List each operation and when to use it. One brief
-   framing section may precede the menu. For a single operation, use one sentence.
+   framing section may precede the menu. A single-operation skill uses one sentence as
+   its menu.
 2. **Numbered phases** that are concise, bolded, and grouped around meaningful outcomes.
+   Use a fixed order only when a dependency, safety constraint, or gate makes sequence
+   mandatory. When several approaches are valid, give the reader criteria for choosing
+   among them.
 3. **A completion contract** with evidence, explicit branch conditions, and Wait gates
    where the user's words are required. Point to `ace/ledger.md` when its rules fit.
 
@@ -40,19 +44,21 @@ result and required user authorization as evidence. Do not print per-step marker
 
 ## Prepare
 
-- **P1. Read the rules.** Read the target school's loaded instructions, any skill-writing
-  rules they point to, and `ace/ledger.md`.
-- **P2. Read or search.** For an existing skill, read its entire `SKILL.md` and all its
-  supporting instruction files. For a new skill, search for one that already covers the
-  job, then one that nearly does and could be revised. Name what the search found. If one
-  is suitable, switch to the matching existing-skill operation and read it in full. Create
-  a skill only when neither search finds a suitable home.
+- **P1. Read or search.** Read the target school's loaded instructions, any skill-writing
+  rules they point to, and `ace/ledger.md`. For an existing skill, read its entire
+  `SKILL.md` and all supporting instruction files. For a new skill, search for one that
+  already covers the job, then one that nearly does and could be revised. Name what the
+  search found. If one is suitable, switch to the matching existing-skill operation and
+  read it in full. Create a skill only when neither search finds a suitable home.
+- **P2. Define the improvement.** State the task the skill must help complete, a likely
+  wrong decision, and the desired result. Use these to choose instructions and review
+  cases.
 
 ## Create a skill
 
-- **C1. Scope.** State what the skill does, its trigger and non-trigger cases, and who
-  reads it: a weaker model in fresh context, possibly under a different harness, unable
-  to ask follow-ups.
+- **C1. Set boundaries.** State the trigger and non-trigger cases, and who reads the
+  skill: a weaker model in fresh context, possibly under a different harness, unable to
+  ask follow-ups.
 - **C2. Write frontmatter.** The directory name is the skill's only invocation handle;
   pick it as carefully as an API name. Write the `description` with explicit TRIGGER and
   DO NOT TRIGGER guidance and concrete phrases a user would type, within D2's budget.
@@ -111,8 +117,12 @@ Use this checklist during F1. Fix every failure:
   explicit file paths and commands.
 - No self-talk: omit the authoring process, conversation, and prior versions. Make every
   sentence stand alone.
-- Generic: placeholder names in examples; project-specific numbers as examples ("e.g.
-  30s"), never as rules.
+- Match the destination. Base-school skills use generic defaults and placeholder
+  examples. Target-specific skills preserve exact requirements from the target's loaded
+  rules. Never invent project facts.
 - Reachability: point to every supporting file from text the reader will load. For a rule
   that must govern ongoing sessions, provide its exact text in a fenced block and instruct
   the agent to copy it into the target repo's `CLAUDE.md` or `AGENTS.md`.
+- For each instruction, ask: "Which decision or likely mistake does this rule address?"
+  Remove instructions without a concrete answer. Use the answer only to decide whether
+  the rule belongs; do not add a per-rule rationale.
