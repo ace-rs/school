@@ -2,12 +2,11 @@
 
 The `ace-*` skills ACE Home ships, and the moment each one is for. Nothing here is
 domain-specific — they cover what a raw coding session handles badly: losing the thread
-across a `/clear`, work that skipped review, a rule that won't stick. Reach for them by
-the problem, not the mechanism; each section below leads with the situation it's for.
+across a `/clear` and work that skipped review. Reach for them by the problem, not the
+mechanism; each section below leads with the situation it's for.
 
 Invoke one by name — `/ace`, `/ace-save`, `/ace-docs` — or just describe the situation
-and let the agent pick; every skill declares triggers for that. `ace-realign` also
-self-engages without being asked, on a repeated violation of the same rule.
+and let the agent pick; every skill declares triggers for that.
 
 The attended and AFK workflows verify and audit each completed, coherent slice before
 committing it locally. On resume, coherent dirty work with reconstructable evidence
@@ -15,17 +14,16 @@ resumes at the first unverified phase; unresolved dirty state is surfaced for di
 or logged as a blocker that stops the AFK run. A local commit is a checkpoint, not a push
 or permission for any other outward action.
 
-| Skill         | Reach for it when                         |
-|---------------|-------------------------------------------|
-| `ace-init`    | first-time onboarding of a repo into ACE  |
-| `ace`         | moving the workflow forward a step        |
-| `ace-afk`     | running unattended, no one watching       |
-| `ace-save`    | before a `/clear`, exit, or switch        |
-| `ace-audit`   | work landed unreviewed, or a quality pass |
-| `ace-realign` | a rule keeps getting broken               |
-| `ace-school`  | a fix should reach every project          |
-| `ace-docs`    | durable artifacts are scattering          |
-| `ace-skill`   | a skill needs writing or revising         |
+| Skill        | Reach for it when                         |
+|--------------|-------------------------------------------|
+| `ace-init`   | first-time onboarding of a repo into ACE  |
+| `ace`        | moving the workflow forward a step        |
+| `ace-afk`    | running unattended, no one watching       |
+| `ace-save`   | before a `/clear`, exit, or switch        |
+| `ace-audit`  | work landed unreviewed, or a quality pass |
+| `ace-school` | a fix should reach every project          |
+| `ace-docs`   | durable artifacts are scattering          |
+| `ace-skill`  | a skill needs writing or revising         |
 
 ## `ace-init` — onboard a repo into ACE
 
@@ -65,12 +63,6 @@ Either a diff landed without going through `/ace`'s audit (ad-hoc edits, late sk
 drift), or a large body of work just landed and you want a deliberate quality pass over
 it. `ace-audit` re-runs the audit against the relevant coding skills — catching structural
 problems while a rewrite is still cheap.
-
-## `ace-realign` — make a broken rule stick
-
-The agent keeps violating a rule and restating it isn't working. `ace-realign` forces
-re-attention now — it repeats the broken rule at the start or end of every message until
-you tell it to stop, keeping the rule in working context every turn.
 
 ## `ace-school` — make a fix outlive this repo
 
