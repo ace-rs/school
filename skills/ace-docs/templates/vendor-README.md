@@ -1,27 +1,23 @@
 # Vendor reference
 
-**Third-party lookup material** — facts about tools and services this repo *uses* but does
-not own: framework commands, an external API's signatures, another product's CLI flags,
-config keys, error codes. Answers "what exactly does *their* thing do?" for surfaces you
-keep reaching for.
+Store retained lookup facts about third-party tools and services: framework commands,
+external API signatures, CLI flags, config keys, and error codes.
 
-Our own surface (our CLI, our config, our API) is not vendor — that is `../spec/`. A task
-walkthrough is `../guides/`.
+Route the project's own config, CLI, API, and schema to `../spec/`. Route task
+walkthroughs to `../guides/`.
 
-**Link-first, crib not mirror.** Point at the upstream source and keep only the slice you
-actually reuse plus your own gotchas. Never dump a whole external API — upstream owns it,
-and a full copy rots the moment they ship.
+Link to the authoritative upstream source. Keep only the slice the project reuses and
+project-specific gotchas. Do not mirror an entire external surface.
 
-**Mark provenance.** Head each file with where it came from and when it was read:
+Start every file with its source and the version or date read:
 
 ```
 <!-- derived from: <source-or-url> @ <version-or-date> -->
 ```
 
-Upstream is the source of truth; the marker makes staleness legible. When the crib is
-wrong, re-read upstream — you cannot fix the rot by editing here.
+Re-read the upstream source before correcting stale material.
 
 ## Format
 
-One file per subject: `<slug>.md` (no date prefix — describes a thing, not a moment).
-Favor tables and lists; keep entries skimmable.
+Use one file per subject: `<slug>.md`. Prefer tables and lists, keep entries skimmable,
+and update them in place.

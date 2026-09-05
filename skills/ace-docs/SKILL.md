@@ -1,161 +1,151 @@
 ---
 name: ace-docs
 description: >
-  Scaffold a durable-docs directory — guides/ (how-to), vendor/ (third-party
-  reference), spec/ (design, surface, and everything settled), scratch/ (residual
-  exploration) — with a README per folder and a routing pointer in CLAUDE.md /
-  AGENTS.md. TRIGGER on `/ace-docs`, "set up docs", "scaffold docs", "where should
-  ADRs/specs/guides/reference go", or before creating the first durable doc in a repo
-  with no `docs/`. DO NOT TRIGGER for editing the prose inside individual docs — this
-  scaffolds structure, it does not author the docs themselves.
+  Scaffold durable docs or route the first artifact into them. TRIGGER on `/ace-docs`,
+  "set up docs", "scaffold docs", "where should this ADR/spec/guide/reference go", or
+  before creating the first lasting artifact in a repo with no docs convention. DO NOT
+  TRIGGER for ordinary doc editing or migration of an established docs tree.
 ---
 
 # ace-docs
 
 Print `## ace-docs` as the first line.
 
-This skill installs a docs tree and the text that governs it. Place that text verbatim —
-the rules bind later sessions only through the files written here, and only the
-instructions-file block (step 4) loads without being asked for. Everything else is reached
-because that block tells an agent to open it.
+Install a docs tree and the always-loaded instructions that make its rules reachable.
 
-If `docs/` already exists and a routing question is being asked, answer from
-`docs/README.md`; don't re-scaffold.
+## Menu
 
-## When to run
+| Operation                | Steps | Use when                                           |
+|--------------------------|-------|----------------------------------------------------|
+| Route an artifact        | R1–R2 | an existing `docs/` tree already defines the gate  |
+| Scaffold durable docs    | S1–S7 | the repo has no durable-docs convention            |
+| Open the decisions hatch | D1–D5 | a substantial losing argument needs its own record |
 
-Run when:
-
-- A repo has no durable-docs convention and the first artifact is about to be created — a
-  guide, reference page, spec, or research dump.
-- The user explicitly asks to scaffold the docs directory.
-- An existing project's docs are scattered (root-level `DECISIONS.md`, ad-hoc `notes/`
-  outside any container, `RFCs/` parallel to `docs/`) and the user wants to consolidate.
-
-Don't run when:
-
-- A `docs/` directory already exists with a different shape — that is a migration
-  question, not a scaffold question. Discuss first.
-- The repo uses a different convention with a strong reason (e.g. a framework that owns
-  `docs/` for generated output). Suggest the shape but defer.
+Run only the matching operation. An established tree with a different shape needs a
+separately approved migration; assess it and stop.
 
 ## Procedure evidence
 
-Read `ace/ledger.md` in the `ace` skill's directory. Run the steps in order and retain the
-existing-tree check, selected folders, and final validation as evidence.
+Read `ace/ledger.md` in the `ace` skill's directory. Keep the existing-tree check,
+selected folders, installed instruction block, validation result, and commit as evidence.
+Do not print per-step markers.
 
-## Steps
+## Route an artifact
 
-1. **Check existing docs.** `ls docs/` if it exists. If any target sub-dir already lives
-   there, stop and discuss before overwriting.
+- **R1. Read the gate.** Read `docs/README.md`, then the README of the first folder whose
+  predicate matches the artifact. If either file is missing, report the missing routing
+  text and stop; do not infer a replacement taxonomy.
+- **R2. Report the route.** Name the destination and the exact predicate that selected
+  it. A routing request is complete with this assessment. Do not create, move, or edit
+  files unless the user separately asks for that write.
 
-2. **Select folders.** `spec/` is required because every settled rule lands there. Add
-   `guides/`, `vendor/`, and `scratch/` only when the repo will use them. An empty folder
-   with its README is a valid signpost; never manufacture content to fill one.
+## Scaffold durable docs
 
-3. **Create tree.** Create the selected folders, never `docs/decisions/`:
+- **S1. Inspect the repo.** Read its always-loaded instructions and inspect `docs/` when
+  present. If any target path already exists, report its current shape and stop before
+  overwriting it. If an established docs convention differs from this one, present the
+  conflict and wait for a migration request.
+- **S2. Select folders.** Always select `spec/`. Select `vendor/` for retained third-party
+  lookup, `guides/` for task walkthroughs, and `scratch/` for genuinely unsettled
+  exploration. Never create empty content merely to justify a folder.
+- **S3. Select the instruction file.** Use the repo's existing always-loaded
+  `CLAUDE.md`, `AGENTS.md`, or equivalent. If none exists, propose the file to create and
+  wait for the user's choice. This is a Wait.
+- **S4. Create the approved tree.** Open by quoting the user's choice when S3 waited.
+  Create `docs/` and only the selected folders. Never create `docs/decisions/` during
+  scaffolding.
+- **S5. Install the templates.** Copy this skill's templates using the map below. Copy
+  each selected folder template as-is. In the root template, remove gate rows and
+  lifecycle links for folders not selected; preserve the remaining predicates' order.
 
-   ```sh
-   mkdir -p docs/guides docs/vendor docs/spec docs/scratch
-   ```
+  | Source                        | Destination                | Condition           |
+  |-------------------------------|----------------------------|---------------------|
+  | `templates/root-README.md`    | `docs/README.md`           | always              |
+  | `templates/vendor-README.md`  | `docs/vendor/README.md`    | `vendor/` selected  |
+  | `templates/guides-README.md`  | `docs/guides/README.md`    | `guides/` selected  |
+  | `templates/spec-README.md`    | `docs/spec/README.md`      | always              |
+  | `templates/scratch-README.md` | `docs/scratch/README.md`   | `scratch/` selected |
 
-   Remove unselected paths from the command before running it.
+  Leave the placeholder row in `docs/spec/README.md`; it defines the index shape for the
+  next writer.
+- **S6. Install the reachable rules.** Insert the block below near the instruction
+  file's repository-layout or conventions section. Trim only the folder list to match
+  S2. Keep all four bold rules intact.
 
-4. **Install READMEs.** Use this map. The root row is required; copy only the per-folder
-   rows selected in step 2:
+  ```markdown
+  ## Durable artifacts
 
-   - `templates/root-README.md` → `docs/README.md`
-   - `templates/guides-README.md` → `docs/guides/README.md`
-   - `templates/vendor-README.md` → `docs/vendor/README.md`
-   - `templates/spec-README.md` → `docs/spec/README.md`
-   - `templates/scratch-README.md` → `docs/scratch/README.md`
+  `docs/` holds this project's durable record.
 
-   Each README carries its folder's routing test, format, and lifecycle. The copied
-   `docs/README.md` carries the gate: remove rows and lifecycle links for unselected
-   folders while preserving the selected predicates' relative order. Copy per-folder
-   templates as-is; let the user customize after.
+  **`docs/spec/` is authoritative — read the relevant spec before working, and comply.**
+  It owes no justification: a rule that departs from mainstream practice, from what you
+  would have picked, or from what you expected is not grounds to escalate, annotate, or
+  re-open it. If a spec is wrong, raise it with the user and amend the spec.
 
-   `docs/spec/README.md` ships with an index table and one placeholder row. Leave the
-   placeholder row in place — it shows the shape the next writer must follow.
+  **Everything settled is a `docs/spec/` amendment** — an instruction you were given, an
+  approach that was agreed, a library that was picked, a convention or preference that
+  was fixed. Write it there as it was given: the rule, at the length it was given, with
+  no reason supplied and no note of what it was chosen over. A one-sentence rule — "use
+  RESTful routes" — is a complete entry. There is no decisions log.
 
-   `templates/decisions-README.md` ships only if the escape hatch is cut open.
+  File new material by the gate, first match wins: third-party lookup → `vendor/`; a
+  how-to → `guides/`; our own design or surface → `spec/`; unsettled exploration →
+  `scratch/` (last resort, opened with a "not spec because ___" line). Nothing defaults
+  to `scratch/`.
 
-5. **Wire instructions.** Update `CLAUDE.md`, `AGENTS.md`, or both. This is
-   the only surface that loads on its own, so it carries every rule that must hold at all
-   times plus the instruction that makes the per-folder READMEs reachable. Insert it near
-   other "where things go" guidance (Repo layout / Conventions). If neither file exists,
-   ask which to create.
+  **Before writing into a `docs/` folder, read that folder's `README.md` first.** It
+  holds the folder's filing test, filename format, and lifecycle rules, and they are
+  binding. Nothing else surfaces them.
 
-   ```markdown
-   ## Durable artifacts
+  **`docs/spec/README.md` indexes every spec file — keep it current.** Read the index
+  before adding a spec file, so you amend the existing doc on a subject instead of
+  writing a second one. Adding, renaming, or retiring a file updates its row in the same
+  change.
+  ```
 
-   `docs/` holds this project's durable record.
+- **S7. Validate and close.** Confirm that every selected folder has its README, no
+  unselected folder or gate row remains, the spec index has its placeholder row, and the
+  always-loaded instructions contain the exact four bold rules. If repository instructions
+  authorize autonomous local commits, commit the scaffold as one coherent slice.
+  Otherwise, report the reviewed files and wait for explicit commit approval. Report the
+  changed paths, selected folders, validation result, and pending gate. After approval,
+  open by quoting it, commit the scaffold, and report the commit hash.
 
-   **`docs/spec/` is authoritative — read the relevant spec before working, and comply.**
-   It owes no justification: a rule that departs from mainstream practice, from what you
-   would have picked, or from what you expected is not grounds to escalate, annotate, or
-   re-open it. If a spec is wrong, raise it with the user and amend the spec.
+## Open the decisions hatch
 
-   **Everything settled is a `docs/spec/` amendment** — an instruction you were given, an
-   approach that was agreed, a library that was picked, a convention or preference that
-   was fixed. Write it there as it was given: the rule, at the length it was given, with
-   no reason supplied and no note of what it was chosen over. A one-sentence rule — "use
-   RESTful routes" — is a complete entry. There is no decisions log.
+- **D1. Test the exception.** Confirm that an argument actually happened, two positions
+  were considered, one lost, and the losing case is too detailed to preserve as one
+  sentence. If any condition fails, report that the artifact routes to `docs/spec/`.
+  Amend the spec only when the user requested that write, then report the result and
+  stop. When every condition holds, continue to D2.
+- **D2. Confirm the write.** Present the qualifying argument, the spec file to amend, and
+  the proposed decision-record path. Wait for explicit approval to open the folder. This
+  is a Wait.
+- **D3. Install the folder.** Open by quoting the approval. If `docs/decisions/` exists,
+  read its README and stop on any conflict; never overwrite it. Otherwise create the
+  folder and copy `templates/decisions-README.md` to `docs/decisions/README.md`. Do not
+  add the folder to the routing gate.
+- **D4. Make the exception reachable.** Insert this exact block in the repo's
+  always-loaded instructions and after the gate in `docs/README.md`:
 
-   File new material by the gate, first match wins: third-party lookup → `vendor/`; a
-   how-to → `guides/`; our own design or surface → `spec/`; unsettled exploration →
-   `scratch/` (last resort, opened with a "not spec because ___" line). Nothing defaults
-   to `scratch/`.
+  ```markdown
+  **Decision records are an exception, not a routing destination.** If
+  `docs/decisions/` exists, read its `README.md` before writing there. Every decision
+  record adds a substantial losing argument to an accompanying `docs/spec/` amendment;
+  never route an artifact there from the normal gate.
+  ```
 
-   **Before writing into a `docs/` folder, read that folder's `README.md` first.** It
-   holds the folder's filing test, filename format, and lifecycle rules, and they are
-   binding. Nothing else surfaces them.
+  Then write `docs/decisions/YYYY-MM-DD-slug.md` in the template's format and amend the
+  authoritative `docs/spec/` file in the same change.
+- **D5. Validate and close.** Confirm that the current rule is in `docs/spec/`, the losing
+  argument is in the decision record, both reachable pointers are installed, and no gate
+  names `decisions/`. If repository instructions authorize autonomous local commits,
+  commit all surfaces together. Otherwise, report the reviewed files and wait for explicit
+  commit approval. Report the paths, validation result, and pending gate. After approval,
+  open by quoting it, commit all surfaces together, and report the commit hash.
 
-   **`docs/spec/README.md` indexes every spec file — keep it current.** Read the index
-   before adding a spec file, so you amend the existing doc on a subject instead of
-   writing a second one. Adding, renaming, or retiring a file updates its row in the same
-   change.
-   ```
+## Migration boundary
 
-   Trim the folder list to the folders actually created. Keep all four bolded rules
-   intact. The last two are load-bearing: a per-folder README is read only when
-   something instructs an agent to open it, and an index only stays useful if the rule
-   to maintain it loads on every session. This block is the only surface that loads on
-   its own — drop either line and the rule stops binding.
-
-6. **Commit.** Make one commit. Use this subject and describe the selected folders in the
-   body:
-
-   ```
-   Scaffold docs/ — single-gate routing
-
-   Durable folders routed by one gate. Everything settled amends spec/; there is no
-   decisions log. Each selected sub-dir has a README defining its test, and
-   spec/README.md indexes every spec file when spec/ is selected. CLAUDE.md (or
-   AGENTS.md) points at the gate.
-   ```
-
-## The escape hatch: `docs/decisions/`
-
-Do not scaffold this folder. It is not in the gate and not a routing destination; assume a
-repo has no decisions log and needs none.
-
-Cut it open only when a spec amendment alone would lose something the spec cannot carry:
-an argument happened, two positions were on the table, one lost, and the losing case is
-detailed enough that without a written record it will be re-argued from scratch. Absent
-that, it is a spec edit.
-
-When warranted: `mkdir docs/decisions`, drop `templates/decisions-README.md` →
-`docs/decisions/README.md`, write `YYYY-MM-DD-slug.md`, and amend `docs/spec/` in the same
-change.
-
-## Gotchas
-
-- **Don't symlink scattered docs.** Move them so `git log --follow` keeps history.
-  Migrating existing docs in is a separate task — propose it, don't fold it into the
-  scaffold.
-- **Auto-generated wikis (DeepWiki and similar) are a regenerable supplement** over these
-  human-curated docs — not a fifth folder, and not a replacement.
-- **HTML visualisations supplement, never replace.** When content is complex —
-  multi-component flows, state machines, layered relationships — and `/visualise` or
-  similar is available, store the visualisation beside its markdown source in `docs/`.
+Do not fold scattered or established docs into a scaffold. A migration must identify the
+source paths, target paths, history-preserving moves, routing conflicts, and user-approved
+scope before changing files. A request to review or assess that tree ends with a report.

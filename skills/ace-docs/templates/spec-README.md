@@ -1,30 +1,24 @@
 # Spec & architecture
 
-**Current-understanding durable artifacts** — the design of the project and how it
-actually fits together: design specs, RFCs, interface contracts, architecture / "how it
-works" overviews, *and our own exact surface* (our CLI flags, config keys, API, schemas).
-Prose you read to understand the system, plus the lookup facts about our own thing.
-Updated in place; always reflects present design, not history.
+Store the project's current design, intended behavior, architecture, interface contracts,
+and exact config, CLI, API, and schema. Update each file in place as the system changes.
 
-**This is the home for everything settled** — an instruction you were given, an approach
-that was agreed, a library that was picked, a convention or preference that was fixed. All
-of it lands here as an amendment, written as it was given: the rule, at the length it was
-given, with no reason supplied and no note of what it was chosen over. There is no
-separate ruling artifact to reach for.
+Put every settled instruction, agreement, library choice, convention, and preference
+here. Write the rule at the length it was given. Do not add a reason or an alternative
+the user did not state. Do not create a separate ruling artifact.
 
-**This spec is authoritative — read it before you work, and comply.** It owes your priors
-no justification. That a rule departs from mainstream practice or from what you expected
-is not grounds to escalate or re-open it. If you think it's wrong, raise it and amend it
-here.
+**Read the relevant spec before working, and comply.** Raise a wrong spec with the user
+and amend it. Do not reopen, annotate, or route around a spec because it differs from a
+common default or personal preference.
 
-A *third-party* surface (a framework's API, another product's flags) is `../vendor/`.
-Research, a survey, or a draft is `../scratch/`.
+Route third-party lookup to `../vendor/`. Route unsettled research, surveys, and drafts
+to `../scratch/`.
 
 ## Index
 
-One row per file in this folder. **Keep it current** — adding, renaming, or retiring a
-spec file updates its row in the same change. Read this table before you add a file: if a
-doc on the subject already exists, amend that doc instead of writing a second one.
+Keep one row per spec file. Update this table in the same change when adding, renaming, or
+retiring a file. Read it before adding a spec; amend the existing file when its subject
+already has a row.
 
 | File        | Covers                             | Status      |
 |-------------|------------------------------------|-------------|
@@ -32,6 +26,5 @@ doc on the subject already exists, amend that doc instead of writing a second on
 
 ## Format
 
-One file per subject: `<slug>.md` (no date prefix — describes a thing, not the moment it
-was written). Add a status header (`draft`, `accepted`, `superseded`, `implemented`) so
-readers can tell whether it still describes current design.
+Use one file per subject: `<slug>.md`. Start it with a status: `draft`, `accepted`,
+`implemented`, or `superseded`.

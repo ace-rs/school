@@ -1,205 +1,219 @@
 ---
 name: ace-school
 description: >
-  ACE school management — proposing skill changes and creating PRs to the school
-  repo. TRIGGER when: user wants to propose changes to skills, create a school PR,
-  run `ace diff`, or asks about school structure/workflow — also when `ace school
-  pull` fails or the school checkout is dirty. DO NOT TRIGGER for: normal coding tasks
-  or project-specific work.
+  Inspect an ACE school, review its changes, or prepare a school PR. TRIGGER on school
+  structure, `ace diff`, dirty school state, failed `ace school pull`, skill-change
+  proposals, or an explicit school-PR request. DO NOT TRIGGER for project work that does
+  not change or diagnose a school.
 ---
 
-# ACE School Management
+# ace-school
 
 Print `## ace-school` as the first line.
 
-## What is an ACE school?
-
-A school is a git repo containing skills, conventions, and session prompts shared across
-projects. Structure:
-
-- `school.toml` — school metadata (schema below)
-- `skills/<name>/SKILL.md` — one directory per skill
-- `CLAUDE.md`, `docs/` — house rules and durable record
-
-Projects subscribe via `ace setup`. Run `ace paths school` to locate the authoritative
-school repository. A normal subscription stores that checkout in ACE's data dir
-(typically `~/.local/share/ace/…`, **not** the cache) and symlinks its `skills/` into the
-project.
-
-If `ace.toml` sets `school = "."`, `ace paths school` resolves to the current project.
-That checkout is authoritative. Do not edit or synchronize
-`~/.local/share/ace/<name>/` or `~/.cache/ace/` unless the user explicitly names those
-paths.
-
-## `school.toml` schema
-
-| Field            | Type   | Notes                                                   |
-|------------------|--------|---------------------------------------------------------|
-| `name`           | string | School display name (required)                          |
-| `backend`        | string | Default backend; built-in or a `[[backends]]` name      |
-| `session_prompt` | string | Text prepended to every subscriber session              |
-| `env`            | map    | Env vars exported into each session shell               |
-| `[[mcp]]`        | array  | MCP servers: `name`, `url`, `headers`, `instructions`   |
-| `[[projects]]`   | array  | Project metadata: `name`, `repo`, `description`, `env`  |
-| `[[imports]]`    | array  | Upstream schools to inherit from (see below)            |
-| `[[backends]]`   | array  | Custom backend decls: `name`, `kind`, `cmd`, `env`      |
-
-All fields but `name` are optional and dropped from output when empty.
-
-## Imports & inheritance
-
-A school composes others via `[[imports]]`. Each decl:
-
-| Field                  | Notes                                                         |
-|------------------------|---------------------------------------------------------------|
-| `source`               | `owner/repo` or URL of the upstream school                    |
-| `skills`               | patterns to pull; `"*"` takes the whole school                |
-| `skill`                | backcompat singular alias for `skills`; never re-emitted      |
-| `exclude_skills`       | patterns to subtract; also silences collision warnings        |
-| `include_experimental` | admit the experimental tier (default off)                     |
-| `include_system`       | admit the system tier (default off)                           |
-| `include_internal`     | admit `internal: true` skills via glob; explicit names bypass |
-
-At least one of `skills`/`skill` must be set. Across decls, **first-wins**: an earlier
-decl claims an identity; a later decl matching the same one warns as a collision (silence
-it by listing the pattern in the winner's `exclude_skills`).
-
-Imported skills are **copied**, not symlinked, from the import cache
-(`~/.cache/ace/imports/`) into the school's `skills/`; re-fetch with `ace school pull`.
-(Contrast: a subscribing *project* gets symlinks to its school's `skills/` — a different
-mechanism.)
-
-### Check the upstream layout before writing a decl
-
-A `skills` pattern matches only what discovery yields from the source repo. Discovery
-runs two stages against the repo root and nothing else:
-
-1. **Single skill.** `<root>/SKILL.md` exists → the repo is one skill, named after the
-   root basename. Discovery stops.
-2. **Skill dirs**, walked recursively, `SKILL.md` at any depth: `skills/`, plus the
-   tier dirs `skills/.curated/`, `skills/.experimental/`, `skills/.system/` (the
-   latter two are what `include_experimental` / `include_system` admit). Only when
-   all four yield nothing does it fall back to a backend dir: `.claude/skills/`,
-   `.codex/skills/`, `.opencode/skills/`, `.cursor/skills/`, `.windsurf/skills/`,
-   `.kiro/skills/`, `.agents/skills/`.
-
-A nested `skills/typescript/coding/SKILL.md` yields identity `typescript/coding` —
-that full path is what the pattern must match.
-
-There is no whole-repo walk. A repo that keeps each skill as its own directory at the
-root — no root `SKILL.md`, no `skills/` — yields zero skills; no pattern reaches it.
-A decl that matches nothing is a **warning, not an error**, so an import that pulls
-nothing means the source layout is wrong, not the skill name. Do not retry other
-import paths — **vendor instead**: copy the skill directory into this school's
-`skills/`, keep its license file and attribution, rewrite the frontmatter to house
-style, and record where it came from. A vendored skill is maintained by hand —
-`ace school pull` does not update it, so check upstream revisions manually.
-
-Full discovery rule: `docs/spec/skills/model.md` § Discovery Cascade in `ace-rs/ace`.
-
-## Skills have no alias
-
-A skill's only invocation handle is its **directory identity** (path/basename) — e.g.
-`ace-afk` or `ace/ace-afk`. The frontmatter `name:` is display-only; ACE never matches on
-it, and the parser reads only `name` and `description` (any other frontmatter key is
-ignored). `/foo` resolves to `skills/foo/`, full stop. A second invocation name means a
-second directory, not a frontmatter field.
-
-## `ace` CLI — school-relevant commands
-
-| Command                   | Purpose                                                 |
-|---------------------------|---------------------------------------------------------|
-| `ace setup <school>`      | Subscribe a project: clone school + wire it in          |
-| `ace diff`                | Show uncommitted changes in the school checkout         |
-| `ace paths [key]`         | Resolved paths (`school`, `cache`, `project`, …)        |
-| `ace import <owner/repo>` | Import skills from another school (`--skill`, `--all`)  |
-| `ace school init`         | Scaffold a new school                                   |
-| `ace school pull`         | Re-fetch imports (alias: `update`)                      |
-| `ace school skills`       | List a school's skills                                  |
-| `ace school validate`     | Check school config (alias: `check`)                    |
-| `ace skills`              | List/curate active skills (`ls`; `--all`, `--names`)    |
-| `ace explain <skill>`     | Show how a skill resolves (provenance + trace)          |
-| `ace config`              | Print/get/set config keys                               |
-| `ace mcp`                 | Manage MCP server registrations                         |
-| `ace fmt`                 | Pretty-print/clean ace.toml & school.toml (`format`)    |
-
-Run school-repository commands from `cd "$(ace paths school)"`.
-
-## Editing skills
-
-`ace paths school` selects the checkout to edit. If it resolves to the current project,
-edit that project's `skills/<name>/SKILL.md` directly. Otherwise, project skill files
-are symlinks into the resolved checkout, so an edit through one lands there. The
-resolved checkout is a real git working copy, branchable and committable.
-
-Keep the resolved checkout clean. A data-dir checkout is shared by every project on the
-machine that subscribes to that school, and an uncommitted change there blocks
-`ace school pull` for all of them. Finish a skill-editing session with the changes either
-proposed upstream (steps below) or reverted. Never park uncommitted changes in the
-checkout.
-
-## Procedure evidence
-
-Read `ace/ledger.md` in the `ace` skill's directory. Run the selected operation in order
-and retain its review and remote results. Proposal step 2 waits for approval; step 10
-waits for a checkout selection. Continue only after the user answers either gate.
+Use a school checkout the user names explicitly. Otherwise resolve it with
+`ace paths school`. Carry that selected checkout through the operation.
 
 ## Menu
 
-| Operation             | Steps   | Use when                              |
-|-----------------------|---------|---------------------------------------|
-| Propose changes       | 1–11    | local school edits should become a PR |
-| Clean merged proposal | 1–3     | that PR has merged                    |
+| Operation               | Steps  | Use when                                     |
+|-------------------------|--------|----------------------------------------------|
+| Inspect or diagnose     | I1–I3  | structure question or school failure         |
+| Review school changes   | R1–R3  | review request or `ace diff`                 |
+| Create a school PR      | P1–P6  | explicit request to publish a proposal       |
+| Clean a merged proposal | C1–C3  | explicit request to clean a merged proposal  |
 
-## Proposing changes
+Use only the selected operation. A review or diagnostic request ends with its report; it
+does not authorize a branch, commit, push, PR, cleanup, or other write.
 
-1. **Review diff.** Run `ace diff` to review changes.
-2. **Confirm proposal.** Summarize findings — combine the diff output with your own
-   context about what changed and why during this session. Present the summary to the user
-   and wait for explicit approval before proceeding.
-3. **Enter checkout.** Open by quoting the approval. Run
-   `cd "$(ace paths school)"` to enter the authoritative school checkout.
-4. **Create branch.** Run `git checkout -b ace/{short-description}`.
-5. **Commit proposal.** Stage and commit everything that belongs to the proposal.
-   Put session context that does not belong in the PR into the project's durable record.
-   Do not reset the checkout; cleanliness comes from committing, not discarding work.
-6. **Verify branch.** Confirm the proposal branch contains every intended commit and
-   the working tree is clean.
-7. **Push branch.** Run `git push -u origin {branch}` once the branch is complete.
-8. **Create PR.** Create the PR through the repository's configured hosting workflow.
-9. **Report PR.** Present the PR title, URL, branch, and current checkout state.
-10. **Choose checkout.** Ask whether to retain the proposal branch so subscribing
-    projects keep using the fixed skill until merge, or return the checkout to pristine
-    main. This is a Wait.
-11. **Set checkout.** Open by quoting the user's choice. Retain the proposal branch
-    and confirm it is clean, or run `git checkout main` and confirm main is clean.
+## Procedure evidence
 
-## Cleaning a merged proposal
+Read `ace/ledger.md` in the `ace` skill's directory. Keep the selected checkout, relevant
+diff or diagnostic output, user authorization, remote selection, PR result, and final
+checkout state as evidence. Do not print per-step markers.
 
-1. **Confirm merge.** Verify that the proposal PR merged.
-2. **Update main.** Check out main and pull the merged commit.
-3. **Delete branch.** Delete the merged local feature branch.
+## Inspect or diagnose
 
-## Good school PR guidelines
+- **I1. Select the checkout.** Run `ace paths school`. Use its result unless the user
+  explicitly named another school checkout; record any difference. Inspect
+  `git status --short` and `git remote -v` in the selected checkout. Do not substitute a
+  project-facing skill symlink, subscription clone, or cache path.
+- **I2. Inspect the named surface.** For a structure question, read `school.toml` and the
+  relevant school docs. For a dirty checkout, run `ace diff`, record the checkout it
+  resolves, and inspect `git diff` in the selected checkout. For a failed pull, inspect
+  the dirty state, import declarations, and upstream discovery shape before assigning a
+  cause.
+- **I3. Report the result.** State the checkout, evidence, conclusion, and the first
+  unresolved prerequisite. Stop without changing state.
 
-- **One skill or one coherent theme per PR.** Don't mix unrelated skill changes.
-- **Title**: imperative, scoped (e.g. "Clarify audit checklist in ace-audit").
-- **Body**: what changed, why, which sessions revealed the need.
-- **Keep skills generic** — no project-specific content. Skills must work across all
-  projects that subscribe to the school.
-- **Watch for conflicts** — skill instructions can interact with project `CLAUDE.md` and
-  with each other. If a skill contradicts another skill or common project conventions,
-  call it out in the PR description.
-- **Honor existing conventions** — if issue-creator, PR-creator, or similar skills are
-  available in the session, follow their format and guidelines when creating issues or
-  PRs.
-- **Honor the school's record-keeping** — if the school keeps a durable record
-  (spec dir, notes/research dir, or similar), read prior entries for context before
-  proposing changes, and amend it per the school's conventions when the PR resolves
-  ambiguity or sets a precedent. Don't assume any specific directory exists — check
-  what the school actually has.
+## Review school changes
 
-## Authoring skills
+- **R1. Select and read.** Run `ace paths school`. Use an explicitly named school checkout
+  instead when provided, and record the difference. Read the selected checkout's
+  instructions and durable record, then inspect its working-tree state.
+- **R2. Review.** Run `ace diff` and record the checkout it resolves. In the selected
+  checkout, inspect staged and unstaged changes. Check the actual changes against the
+  stated task, skill interactions, genericity, supporting rosters, and authoring rules.
+- **R3. Report and stop.** Report every finding, reviewed path, and decisive diff
+  evidence. Clean and failing reviews both complete this assessment. Do not continue
+  into P1 without an explicit request to create a school PR.
 
-Load `ace-skill`, read the school's instructions and durable design record, and follow the
-operation that matches the change. The school's rules override the base method.
+## Create a school PR
+
+- **P1. Prepare the target and change.** Resolve the checkout and read its instructions,
+  durable record, branch convention, and PR instructions. Use an explicitly named school
+  checkout instead of the `ace paths school` result and record the difference. For skill
+  edits, load `ace-skill` and complete its matching authoring operation. Amend the
+  school's durable record when the change settles or changes a convention. Run
+  `git remote -v` in the selected checkout and resolve the repository-designated remote.
+  Resolve the local base branch, its target base ref such as
+  `{remote-name}/{base-branch}`, and the proposal branch. Report and wait if any target is
+  ambiguous.
+- **P2. Verify the concrete proposal.** Run `ace diff` and record the checkout it
+  resolves. In the selected checkout, inspect `git diff`, `git diff --cached`,
+  `git log --oneline {base-ref}..HEAD`, and `git diff {base-ref}...HEAD`. Run the
+  proposal's required checks. Stop only when the staged diff, unstaged diff, and intended
+  commit range contain no proposed change. Confirm that the changed paths belong to one
+  skill or coherent theme and every required roster and record is current. Follow the
+  repository's branch convention. Use the current branch when it is suitable; plan
+  `ace/{short-description}` only when a new branch is required. Report unrelated commits
+  and stop; do not rewrite the graph. Present the exact paths, findings, remote, base
+  branch, base ref, proposal branch, commit plan, PR title, full draft body, and
+  validation evidence.
+- **P3. Authorize publication.** Ask for explicit authorization to push the named branch
+  to the named remote and create the presented PR. This is a Wait. If the user already
+  authorized those exact outward actions and P2 did not change their scope, quote that
+  authorization and continue without asking again.
+- **P4. Publish the proposal.** Open by quoting the authorization. Enter the selected
+  checkout and confirm the P2 change set is unchanged. Create the planned branch only
+  when required. Stage only the presented paths, commit logical slices using the
+  school's convention, and never discard unrelated state. Confirm that the branch has
+  every intended commit, no unrelated commit, a clean tree, and passing required checks.
+  Push with `git push -u {remote-name} {branch}`. Create the PR through the configured
+  hosting workflow with the presented title and body. Follow any loaded PR-creator,
+  issue-creator, hosting-format skill, or repository PR instructions.
+- **P5. Report and choose checkout.** Present the PR title, URL, remote, base, branch,
+  commit hashes, validation result, and current checkout state. Ask the user to retain the
+  clean proposal branch until merge or return to the clean base branch. Wait for the
+  choice. This is a Wait.
+- **P6. Apply the checkout choice.** Open by quoting the choice. Keep the proposal branch
+  and verify it is clean, or check out the resolved base branch and verify it is clean.
+  Report the final branch and status.
+
+## Clean a merged proposal
+
+- **C1. Confirm the target.** Confirm that the user explicitly requested cleanup. Resolve
+  the checkout, remote, proposal branch, intended base branch, and PR. Verify through the
+  configured hosting workflow that the PR merged, then inspect the working tree before
+  any checkout. Stop if the PR remains open, the base is ambiguous, or the tree is dirty.
+- **C2. Update the base.** Check out the resolved base branch and run
+  `git pull --ff-only {remote-name} {base-branch}`. Stop on a non-fast-forward result.
+- **C3. Remove the merged branch.** Delete only the verified merged local branch with
+  `git branch -d {branch}`. Report the merge evidence, updated commit, deleted branch,
+  and clean checkout state.
+
+## Completion contract
+
+- I1–I3 complete with the resolved checkout, diagnostic evidence, finding, and no write.
+- R1–R3 complete with reviewed paths, every finding, decisive diff evidence, and no write.
+- P1–P6 complete with the exact authorization quote, PR URL, remote, branch, commits,
+  validation result, and final checkout state.
+- C1–C3 complete with the cleanup request, merge evidence, updated base commit, deleted
+  branch, and clean checkout state.
+- A missing prerequisite returns to the earliest step that can establish it. An unresolved
+  prerequisite completes only with a report naming the evidence and required decision.
+
+## School reference
+
+A school is a git repository containing shared skills, conventions, and session prompts:
+
+- `school.toml` — school metadata.
+- `skills/<name>/SKILL.md` — one directory per skill.
+- `CLAUDE.md`, `AGENTS.md`, or an equivalent — always-loaded house rules.
+- `docs/` — a durable record when the school uses one.
+
+Projects subscribe through `ace setup`. Unless the user names a school checkout,
+`ace paths school` returns the one to use. A normal subscription stores it under the ACE
+data directory and symlinks its skills into the project. When `ace.toml` sets
+`school = "."`, the current project is that checkout. Do not substitute an import cache
+or another guessed path.
+
+### `school.toml` schema
+
+| Field            | Type   | Notes                                                  |
+|------------------|--------|--------------------------------------------------------|
+| `name`           | string | school display name; required                          |
+| `backend`        | string | built-in backend or a `[[backends]]` name              |
+| `session_prompt` | string | text prepended to each subscriber session              |
+| `env`            | map    | environment variables exported into session shells     |
+| `[[mcp]]`        | array  | servers: `name`, `url`, `headers`, `instructions`      |
+| `[[projects]]`   | array  | project metadata: `name`, `repo`, `description`, `env` |
+| `[[imports]]`    | array  | upstream schools to inherit from                       |
+| `[[backends]]`   | array  | custom backends: `name`, `kind`, `cmd`, `env`          |
+
+All fields except `name` are optional and omitted when empty.
+
+### Imports and inheritance
+
+Each `[[imports]]` declaration uses these fields:
+
+| Field                  | Meaning                                                      |
+|------------------------|--------------------------------------------------------------|
+| `source`               | upstream `owner/repo` or URL                                 |
+| `skills`               | patterns to import; `"*"` selects the whole school           |
+| `skill`                | accepted singular input for `skills`; never re-emitted       |
+| `exclude_skills`       | patterns to subtract and silence matching collision warnings |
+| `include_experimental` | admit the experimental tier; default off                     |
+| `include_system`       | admit the system tier; default off                           |
+| `include_internal`     | admit internal skills by glob; explicit names bypass it      |
+
+At least one of `skills` or `skill` is required. Imports are first-wins: an earlier
+declaration claims an identity, and a later match warns unless the winner excludes it.
+`ace school pull` copies imports from the import cache into the school's `skills/` tree.
+It does not update skills vendored by hand.
+
+Before writing an import, inspect the upstream layout. Discovery checks in order:
+
+1. `<root>/SKILL.md`; when present, the repository is one skill named after the root.
+2. Recursive `SKILL.md` files under `skills/` and its `.curated/`, `.experimental/`, and
+   `.system/` tiers.
+3. Only when step 2 finds nothing, recursive skills under `.claude/skills/`,
+   `.codex/skills/`, `.opencode/skills/`, `.cursor/skills/`, `.windsurf/skills/`,
+   `.kiro/skills/`, and `.agents/skills/`.
+
+A nested `skills/language/coding/SKILL.md` has identity `language/coding`. Discovery does
+not walk arbitrary root directories. A declaration that matches nothing warns rather
+than fails. When the upstream layout exposes no skill, vendor the directory with its
+license and attribution, adapt its frontmatter, record its source, and maintain it by
+hand only when the request authorizes that import or edit. A diagnostic request reports
+the unsupported layout and stops. The complete discovery rule lives in
+`docs/spec/skills/model.md` in the ACE source.
+
+### Skills have no alias
+
+A skill's invocation handle is its directory identity. Frontmatter `name:` is display
+only; the parser reads only `name` and `description`, and ignores other metadata keys.
+ACE resolves `/foo` to `skills/foo/`. Another invocation name requires another real skill
+directory, not an alias field or forwarding stub.
+
+### School commands
+
+| Command                   | Purpose                                                |
+|---------------------------|--------------------------------------------------------|
+| `ace setup <school>`      | subscribe a project and wire the school in             |
+| `ace diff`                | show uncommitted school-checkout changes               |
+| `ace paths [key]`         | print resolved school, cache, and project paths        |
+| `ace import <owner/repo>` | import skills with `--skill` or `--all`                |
+| `ace school init`         | scaffold a school                                      |
+| `ace school pull`         | refresh imports; alias `update`                        |
+| `ace school skills`       | list a school's skills                                 |
+| `ace school validate`     | check school config; alias `check`                     |
+| `ace skills`              | list or curate active skills                           |
+| `ace explain <skill>`     | show a skill's provenance and resolution trace         |
+| `ace config`              | print, get, or set config keys                         |
+| `ace mcp`                 | manage MCP server registrations                        |
+| `ace fmt`                 | format `ace.toml` and `school.toml`                    |
+
+Run checkout-local commands from the selected checkout. When an ACE command resolves a
+different checkout, record that path and do not treat its output as evidence about the
+selected checkout.

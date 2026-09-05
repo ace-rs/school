@@ -1,137 +1,124 @@
 # The `.ace/` trail format
 
-Read this before writing anything under `.ace/`. It binds every skill that
-writes the trail, not just `ace-save`.
+Read this contract before writing under `.ace/`. The trail is repository-local,
+gitignored runtime state. Never commit it. A removed line is not recoverable from git.
 
-The trail lives in `.ace/` and is gitignored — runtime scratch, never
-committed, and never recoverable from git. A line removed here is gone.
+Use **Update the trail** (U1–U3) for a checkpoint. Use **Graduate an item** (G1–G3) only
+after the user settles or kills it in verbatim words.
 
-```
+## Layout
+
+```text
 .ace/
   save.md            current truth: now / standing facts / pointers
   save.ledger.md     in-flight items: status + provenance per item
 ```
 
-## Whose words are whose
+Anything carrying a status is an item and belongs in `save.ledger.md`. Everything else
+belongs in `save.md`.
 
-The user states; you derive. What they state lands in `docs/spec/` the way they
-stated it — the rule, plainly, at the length they gave it, with no reason
-supplied and no record of how it came up.
+## Words and provenance
 
-What you derive is yours and provisional. Taken up, it becomes their sentence.
-Carried on past, it goes away and leaves nothing behind — withdrawing it is your
-own move, made without asking.
+The user states; the agent derives. Put a rule the user states in `docs/spec/` exactly as
+stated: no added reason and no record of alternatives. Keep an agent derivation
+provisional. It becomes the user's statement only when the user takes it up in their own
+words.
 
-## What goes where
+Use one provenance value on every ledger item:
 
-Anything carrying a status is an item and belongs to `save.ledger.md`.
-Everything else — the narrative, what holds across sessions, where to look —
-is `save.md`.
+| Provenance         | Use when                                              |
+|--------------------|-------------------------------------------------------|
+| `user:verbatim`    | `ev:` preserves the user's exact words                |
+| `user:paraphrased` | the claim restates the user's intent in agent words   |
+| `agent:inferred`   | the agent derived the claim                           |
 
-## `.ace/save.md` — current truth
+Default to `agent:inferred`. Treat any item without a verbatim `ev:` quote as
+`agent:inferred`, regardless of its written label. An ambiguity the agent resolves remains
+`agent:inferred` until the user confirms it.
 
-Sections: now / standing facts / pointers.
+## `.ace/save.md`
 
-Revise it in place. Change the lines that changed and leave the rest alone.
-Never regenerate the file from scratch — a line you did not re-derive this
-session is a line silently lost.
+Use the sections `now`, `standing facts`, and `pointers`. Revise the existing file in
+place. Never regenerate it from scratch. Preserve every line that this session did not
+re-establish or close.
 
-No history and no corrections-of-corrections: a dead line is absent, not
-struck through. A settled rule lives in `docs/`; here it appears only as a
-one-line pointer. An item with a status lives in `save.ledger.md`, never here.
+Keep no history or correction trail. Remove a dead line instead of striking it through.
+Keep settled rules in `docs/`; retain only a one-line pointer here. Keep every item with a
+status in `save.ledger.md`, never here.
 
-Past ~60 lines the file is telling you items are overdue to graduate. That is
-a reading, not a ceiling — go move them out. Never shrink the file for its own
-sake, and if nothing can move, leave it long and say so in the report.
+Past about 60 lines, inspect whether material should graduate. This is a review signal,
+not a size limit. Never shorten the file merely to meet a length target.
 
-## `.ace/save.ledger.md` — items
+## `.ace/save.ledger.md`
 
-A single in-flight buffer across all open walks, not per-topic. The only home
-of item statuses. Every item is one entry — status, provenance, claim, and its
-evidence. An item's `ev:` quotes the user. The conversation an item quotes dies with the
-session, and this file is the copy that survives. Quote the user's words at whatever
-length preserves them; never trim `ev:` for size.
+Use one ledger across all open topics. Give each item one entry with status, provenance,
+claim, and evidence:
 
 ```markdown
 SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what
-  they said, wrapped at 90 columns with a two-space indent. | ev: "their exact
-  words"
+  the user said, wrapped at 90 columns with a two-space indent. | ev: "their
+  exact words"
 
-open · agent:inferred — **Another claim.** No ev — they haven't said it.
+open · agent:inferred — **Another claim.** No ev — the user has not said it.
 ```
 
-Statuses group by whether the entry can leave the file:
+Use these statuses for entries that remain until the user takes them up:
 
-**No exit — the entry stays until the user takes it up.**
+| Status                   | Use when                                                |
+|--------------------------|---------------------------------------------------------|
+| `open`                   | raised but not presented                                |
+| `presented`              | presented; the user advanced without settling it        |
+| `proposed`               | a specific fix awaits the user's answer                 |
+| `deferred`               | deliberately retained for later                         |
+| `needs-disambiguation`   | the user's words admit two readings; a question is open |
 
-- `open` — raised, not yet put to the user.
-- `presented` — put to them; they advanced without answering on substance.
-- `proposed` — a specific fix offered, awaiting their yes or no. A standing
-  rule may force the answer; cite the rule as the derivation and still wait.
-- `deferred` — real, deliberately not now.
-- `needs-disambiguation` — their words admit two readings; a question is
-  pending.
+A standing rule may determine the proposed answer; cite that rule and still wait for the
+user's answer.
 
-These hold an item carrying the user's words. An `agent:inferred` item at any of
-them is yours, and `withdrawn` is open to it at any time.
+Use these statuses for entries that may leave:
 
-**Exits the ledger.**
+| Status      | Use when                                                        |
+|-------------|-----------------------------------------------------------------|
+| `SETTLED`   | the user accepted or stated the item; verbatim `ev:` required   |
+| `KILLED`    | the user rejected the item; verbatim `ev:` required             |
+| `withdrawn` | the agent no longer holds its own derivation                    |
 
-- `SETTLED` — the user said it. Verbatim words required. Graduates; see
-  *Graduating an item*.
-- `KILLED` — the user said no to it. Verbatim words required. Graduates; see
-  *Graduating an item*.
-- `withdrawn` — you dropped a derivation of your own, with no user input. Delete
-  the entry and write nothing anywhere. The reason is always that you no longer
-  hold it; file length is never the reason.
+Delete a withdrawn entry and write nothing elsewhere. Withdraw an agent derivation once
+the work moves past it or the user continues without taking it up. Never withdraw an item
+that carries the user's words. Surface those items at the next save and retain their full
+`ev:` quotes.
 
-Provenance: `user:verbatim` (their exact, quotable words) · `user:paraphrased`
-(their intent, your wording) · `agent:inferred` (you derived it — they never
-said it).
+## Update the trail
 
-Default provenance is `agent:inferred`: an item written without a quoted user
-phrase IS agent-derived, whatever else it's tagged. Their words or it isn't
-theirs — SETTLED/KILLED must carry the user's verbatim words in `ev:`; an entry
-with no `ev:` quote is malformed and reads as `agent:inferred`. Forgetting to
-down-rank a solo call fails safe — it stays a derivation. Ambiguity the model
-resolves stays `agent:inferred` until the user confirms — never folded into the
-record as stated fact.
+- **U1. Read before writing.** Read both existing trail files. Classify each new fact as
+  current truth, standing fact, pointer, or item. Preserve existing lines unless U2 or G3
+  permits removal.
+- **U2. Revise in place.** Update `save.md` current truth and pointers. Add or revise
+  ledger items with status, provenance, claim, and evidence. Remove a line only when it
+  moved to a named destination, became finished or superseded, or is an agent derivation
+  being withdrawn.
+- **U3. Report changes.** Name every destination for a moved line and every line removed
+  as finished, superseded, or withdrawn. Never remove or rank entries to reduce file
+  length.
 
-Withdraw a derivation once the work moves past it or they carry on without
-taking it up. Surface the items carrying their words at the next save, and never
-trim one for length. A long ledger is derivations you are still holding.
+## Graduate an item
 
-## How a line leaves — both files
+- **G1. Verify evidence.** Require the user's verbatim words in `ev:`. Without them, keep
+  the item as `agent:inferred` and stop graduation.
+- **G2. Route through docs.** If a `KILLED` item was never in the spec, delete the ledger
+  entry, write nothing, and finish without G3. Otherwise require an existing `docs/`
+  destination. When none exists, recommend `ace-docs`, wait for the user's approval, and
+  keep the item in the ledger. This is a Wait; never scaffold `docs/` during `ace-save`.
+  When the destination exists, read `docs/README.md` and the destination folder's README.
+  For `SETTLED`, write the user's rule into `docs/spec/`. For `KILLED`, remove what the
+  user's words kill from the spec and update every sentence that still teaches it.
+- **G3. Close the ledger entry.** After the docs change succeeds, remove the item from
+  `save.ledger.md` and leave a one-line pointer in `save.md`.
 
-A line goes when it moves to a named destination, when the thing it describes is
-finished or superseded, or when you withdraw a derivation of your own. The last
-two leave with no destination. Say in the save report where each moved line
-went, and name any that were deleted.
+## Completion evidence
 
-Never drop a line to hit a size. Never rank lines by importance to choose what
-to cut — how important a line looks is a judgment about where it belongs and
-how tersely to write it, never about whether it survives.
-
-## Graduating an item
-
-An item the user stated leaves by landing through the `docs/README.md` gate —
-which means `spec/`, current design truth. Write the rule as they said it, at
-the length they gave it: no reason they didn't supply, no note that a choice was
-made or what it was weighed against. Once it lands, trim the entry from the
-ledger and leave a one-line pointer in `save.md`. The ledger stays short because
-stated items leave and derivations get withdrawn, not because entries are rare.
-
-- `SETTLED` — write their sentence into the spec.
-- `KILLED` — delete from the spec whatever their words kill, and edit any
-  sentence that still teaches the killed thing. A derivation of yours was never
-  in the spec: delete the entry and write nothing.
-
-Only an item carrying the user's verbatim words graduates. What it was tagged
-beforehand doesn't matter — an `agent:inferred` item the user kills graduates on
-their words — but a derivation they never took up leaves by withdrawal instead,
-however confident it is.
-
-**No `docs/` in the repo.** The first time an item settles with nowhere to
-graduate to, recommend the user run `/ace-docs`, and wait for their go. Never
-scaffold `docs/` inside a save. Until they approve, the item stays in the
-ledger — that is the correct state, not a backlog to clear.
+An update completes with the changed trail paths and U3 report. Graduation completes with
+the verbatim `ev:` quote, destination path, removed ledger entry, and `save.md` pointer.
+A killed derivation that never entered the spec completes with its verbatim `ev:` quote
+and deleted ledger entry; it has no destination or pointer. A missing docs destination
+completes only the named Wait and preserves the item.

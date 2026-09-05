@@ -1,11 +1,10 @@
 ---
 name: ace-init
 description: >
-  One-time onboarding of a repo into ACE so coding sessions fit the project. TRIGGER on
-  `/ace-init`, or when the user asks to initialize, onboard, or set up ACE in this repo —
-  typically just after `ace setup`. Use it whenever a repo is first being ACE-shaped, even
-  if "ace-init" is never said. DO NOT TRIGGER at session start or between tasks (that is
-  the `ace` skill), for routine coding, or when the repo is already onboarded.
+  Onboard a repo into ACE. TRIGGER on `/ace-init`, "initialize ACE", "onboard this repo",
+  the first setup after `ace setup`, a material project-shape change, or an explicit
+  request for its optional spec run. DO NOT TRIGGER at session boundaries, for routine
+  work, or to start a spec run without the user's request.
 argument-hint: "[optional focus, e.g. 'skills only' or 'docs too']"
 ---
 
@@ -13,195 +12,119 @@ argument-hint: "[optional focus, e.g. 'skills only' or 'docs too']"
 
 Print `## ace-init` as the first line.
 
-Onboard this repository into ACE: study what it is, configure ACE to fit it, and leave
-durable orientation behind. A one-time onboarding — run on adoption, or again after a
-material shift — and the cold-start counterpart to the `ace` workflow skill, which drives
-the recurring per-task loop. ace-init configures and orients; it does not do feature work.
-Hand off to `/ace` for that.
+Configure ACE for the repository and leave durable orientation for later sessions.
 
-It runs in two phases — **lay down the structure** (Phase 1: cheap, expected) then an
-optional **full spec run** (Phase 2: token-heavy, approval-gated).
+## Menu
 
-Assumes `ace setup` already ran. If the repo has no ACE config, point the user at
-`ace setup` first.
+| Operation             | Steps | Use when                                             |
+|-----------------------|-------|------------------------------------------------------|
+| Lay down structure    | S1–S8 | first onboarding or a material project-shape change  |
+| Run the optional spec | F1–F7 | code lacks durable explainers and the user approves  |
 
-**Propose-then-wait, in one batch.** The study is read-only — run it directly. Collect
-everything Phase 1 would write in `.ace/init-plan.md`, get approval on the whole, then
-apply it in one pass — never file-by-file. The plan is gitignored working state and is
-deleted after the approved batch lands. The Phase 2 spec run is separately gated; never
-start it unprompted.
-
-`$ARGUMENTS` narrows focus if provided (e.g. "skills only").
+Complete S1–S8 before the first spec run. For a later spec-only request, resume at F1 when
+S8's installed files and review evidence still match the repo. Otherwise return to S2,
+record the earliest stale S step in the plan, and resume from there. F1 is a separate
+Wait. `$ARGUMENTS` narrows the requested scope.
 
 ## Procedure evidence
 
-Read `ace/ledger.md` in the `ace` skill's directory. Run each phase in order and retain
-its review result. Phase 1 step 6 and Phase 2 step 1 are Waits; continue only after the
-user approves.
+Read `ace/ledger.md` in the `ace` skill's directory. Keep `.ace/init-plan.md`, the S6
+authorization, the `ace link` result, and each review result as evidence. For a spec run,
+also keep the separate F1 authorization. Do not print per-step markers.
 
-## Phase 1 — Lay down the structure
+## Lay down structure
 
-### 1. **Open plan**
+- **S1. Check prerequisites.** Confirm that `ace setup` has produced an ACE config. If it
+  has not, report that prerequisite and stop. Do not invoke a harness-native initializer.
+  Read the repo's always-loaded instructions and any durable docs rules before planning.
+- **S2. Open the plan.** Create or reopen `.ace/init-plan.md`. Read an existing plan and
+  reconcile it with the current repo before using it. Check whether `.ace/` is gitignored.
+  When it is not, record the required `.gitignore` edit in the plan; do not make that
+  tracked edit before approval. Keep every proposed Phase 1 write in this plan.
+- **S3. Skim the repo.** Record the stack, entry points, top-level shape, domain, existing
+  instructions, project commands, style rules, branch and commit conventions, recent
+  commits, and current working-tree state. Keep this to a skim; F1–F7 own the deep scan.
+- **S4. Plan always-loaded instructions.** Record the exact proposed edits to
+  `CLAUDE.md`, `AGENTS.md`, or the repo's equivalent. Cover what the repo is, the commands
+  and conventions a later agent needs, the active skill selection, and the `docs/`
+  pointer when applicable. If no instruction file exists, name the file to create.
 
-Create `.ace/init-plan.md`. Verify whether `/.ace/` is gitignored; when it is not, record
-the `.gitignore` addition in the plan instead of editing the tracked file before approval.
-Record every Phase 1 finding and proposed write in the plan until step 8 removes it.
+  Include this block in the plan and label it **Proposed future commit autonomy policy**:
 
-### 2. **Study repo**
+  ```markdown
+  ## Git checkpoints
 
-Build a picture of what this is and what the user is building. Cover:
+  Commit coherent, completed slices autonomously after completing the checks required for
+  that work. Do not ask for permission to make a local commit. A local commit does not
+  authorize pushing, publishing, merging, releasing, deploying, or any other change to
+  shared or external state; each requires separate user authorization.
+  ```
 
-- **Stack** — languages, frameworks, package managers, build and test commands.
-- **Shape** — entry points, top-level layout, module boundaries, where code lives.
-- **Domain** — what the project does, who it's for, the core nouns and verbs.
-- **Conventions** — existing instructions file(s), README, lint/format config, CI,
-  commit-message style, branching.
-- **Activity** — `git log --oneline -20` and `git status` for what's in flight.
+  State that the user may revise or omit the block. Explain that approval authorizes later
+  local commits after required checks and grants no outward authority.
+- **S5. Plan skills and docs.** Run `ace skills --all`. For a candidate whose purpose is
+  unclear, read its frontmatter `description` under the school path reported by
+  `ace paths`. Choose the config layer by audience and record each inclusion or exclusion
+  with one short reason tied to S3.
 
-Keep it a skim — the deep pass is Phase 2. Record findings in `.ace/init-plan.md` as you
-go; later steps add to it.
+  | File             | Scope                 | Use for                 |
+  |------------------|-----------------------|-------------------------|
+  | `ace.toml`       | shared, committed     | the team-wide skill set |
+  | `ace.local.toml` | personal, uncommitted | personal overrides      |
 
-### 3. **Plan instructions**
+  Record the proposed selection as an exact `skills = [...]` edit or exact
+  `ace skills include` and `ace skills exclude` commands; both produce the same layered
+  result. Do not apply either form before S7. Use `ace skills` to inspect the active set
+  and `ace config` to inspect the resolved config.
 
-The harness instructions file is where an agent reads "what is this repo" every session —
-`CLAUDE.md`, `AGENTS.md`, or the harness's equivalent. From the step-2 study, plan to
-write or refresh:
+  Decide whether the repo needs durable architecture, domain, or design docs. When it
+  does, record an `ace-docs` scaffold and a `docs/spec/` project overview as future work.
+  Do not scaffold docs during S1–S8. When it does not, record `no docs`.
+- **S6. Review and wait.** Finalize `.ace/init-plan.md` with the S3 findings and every
+  proposed write. Present the complete batch. Call out the commit-autonomy block, its
+  local-only authority, and the user's option to revise or omit it. Wait for explicit
+  approval of the whole plan. This is a Wait.
+- **S7. Apply the approved plan.** Open by quoting the approval. Make the instruction,
+  config, and `.gitignore` edits in one batch. Install only the approved commit-autonomy
+  wording; if the user omitted it, preserve the existing policy unless the approved plan
+  says otherwise. Run `ace link`. If the current harness does not reload changed skills,
+  report that a relaunch is required.
+- **S8. Verify and close.** Compare every write with the approved plan. Confirm the
+  resolved skill set with `ace skills` and `ace config`, then remove `.ace/init-plan.md`.
+  Report changed files, link result, resolved skill set, review result, and any approved
+  future docs work. Commit the completed onboarding when the approved policy or existing
+  instructions authorize a local commit. Otherwise, report the reviewed files and wait
+  for explicit commit approval; open by quoting that approval before committing. Stop;
+  do not begin F1 without its separate approval.
 
-- A tight "what this repo is" overview.
-- Conventions worth pinning — build/test commands, house style, branching.
-- A pointer to `docs/` if it exists or gets scaffolded (step 5).
-- Which skills are active and why (see step 4).
+## Run the optional spec
 
-Record, but do not install, this default block in `.ace/init-plan.md`:
+A spec run distills implemented behavior into durable explainers. It does not invent a
+design or replace reconciliation against the code.
 
-```markdown
-## Git checkpoints
+- **F1. Scope and wait.** List candidate units and order them by dependency, change
+  frequency, risk, and current understanding. Use subsystems, domain models, key flows,
+  and integration boundaries as units. Present the ordered scope and wait for explicit
+  approval. This is a Wait.
+- **F2. Prepare docs.** Open by quoting the approved scope. Read the existing `docs/`
+  gate. If none exists, run `ace-docs` before writing the first unit. Route project
+  behavior and its exact surface to `docs/spec/`; route retained third-party lookup to
+  `docs/vendor/`.
+- **F3. Study one unit.** Deep-read the implementation for the next approved unit. Gather
+  behavior, contracts, data shapes, invariants, errors, edge cases, and non-obvious
+  intent.
+- **F4. Reconcile claims.** Check every proposed claim against the implementation. Report
+  intended and implemented behavior separately when they diverge.
+- **F5. Write the spec.** Run the unit through the normal `ace` planning phases, then
+  write through the `ace-docs` gate. Amend `docs/spec/` for everything settled. Never
+  scaffold a decisions log as a default.
+- **F6. Review the unit.** Verify every claim against the implementation and approved
+  scope. Fix every mismatch. Keep the changed spec, source references, and clean review
+  as evidence.
+- **F7. Continue or close.** Repeat F3–F6 for the next approved unit. When the approved
+  scope is exhausted, report each spec path and its review evidence, then stop. A smaller
+  approved scope may end after one seed spec.
 
-Commit coherent, completed slices autonomously after completing the checks required for
-that work. Do not ask for permission to make a local commit. A local commit does not
-authorize pushing, publishing, merging, releasing, deploying, or any other change to
-shared or external state; each requires separate user authorization.
-```
-
-Label it **Proposed future commit autonomy policy**. Explain in the plan that approval
-would let future agents create local commits without asking after completing the checks
-for their work, but would grant no authority to push, publish, or take another outward
-action. State that the user may revise or omit the block before approving Phase 1.
-
-Place ACE additions near existing "where things go" guidance, not scattered. If no
-instructions file exists, the plan records which to create. Add all of this to the plan.
-
-### 4. **Plan skills**
-
-A school ships every skill it bundles by default. Trim to what this repo needs.
-
-**Discover what's on offer first.** Run `ace skills --all` — the full inventory the school
-and its imports provide, excluded ones included. Plan the selection from that list, not
-from the skills loaded in this session. For any candidate whose purpose isn't obvious from
-its name, read its frontmatter `description` under the resolved school clone (the `school`
-row of `ace paths`) before ruling it in or out.
-
-**Where to write it** — pick the layer by audience:
-
-| File             | Scope                 | Use for                 |
-|------------------|-----------------------|-------------------------|
-| `ace.toml`       | shared, committed     | the team-wide skill set |
-| `ace.local.toml` | personal, uncommitted | your overrides on top   |
-
-Two ways to set it, equivalent in effect:
-
-- Edit the `skills = [...]` array directly — globs like `ace-*` work.
-- `ace skills include <pat>` / `ace skills exclude <pat>` — always-add / always-remove
-  patterns layered on the array.
-
-Record the chosen set in the plan with a one-line rationale per add or drop, mapped to the
-study (e.g. "drop `frontend-design` — no UI here"). `ace skills` lists what's active;
-`ace config` shows the resolved set.
-
-### 5. **Plan docs**
-
-From the study, decide whether durable docs are warranted — architecture, a domain model,
-or non-obvious design history worth persisting. If so, the plan notes that `docs/` should
-be scaffolded via `ace-docs` (which owns the tree shape and routing) with a project
-overview in `docs/spec/` as the seed doc. Don't scaffold here — defer it to `ace-docs` at
-the point that first doc is written (the Phase 2 spec run, or whenever a doc is needed),
-so a tree that never gets filled is never created. If there's little to document, note
-"no docs" in the plan.
-
-That overview is the high-level cut; the detailed specs come in Phase 2.
-
-### 6. **Confirm plan**
-
-Once the scan is done, finalize the plan file and present it as a whole — findings plus
-every proposed change. Call out the proposed `Git checkpoints` policy separately. State
-that it lets future agents create local commits without asking but does not authorize
-pushing, publishing, or any other outward action. Tell the user they may revise or remove
-it before approval. Wait for approval of the complete batch.
-
-### 7. **Apply plan**
-
-Open by quoting the approval. Edit the instructions file and write the skills config in
-one batch. Write only the `Git checkpoints` policy wording the user approved. If the user
-removed or rejected the proposed block, do not add it; preserve the repository's existing
-policy unless the approved plan explicitly changes it. Then run `ace link` so the selected
-skills are symlinked into the harness's skill folder. On harnesses that auto-reload skills
-from the filesystem, they go live in the running session immediately. On other harnesses,
-tell the user to relaunch. If durable docs are warranted, report the `ace-docs` scaffold
-and Phase 2 spec run as follow-ups; start neither here.
-
-### 8. **Remove plan**
-
-Delete `.ace/init-plan.md` after all approved writes and `ace link` complete. Report the
-files changed and the link result.
-
-## Phase 2 — Full spec run
-
-A spec run distills what the code already does into durable explainers. It needs a deep
-scan, not Phase 1's skim. Run it only when the project lacks specs and would benefit.
-
-### 1. **Scope run**
-
-List the spec-able units and order them by dependency, change frequency, risk, and current
-understanding. A large codebase needs several specs and may need several sessions. Present
-the ordered scope and wait for explicit approval. Typical units:
-
-- **Subsystem / service** — e.g. `auth`, `billing`, `ingest-pipeline`; one spec each.
-- **Domain model** — the core entities, their invariants and lifecycles.
-- **Key flow** — checkout, onboarding, a nightly job — end-to-end across modules.
-- **Integration boundary** — each external API, queue, or webhook contract.
-
-### 2. **Prepare docs**
-
-Open by quoting the approved scope. Read the existing `docs/` gate; when none exists, run
-`ace-docs` before writing the first unit. Route system behavior, intent, and the project's
-exact surface to `docs/spec/`; route third-party lookup to `docs/vendor/`.
-
-### 3. **Study unit**
-
-Deep-read the implementation for the next approved unit. Capture behavior, contracts,
-data shapes, invariants, errors, edge cases, and non-obvious intent.
-
-### 4. **Reconcile claims**
-
-Check every proposed claim against the implementation. Flag divergences between intended
-and implemented behavior instead of papering over them.
-
-### 5. **Write spec**
-
-Run the unit through the normal `ace` planning phases, then write it through the
-`ace-docs` gate. Everything settled amends `docs/spec/`; never scaffold a decisions log.
-
-### 6. **Review unit**
-
-Verify the document against the implementation and the approved scope. Fix every mismatch.
-
-### 7. **Continue run**
-
-Return to step 3 for the next approved unit. When the approved scope is exhausted, report
-the specs written and stop. A smaller approved scope may end after one seed spec.
-
-## Close
-
-The instructions file and `ace.toml` are committable artifacts; fold them into the repo's
-normal commit flow. Then point the user at `/ace` to start the per-task workflow. ace-init
-is re-runnable when the project's shape shifts materially.
+After onboarding, use `/ace` for recurring project work. Run `ace-init` again only when
+its installed orientation no longer fits or the user explicitly requests the optional
+spec run.

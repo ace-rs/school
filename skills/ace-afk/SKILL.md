@@ -1,13 +1,10 @@
 ---
 name: ace-afk
 description: >
-  Unattended autonomous mode — the nightshift. Drive work forward with no human
-  watching, strictly inside a safety envelope, logging blockers instead of
-  waiting on them. TRIGGER on `/ace-afk`, "afk", "run unattended", "nightshift",
-  or any signal the user is leaving and wants work to continue — even if they
-  don't name the skill. DO NOT TRIGGER while you're in an interactive
-  back-and-forth, for the normal attended `/ace` loop, or when the user is
-  present to approve steps.
+  Run bounded work unattended inside a strict safety envelope. TRIGGER on `/ace-afk`,
+  "afk", "run unattended", "nightshift", or when the user says they are leaving and
+  wants work to continue. DO NOT TRIGGER during an attended workflow or interactive
+  approval loop.
 argument-hint: "[focus or constraints for the unattended run]"
 ---
 
@@ -15,15 +12,13 @@ argument-hint: "[focus or constraints for the unattended run]"
 
 Print `## ace-afk` as the first line.
 
-Unattended mode. No human is watching — overnight is the prime case. Make maximum
-forward progress on the best use of idle token budget, strictly inside the
-envelope below. When something genuinely needs a human, **do not wait** — log it
-and move to the next unblocked thing.
+No human is available to answer after the run starts.
 
-## Operating envelope — hard floor, no exceptions
+Use **Run unattended** (1–4) for one bounded goal with a defined stopping condition.
 
-With no human to catch a mistake, the propose-then-wait gates that protect the
-attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
+## Operating envelope
+
+Stay inside every boundary below:
 
 - **No global-state mutation** — nothing outside the project working tree
   (`~/.config`, `~/.local`, shell rc, global package managers, system installs).
@@ -32,73 +27,67 @@ attended `/ace` loop are gone. The envelope replaces them. Stay strictly inside:
 - **No working-tree destruction** — no `git reset --hard`, `checkout`/`restore`
   over uncommitted work, or force-overwrite of files you didn't create this run.
 - **Commit, don't push** — land green slices on the *current* branch so progress
-  survives. Pushing is the canonical "needs a human" action; it waits.
+  survives only when repository instructions already authorize autonomous local commits.
+  Otherwise retain the reviewed diff. Pushing always waits.
 - **Nothing of your own in `docs/spec/`** — the spec holds what the user stated,
   in their words. Calls you make alone stay in `.ace/save.ledger.md` marked
   `agent:inferred`. Writing a spec is allowed only when that was the task handed
   to this run.
 
-A boundary you'd have to cross to make progress is a blocker. Log it, don't cross
-it.
+A boundary required for progress is a blocker. Log it and do not cross it.
 
-## Pre-flight — before the unattended loop engages
+Read `ace/ledger.md` in the `ace` skill's directory before step 1. Keep the goal, plan,
+authorization, heartbeat handle, workflow evidence, and handoff report as evidence.
 
-Run this while the human is still reachable. It front-loads every decision so the
-unattended body needs none. This phase is the *only* sanctioned asking window.
+## **1. Prepare the run**
 
-Read `ace/ledger.md` in the `ace` skill's directory and keep the decisive result of each
-step. Step 5 is a Wait: the run body opens only after the user's explicit Go.
+Restate the bounded goal and define done as the real deliverable in its real target.
+Resolve open choices and missing inputs while the user is present. Derive a decision basis
+from the repository instructions and the goal. Verify that an existing, independently
+operated timer or session delivery mechanism can be armed and disarmed. Settle local
+commit authority when commits are part of done; otherwise make a retained reviewed diff
+an explicit accepted end state. Present the complete plan, envelope, stop condition, and
+verified heartbeat mechanism. Wait for explicit "Go." This is a Wait and the unattended
+body cannot start without it. If the heartbeat prerequisite is missing, report the
+blocker and stop before asking for Go.
 
-1. **Restate goal.** "Understood: <goal>." Include the definition of
-   *done* — the real deliverable in the real target (the repo actually changed, the thing
-   actually live), never a /tmp render or staged plumbing. If the goal is ambiguous, this
-   is the moment to ask.
-2. **Clear blockers.** Surface and resolve every open choice and missing input
-   now, while the human can answer. This is where all the asking is spent; the body gets
-   none.
-3. **Establish decision-basis.** State the philosophy the run resolves open choices
-   against, derived from the repo's CLAUDE.md + the goal. This is what makes "no questions
-   after Go" safe rather than reckless: the body resolves choices against the basis and
-   records the call, instead of stopping to ask.
-4. **State plan.** Present the complete AFK plan under the decision-basis and envelope.
-5. **Confirm.** Wait for explicit "Go." Go is the last gate. After it: no questions and
-   no go-gate; drive the loop to the envelope.
+## **2. Bind stall recovery**
 
-## Heartbeat — survive a silent stall
+Use an existing, independently operated external timer or session delivery mechanism that
+can inject this prompt while the run is between turns:
 
-The heartbeat handle binds this procedure. The run body cannot start until the handle is
-emitted. The final summary cannot start until deletion of that handle is emitted.
+   > AFK heartbeat. If the run has stalled — waiting on an unavailable dependency,
+   > stopped between turns, or paused to ask something the decision-basis or envelope
+   > already settles — resume the loop now. Continue only within the approved goal,
+   > decision basis, and operating envelope. Resolve covered choices by that basis,
+   > record them, and keep going. Infer no further authority. Log a genuine blocker when
+   > those bounds do not permit progress. If the run is complete, disarm this heartbeat
+   > and write the final summary.
 
-1. **Set prompt.** Use this text for every heartbeat:
+Use roughly ten minutes and choose an off-round interval when available. Do not use a
+harness scheduler or create timer infrastructure. Open by quoting the user's Go. Arm the
+verified mechanism and record its job id or handle before step 3. If arming fails, record
+the failure and whether a handle may remain, write an incomplete handoff, and stop without
+starting the unattended body.
 
-   > AFK heartbeat. If the run has stalled — waiting on a dead subagent, stopped between
-   > turns, or paused to ask something the decision-basis or envelope already settles —
-   > resume the loop now. You hold standing authority to make safe, reversible decisions
-   > on your own: resolve the choice by the basis, record it, keep going. Log only a
-   > genuine blocker (basis-silent, expensive, irreversible). If the run is actually
-   > complete, tear down this heartbeat and write the final summary.
+## **3. Run the approved loop**
 
-2. **Arm heartbeat.** Schedule the prompt on the harness's recurring timer or an external
-   timer that injects a line into the session. Use roughly 10 minutes; choose an off-round
-   interval when the timer supports one.
-3. **Record handle.** Emit the job id or handle before starting the run body.
-4. **Disarm heartbeat.** When the run ends, delete the recorded job and emit the deletion
-   result before writing the final summary.
+Read `workflow-afk.md` in this skill's directory and run it under the approved decision
+basis and operating envelope. Honor `$ARGUMENTS` as the focus. Ask no questions after Go.
+Resolve covered choices from the basis and record them. Log a basis-silent, expensive,
+irreversible, or otherwise forbidden choice as a blocker.
 
-A heartbeat lands when the session is between turns, so it revives a run that has come to
-rest. A hard hang in the middle of one operation is the harness's own timeout to break.
+When the approved plan authorizes delegation and an existing worker channel is available,
+delegate only isolated slices. Give each worker the goal, scope, applicable rules, and
+required evidence. Review the result before accepting it. Do not create worker
+infrastructure during the run.
 
-## Run the loop
+## **4. Disarm and hand off**
 
-After Go, complete Heartbeat steps 1–3, then read `workflow-afk.md` in this skill's
-directory and drive it autonomously. It is the ACE workflow with its attended approval
-gates replaced by the decision-basis and operating envelope. Honor `$ARGUMENTS` as the
-focus. When the workflow stops, complete Heartbeat step 4 before writing the handoff
-summary.
-
-## The handoff report — `.ace/afk.log`
-
-One file in `.ace/` — the human's morning read. Three parts:
+Stop and record deletion of the heartbeat handle before writing the final summary. If
+disarming fails, record the failure and remaining handle in `.ace/afk.log`, report that
+the run is incomplete, and stop without claiming completion. Write `.ace/afk.log` as the
+user's next-session read with three sections:
 
 - **Blockers** — appended live as they arise. Each entry records enough to unblock
   in one read: **what** (task and where it stopped), **why it can't be self-unblocked**
@@ -111,4 +100,11 @@ One file in `.ace/` — the human's morning read. Three parts:
   user later states it themselves, and is yours to withdraw otherwise. This section tells
   them what the run did.
 - **Summary** — written when the run ends: what landed (commits, tasks done) and
-  what's still queued. Don't re-list blockers or calls here; they're already above.
+   what's still queued. Don't re-list blockers or calls here; they're already above.
+
+## Completion contract
+
+The unattended run completes only when `workflow-afk.md` reaches a stop condition, the
+heartbeat handle is deleted, and `.ace/afk.log` names landed work and remaining work. If
+stall recovery is unavailable, preparation ends with the prerequisite blocker and no
+unattended work starts.

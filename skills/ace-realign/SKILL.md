@@ -1,63 +1,52 @@
 ---
 name: ace-realign
 description: >
-  Force re-attention on a rule you keep breaking — repeat it verbatim at the start
-  or end of every message until the session ends or the user says stop. TRIGGER on
-  "realign" when the user calls out a broken rule that already lives in a loaded
-  surface (CLAUDE.md, a skill, an explicit earlier instruction). ALSO AUTO-TRIGGER
-  without being asked: on the second violation, within a session, of the same rule a
-  loaded surface marks as hard or non-negotiable, self-engage on that rule. DO NOT
-  TRIGGER for first-time rule capture with no prior violation, when the user merely
-  disagrees with an output rather than citing a broken rule, or — on the auto path —
-  for a hard rule's first violation or for ordinary unmarked rules.
+  Repeat a broken loaded rule every turn until the user stops it. TRIGGER on "realign"
+  when the user cites a broken rule, or automatically on the second session violation of
+  the same rule marked hard or non-negotiable. DO NOT TRIGGER for new rule capture or
+  disagreement without a cited rule; on the automatic path, exclude first violations and
+  ordinary rules.
 ---
 
-# Realignment Protocol
+# ace-realign
 
 Print `## ace-realign` as the first line.
 
-The user invokes this by saying **"Realign"** when you have broken a rule (from
-CLAUDE.md, a loaded skill, or an explicit user instruction earlier in the session).
-The fix is forced re-attention — repetition keeps the rule in working context every
-turn.
+Use **Arm a rule** (A1–A3) for the first active rule, **Stack a rule** (S1–S2) for
+another violation while armed, and **Stop** (X1) only on the user's instruction.
 
-This works only when the rule already lives in a surface that loads automatically. If
-it isn't written down anywhere future sessions will see it, repetition won't help the
-next session — edit the surface instead (project CLAUDE.md, user CLAUDE.md, a skill, or
-in-repo docs).
+## Arm a rule
 
-## Auto-trigger on hard rules (no invocation needed)
+- **A1. Select the rule.** On explicit "realign," select the loaded rule the user says
+  was broken. On the automatic path, select only the same hard or non-negotiable rule
+  broken for the second time this session. Do not auto-arm for an ordinary rule, a first
+  violation, or a rule marked only for monitoring. Honor the rule's stated scope.
+- **A2. Cite it.** Name the rule and its loaded source. Quote the exact rule when short.
+  For a long rule, quote a self-contained verbatim excerpt that preserves its condition
+  and command. If the cited rule is not in a loaded surface or an explicit earlier user
+  instruction, report the missing prerequisite and do not arm.
+- **A3. Repeat it.** Put `> Realign: <rule text>` once at the chosen edge of every
+  message. Keep the same edge and wording across tasks until the session ends or the user
+  stops it. If one message omits the line, restore it in the next message; the omission
+  never disarms the rule.
 
-Some loaded surfaces mark certain rules as hard: a CLAUDE.md may name them "Laws",
-"non-negotiable", "MUST", or keep them in a designated always-binding section. Hard
-rules bind harder than ordinary instructions.
+## Stack a rule
 
-Each turn, self-audit your last action against the hard rules in your loaded surfaces.
-On the **second** violation of the **same hard rule** within a session, **arm this
-protocol immediately on that rule** (run the steps below) — do not wait for the user to
-say "realign", do not make them re-state the frustration. The first violation: fix it
-and move on, no arming.
+- **S1. Add it.** When another rule meets A1 while realignment is active, run A2 for that
+  rule and add it without replacing an active rule.
+- **S2. Repeat all.** Print every active `> Realign:` line at the same chosen edge of each
+  message.
 
-Only hard rules auto-arm — never ordinary instructions, and never rules a surface marks
-for self-monitoring or watching only. Honor a rule's stated scope: a session-scoped rule
-arms only within its phase, a per-repo rule only in its repo.
+## Stop
 
-When triggered:
+- **X1. Disarm.** Remove a realignment only when the user says to stop it or the session
+  ends. If the user names one of several active rules, remove only that rule. The user's
+  stop instruction is the completion evidence.
 
-1. **Identify the broken rule.** Name it explicitly and cite where it came from
-   (e.g. "Edit protocol — CLAUDE.md Workflow section"). Quote the rule verbatim
-   if short; paraphrase tightly if long.
-2. **Repeat the rule at the start or end of every message going forward.** Use a
-   short, consistent format, e.g. `> Realign: <rule text>`. Place it once per
-   message — start or end, pick one and stay consistent.
-3. **Keep doing (2) until the session expires or the user tells you to stop**
-   (e.g. "stop realigning", "you can drop the realign", "clear"). Do not
-   self-terminate the protocol — it persists across tasks and topic switches.
+## Completion contract
 
-The realign line is this protocol's binding device: once armed, a message
-missing the `> Realign:` line is itself a violation — print it in the next
-message and continue. Never let the omission end the protocol.
-
-If the user says "Realign" again while the protocol is already active, treat it
-as a new violation: identify the new rule, and from then on repeat **both**
-rules in every message (stack them, do not replace).
+Arming completes when the source citation and first `> Realign:` line appear. Stacking
+completes when every active line appears together. The active line on each later message
+is continuing evidence. If lasting behavior across sessions is required, persist the rule
+through a separate authorized edit to an always-loaded repository or user instruction
+surface.

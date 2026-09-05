@@ -1,12 +1,10 @@
 ---
 name: ace-save
 description: >
-  Persist session state to durable storage so the next `/ace` resumes cleanly.
-  TRIGGER when the user says "save session", "save state", "checkpoint", "before
-  I clear", "wrap up", "end of session", or otherwise signals they're about to
-  `/clear`, exit, or context-switch. Also trigger when joining a session not
-  started with `/ace`. DO NOT TRIGGER for committing code or saving files — this
-  skill writes session notes only.
+  Persist session state for the next ACE session. TRIGGER on "save session", "save
+  state", "checkpoint", "before I clear", "wrap up", "end of session", or an imminent
+  `/clear`, exit, or context switch. Also trigger when joining a session not started with
+  `ace`. DO NOT TRIGGER for commits or ordinary file saves; this writes session records.
 argument-hint: "[notes or context to preserve]"
 ---
 
@@ -14,72 +12,76 @@ argument-hint: "[notes or context to preserve]"
 
 Print `## ace-save` as the first line.
 
-Save session state so the next `/ace` resumes cleanly.
+Use **Save a checkpoint** (1–5) to preserve the current session without changing code.
 
-This is a deliberate, deterministic save point — beyond the implicit session
-memory and compaction you'd otherwise rely on (lossy, and gone once the session
-ends). ace-save explicitly persists to durable storage that survives `/clear`,
-exit, and context switches.
+Read `ace/ledger.md`, the Storage cascade in `ace/workflow.md`, and
+`ace-save/trail.md`. The trail file defines layout, status, provenance, removal, and
+graduation rules. Keep the survey cheap: inspect `git status` and the one or two stores
+already in use.
 
-Persist to the **storage cascade** (`ace/workflow.md`, the `## Storage cascade`
-section). Keep the survey cheap: check `git status` plus the one or two stores
-actually in use — don't sweep every tier, and don't hit a task-tracker API
-unless tasks clearly live there.
+## **1. Load contracts**
 
-Do not touch code. Only at a target you're already writing this run, prune stale
-entries you notice while there (completed tasks, superseded prefs, resolved
-questions, contradicted learnings) — don't open stores just to sweep.
+Identify the repository boundary, stores already in use, and authority for each possible
+write. A save request authorizes repository-local session records. It does not authorize
+an external tracker, shared service, or file outside the repository.
 
-## Procedure evidence
-
-Read `ace/ledger.md` in the `ace` skill's directory. Run the five steps in order and keep
-their decisive results. This procedure is separate from `.ace/save.ledger.md`, the state
-file it writes.
-
-## 1. **Load contracts**
-
-Read the storage cascade in `ace/workflow.md` and the trail format in
-`ace-save/trail.md`. The latter defines the layout, status and provenance enums, removal
-rules, and graduation into `docs/`.
-
-## 2. **Survey state**
+## **2. Survey state**
 
 Survey the conversation, `git status`, and the one or two stores already in use. Include
-`$ARGUMENTS` when provided. Do not mutate any store in this step.
+`$ARGUMENTS` when provided. Do not mutate any store. Identify completed work, the current
+stop point, open items, settled user statements, and provisional agent derivations.
 
-## 3. **Persist breadcrumb**
+## **3. Persist breadcrumb**
 
-Persist to the storage cascade:
-- **Tasks / next steps** → the most fitting store the cascade names (issue
-  tracker if one's in use, `.ace/save.md` otherwise) — where the next `/ace`
-  looks for pending work.
-- **Narrative** — what was done, where you stopped, open questions — enough that
-  a fresh session picks up the thread.
+Write the local breadcrumb under `.ace/` using `trail.md`:
 
-## 4. **Route knowledge**
+- Put the current narrative, standing facts, and pointers in `.ace/save.md`.
+- Put every open item, including pending tasks, in `.ace/save.ledger.md` with status and
+  provenance. Leave at most a one-line pointer to them in `.ace/save.md`.
 
-A learning that outlived the task goes to exactly one place, by **who it
-serves** — checked top-down, stop at the first fit:
+Do not replace either trail file wholesale. At a target already being written, remove
+only entries that `trail.md` permits to leave and record the destination or completion in
+the save report.
+
+## **4. Route authorized knowledge**
+
+A learning that outlived the task goes to exactly one place, checked top-down by who it
+serves:
+
 - **Every project that loads a skill** (generic tooling/language fact the skill
-  covers) → record it in the breadcrumb as a pending school change (which skill,
-  what to add) for `ace-school` to propose later. Don't run the branch/push/PR
-  flow inline during a save. Never memory — there it dies with your machine
-  instead of reaching the skill's subscribers.
-- **This repo's team** (settled rules, specs, shared patterns) → `docs/` or the
-  issue tracker. Never memory — it doesn't reach teammates or other agents.
+  covers) → record a pending school change in `.ace/save.ledger.md` with status,
+  provenance, target skill, and proposed addition. Do not run the branch, push, or PR flow
+  during a save.
+- **This repo's team** (settled rules, specs, shared patterns) → `docs/` or a
+  repository-local task file.
 - **You, everywhere** (how the agent should behave for you, your preferences) →
-  your harness's user-level memory or instructions file — whatever persists
-  across every project on this machine (Claude Code: `~/.claude/…/MEMORY.md`).
+  a user-level instructions file only when the user explicitly authorizes that
+  out-of-repository write.
 - **This repo only** (a fact specific to this codebase) → project `CLAUDE.md`.
 
-Also sweep for school-bound artifacts that aren't learnings: skill edits already
-in the working tree (→ note in the breadcrumb for `ace-school` to propose later;
-don't branch/push/PR during a save) and non-trivial design calls (→ the school's
-`docs/spec/`).
+An external tracker, shared service, or out-of-repository file requires explicit user
+authority naming that destination. Without it, keep the item in the local breadcrumb with
+its provenance and the intended destination. Never silently substitute global memory.
 
-A destination with nothing to route stays untouched; never invent a learning to fill one.
+Also record school-bound artifacts in `.ace/save.ledger.md`: skill edits already in the
+working tree and non-trivial design calls intended for the school's `docs/spec/`. Graduate
+a design call into `docs/spec/` only when it carries the user's verbatim evidence required
+by `trail.md`, the school checkout is the current repository, and the save request
+authorizes that local record. Otherwise keep it in the ledger. Never enter or mutate
+another checkout during a save.
 
-## 5. **Report**
+A destination with nothing to route stays untouched. Never invent a learning to fill one.
 
-Report what was saved and where. Only confirm safe to `/clear` if state
-persisted successfully.
+## **5. Report**
+
+Report every written destination, moved or deleted trail entry, retained item, and skipped
+destination that lacked authority. Confirm safe to `/clear` only when the repository-local
+trail persisted successfully.
+
+## Completion contract
+
+Keep the survey, changed trail files, provenance, and report as evidence under
+`ace/ledger.md`. A successful checkpoint ends with the exact local paths that preserve
+the next session. A failed local write ends with the error and does not claim that
+`/clear` is safe. A missing external-write authority keeps the item locally and does not
+block the checkpoint.

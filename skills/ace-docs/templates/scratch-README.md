@@ -1,39 +1,31 @@
 # Scratch
 
-**Unsettled exploration** — research dumps, surveys, investigations, drafts, transcripts:
-thinking-in-progress whose claims are not expected to stay current. This is the residual
-home. Material lands here only when it fits nothing above it in the routing gate — never
-as a default.
+Store only unsettled exploration that fails every earlier predicate in the docs gate:
+research dumps, surveys, investigations, drafts, and transcripts. Route settled design,
+instructions, conventions, and the project's exact surface to `../spec/`. Route retained
+third-party lookup to `../vendor/` and task walkthroughs to `../guides/`.
 
-Belongs here *only* if it is genuinely exploratory. Anything settled — current or intended
-design, an instruction, a convention, our own exact surface — is `../spec/`; third-party
-lookup is `../vendor/`; a task walkthrough is `../guides/`.
-
-**Toll.** Open every scratch file with one line naming why it is not spec:
+Start every scratch file with a truthful reason it is not a spec:
 
 ```
 <!-- not spec because: still exploring; nothing settled yet -->
 ```
 
-If that line cannot be written truthfully, the artifact belongs in one of those folders.
-Put it there instead.
+If that line is not true, route the artifact through the gate again.
 
 ## Format
 
-One file per artifact: `YYYY-MM-DD-slug.md` (the date matters — scratch is about the
-moment it was written). No template; write whatever shape fits.
+Use one file per artifact: `YYYY-MM-DD-slug.md`. Use the shape the exploration needs.
+Only a consolidated `prior-art.md` may omit the date.
 
 ## Lifecycle
 
-Disposable. Edit, rewrite, or delete freely. When exploration settles, promote the durable
-claim up to `../spec/`; what remains here is the raw working material.
+Scratch files are disposable. When exploration settles, move the durable claim into
+`../spec/`. Preserve raw material only when it remains useful.
 
-Two carve-outs on deletion:
+Apply both deletion rules:
 
-- **Cited provenance is retained.** A note another doc cites as its provenance stays, even
-  though scratch is disposable — disposability governs new filing, not deletion of
-  already-cited material. Never orphan a citation.
-- **Collapse instead of scatter.** When design notes pile up on one theme, consolidate
-  them into a single `prior-art.md` digest — one section per source, each cross-linked
-  to the live `../spec/` doc it fed — then repoint citations and drop the absorbed notes.
-  `prior-art.md` is the one undated file here.
+1. Keep material cited as provenance until every citation is repointed.
+2. Consolidate many notes on one theme into `prior-art.md`. Give each source its own
+   section, link each section to the live spec it informed, repoint citations, then remove
+   the absorbed notes.

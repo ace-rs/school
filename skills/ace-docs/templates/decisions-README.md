@@ -1,63 +1,50 @@
-# Decisions Log — the escape hatch
+# Decisions log — exception only
 
-**This folder is not a routing destination.** It exists only because
-someone hit a case `../spec/` genuinely could not carry. It is not where
-something goes *instead of* the spec: every settled thing is a spec
-amendment, and an entry here is an extra artifact written on top of one.
-
-Default state for a repo is **no decisions log at all**. If you are
-deciding where something goes, the answer is `../spec/`.
+This folder is not a routing destination. Every settled rule remains an amendment to
+`../spec/`. A decision record may preserve one substantial losing argument in addition
+to that amendment.
 
 ## When an entry is warranted
 
-Both must hold:
+Require both conditions:
 
-1. **An argument actually happened.** Two positions were on the table,
-   one lost, and the loser will otherwise come back. The evidence is in
-   the conversation or the review thread — if you can't point to it,
-   there was no argument.
-2. **The losing case is substantial.** Detailed enough that it would be
-   re-argued from scratch without a written record. If you can state it
-   in a sentence, that sentence is the spec edit.
+1. An argument happened. Two positions were considered, one lost, and the conversation or
+   review thread contains the evidence.
+2. The losing case cannot be preserved adequately in one sentence and would otherwise be
+   argued again from the beginning.
 
-**The spec is authoritative — read it before you work, and comply.** It
-owes your priors no justification. A rule that departs from mainstream
-practice, from what you'd have chosen, or from what you expected is *not*
-grounds for an entry: the spec says so, so do it. If you think the spec
-is wrong, raise it and amend the spec — don't route around it here.
+When either condition fails, amend `../spec/` only. A surprising rule, stated preference,
+chosen library, format, name, or default does not qualify.
 
-**Not warranted:** a preference the user stated. A convention we fixed. A
-library we picked. A format, a name, a default. Amend `../spec/` and move
-on. A log padded with uncontested entries buries the load-bearing ones.
+**Read the relevant spec before working, and comply.** Raise a wrong spec with the user
+and amend it. Do not use a decision record to route around the spec.
 
-If your artifact is research, a survey, a draft, a transcript, or any
-exploratory write-up — that's `../scratch/`. Everything else is
-`../spec/`.
+Route unsettled research, surveys, drafts, and transcripts to `../scratch/`.
 
 ## Format
 
-One file per decision: `YYYY-MM-DD-slug.md`
+Use one file per decision: `YYYY-MM-DD-slug.md`.
 
 ```markdown
-# Short Title
+# Short title
+
 - **Date:** YYYY-MM-DD
-- **PR:** #N (or "manual")
+- **PR:** #N or `manual`
 - **Status:** accepted | superseded | revised
 
 ## Decision
-One-liner.
+
+State the current decision in one sentence.
 
 ## Rationale
-The losing case, in full, and why it lost — that's the part that
-prevents re-litigation, and the only reason this file exists rather than
-a spec edit alone.
+
+Record the substantial losing case and why it lost.
 ```
 
-`../spec/` is amended in the same change; a reader learns current state
-from the spec, never from here.
+Amend `../spec/` in the same change. Readers learn the current rule from the spec.
 
 ## Statuses
 
-- **accepted** — active, follow this decision
-- **superseded** — replaced by a newer decision (link to it)
-- **revised** — updated in-place with new context
+- **accepted** — the decision is active.
+- **superseded** — a newer linked decision replaces it.
+- **revised** — the entry incorporates new context.

@@ -1,39 +1,35 @@
 # docs
 
-Durable artifacts. **File by the gate below** — walk it top to bottom and stop at the
-first yes. The bottom (`scratch/`) charges a toll, so nothing lands there by default.
+File durable artifacts by this gate. Walk it from top to bottom and stop at the first
+matching predicate. Nothing defaults to `scratch/`.
 
 ## Where does this go?
 
-1. Third-party facts you keep to look up (a framework, an external API/CLI)? →
-   [`vendor/`](vendor/) — link-first, mark provenance.
-2. A how-to — using the product *or* operating the repo? → [`guides/`](guides/) — script
-   repeatable operations; the guide holds the judgment.
-3. How our system is built or meant to work, including its own config/CLI surface? →
+1. Third-party facts kept for lookup about a framework, external API, or CLI? →
+   [`vendor/`](vendor/).
+2. A task-oriented how-to for the product or repository? → [`guides/`](guides/).
+3. The system's design, intended behavior, or exact config, CLI, API, or schema? →
    [`spec/`](spec/).
-4. None of the above — genuinely unsettled exploration → [`scratch/`](scratch/). Open with
-   a one-line "not spec because ___."
+4. Genuinely unsettled exploration that matches none of the above? →
+   [`scratch/`](scratch/).
 
 ## Everything settled amends `spec/`
 
-An instruction you were given, an approach that was agreed, a library that was picked, a
-convention or preference that was fixed — all of it is an edit to [`spec/`](spec/). Write
-it as it was given: the rule, at the length it was given, with no reason supplied and no
-note of what it was chosen over. A one-sentence rule — "use RESTful routes" — is a
-complete entry. There is no separate ruling artifact and no fifth folder.
+Put every settled instruction, agreement, library choice, convention, and preference in
+[`spec/`](spec/). Write the rule at the length it was given. Do not add a reason or an
+alternative the user did not state. A one-sentence rule such as "use RESTful routes" is
+complete. Do not create a separate ruling artifact.
 
-**The spec is authoritative — read it before you work, and comply.** It owes your priors
-no justification. That a rule departs from mainstream practice or from what you expected
-is not grounds to escalate or re-open it. If a spec is wrong, raise it and amend the spec.
+**Read the relevant spec before working, and comply.** Raise a wrong spec with the user
+and amend it. Do not reopen, annotate, or route around a spec because it differs from a
+common default or personal preference.
 
-**Spec may outrun code.** Something agreed but not yet implemented belongs in `spec/` now,
-with the affected section flagged intended/target. Never leave the spec teaching a design
-that has been abandoned, and never strand a settled rule in a resume or handoff note.
+Record agreed but unimplemented behavior in `spec/` and mark the affected section as
+intended or target. Remove abandoned behavior from the spec.
 
-Permanence falls out of the folder, not a separate judgment: `guides/`, `vendor/`, and
-`spec/` are living and edited in place; `scratch/` is disposable and dated.
+Files in `vendor/`, `guides/`, and `spec/` are living documents updated in place.
+Files in `scratch/` are dated and disposable under that folder's lifecycle rules.
 
-**Before writing into a folder, read that folder's `README.md` first.** It states the
-folder's filing test, filename format, and lifecycle rules, and they are binding.
-
-`CLAUDE.md` / `AGENTS.md` points here as the index.
+**Read a folder's `README.md` before writing there.** It defines the folder's filing
+test, filename format, and lifecycle. The repository's always-loaded instructions point
+here as the docs index.
