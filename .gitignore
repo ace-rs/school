@@ -12,6 +12,10 @@
 .opencode/commands
 .opencode/rules
 .opencode/skills
+.pi/agents
+.pi/commands
+.pi/rules
+.pi/skills
 ace.local.toml
 # end ACE
 
@@ -22,3 +26,4 @@ ace.local.toml
 # maintainer-internal detail (personal school, tracker, machine paths). Agents still
 # read and write it; it just never ships. See CLAUDE.md.
 /.docs/
+tmp/
