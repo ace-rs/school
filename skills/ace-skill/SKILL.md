@@ -39,11 +39,16 @@ Every operation ends with F1–F2. For an existing skill, use the most specific 
 operation. Use **Revise a skill** when a request combines description, procedure, or
 other content changes.
 
-Run P1–P2, the chosen operation, then F1–F2. Follow `ace/ledger.md`. Keep the review
+Run P0–P2, the chosen operation, then F1–F2. Follow `ace/ledger.md`. Keep the review
 result and required user authorization as evidence. Do not print per-step markers.
 
 ## Prepare
 
+- **P0. Open the right checkout.** Skip this step only when the session's current
+  directory is a school repository (it has `school.toml` and `skills/`), the request
+  targets that school, and its `school.toml` `[[imports]]` do not bring in the skill.
+  Otherwise load `ace-school`, run its T1–T4, and author inside the checkout it opens.
+  Never edit through `.claude/skills/` or any other ACE skill link.
 - **P1. Read or search.** Read the target school's loaded instructions, any skill-writing
   rules they point to, and `ace/ledger.md`. For an existing skill, read its entire
   `SKILL.md` and all supporting instruction files. For a new skill, search for one that
@@ -63,8 +68,8 @@ result and required user authorization as evidence. Do not print per-step marker
   pick it as carefully as an API name. Write the `description` with explicit TRIGGER and
   DO NOT TRIGGER guidance and concrete phrases a user would type, within D2's budget.
 - **C3. Write and connect.** Apply **Structure**. Point to every supporting file from text
-  the reader will load. Update every roster that names the school's skills, then run the
-  school's link step (`ace link`).
+  the reader will load. Update every roster that names the school's skills. In an
+  authored school, then run `ace link`.
 
 ## Revise a skill
 
@@ -103,8 +108,9 @@ result and required user authorization as evidence. Do not print per-step marker
   evidence. Fix ambiguity and unreachable text. Treat these as textual checks, not
   evidence of model behavior. Present the result and wait for approval. This is a Wait;
   the approval opens F2.
-- **F2. Commit.** Open by quoting the user's approval. Commit the reviewed files using the
-  repository's convention. End with the commit hash and subject as evidence.
+- **F2. Commit.** Open by quoting the user's approval. Commit the reviewed files in the
+  P0 checkout using the repository's convention. End with the commit hash and subject as
+  evidence. In a proposal worktree, pushing and the PR belong to `ace-school` P1–P5.
 
 ## House style checklist
 
