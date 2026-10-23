@@ -39,12 +39,13 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
 ## Editing rules specific to this repo
 
 - Skills must stay **generic**. No project-specific content.
-- For every skill edit, edit directly only when the active model is the requested
-  frontier model. Otherwise use the harness subagent tool to spawn the best available
-  frontier model: `fable 5` for Claude and `5.6 sol` for Codex.
+- Make skill edits with the strongest model tier the harness offers. When the active
+  model is a smaller tier, delegate the edit to a subagent on the strongest tier: for
+  example, Claude Sonnet or Haiku delegates to Opus or Fable, and Codex Luna or Terra
+  delegates to Sol or Astra. When the harness offers no stronger model or no subagent
+  tool, tell the user before editing and wait for their answer.
 - Give the subagent the complete task context, the applicable house rules, the full
-  `ace-skill` instructions, and the user's raw feedback pasted verbatim. Do not
-  paraphrase, summarize, or reinterpret the user's feedback before passing it on.
+  `ace-skill` instructions, and the user's feedback pasted verbatim, not paraphrased.
 - One skill (or one coherent theme) per commit / PR. See `skills/ace-school/SKILL.md` for
   the full PR workflow.
 - **Commit prefix is the skill name, not `skills:`.** Almost every edit here touches a
