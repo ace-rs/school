@@ -58,9 +58,10 @@ array in `ace.toml` — so a project can narrow the set without forking the
 school. Keep `ace` and `ace-save` whenever any ACE Home skill remains: the other skills
 read their workflow, ledger, or trail files from disk even when those skills are not
 loaded. Keep `ace-docs` when `ace-init` will scaffold docs or run specs, and keep
-`ace-skill` when `ace-school` will author or revise skills. Declaring a skill of the same
-name in your own school shadows the one here. See [ace-rs.dev](https://ace-rs.dev) for the
-full CLI reference.
+`ace-skill` when `ace-school` will author or revise skills. `ace school pull` overwrites
+imported skills with the latest version here; to replace one, list it in the import's
+`exclude_skills` and author your own under `skills/`. See [ace-rs.dev](https://ace-rs.dev)
+for the full CLI reference.
 
 Top-level docs:
 
@@ -76,7 +77,7 @@ ace setup ace-rs/school
 ace
 ```
 
-`ace setup` clones the school into a local cache, symlinks `skills/` into
+`ace setup` clones the school into a local cache, links each of its skills into
 the project, and writes `ace.toml`. `ace` launches the configured backend
 (Claude Code by default) with the school's skills, session prompt, and
 MCP servers wired in.
@@ -85,31 +86,27 @@ To start your own team school that inherits from this one:
 
 ```sh
 ace school init --name your-school
-ace setup .                       # self-import: load this school's skills while editing
+ace school pull
 ```
 
-`ace setup .` is convenient but couples the editing session to the skills being
-edited — a half-saved skill can break the session doing the editing. Once your
-school has skills you actively rewrite, point `school` at a stable clone
-instead and test edits by reading the local `SKILL.md` directly.
+`ace school init` writes `school.toml` with an `[[imports]]` entry for
+`ace-rs/school`, and an `ace.toml` with `school = "."` so the session loads
+the school's own skills. `ace school pull` fetches the imported skills.
 
-Then add an import to `school.toml`:
+`school = "."` couples the editing session to the skills being edited — a
+half-saved skill can break the session doing the editing. Once your school has
+skills you actively rewrite, point `school` at a stable clone instead and test
+edits by reading the local `SKILL.md` directly.
 
-```toml
-[[imports]]
-skill = "*"
-source = "ace-rs/school"
-```
-
-`ace school pull` to fetch. Push that repo to a remote and point your
-projects at it (`ace setup <your-org>/<your-school>`).
+Push that repo to a remote and point your projects at it
+(`ace setup <your-org>/<your-school>`).
 
 ## Switching backends
 
-ACE supports multiple backends. The built-ins are `claude` (Claude Code) and
-`codex` (OpenAI Codex CLI); custom backends live in `school.toml` under
-`[[backends]]` and can wrap anything that takes the same general shape
-(OpenCode, droid, etc.).
+ACE supports multiple backends. The built-ins are `claude` (Claude Code),
+`codex` (OpenAI Codex CLI), `opencode`, and `pi`; custom backends live in
+`school.toml` as `[backends.<name>]` tables and can wrap anything that takes the
+same general shape (droid, etc.).
 
 The reason to switch through `ace` rather than launching the tool directly:
 your school comes with you. Skills, MCP servers, session prompt, and
@@ -137,16 +134,14 @@ Or edit `ace.toml` directly:
 backend = "codex"
 ```
 
-`ace.toml` lives at the project root. Per-user defaults go in
-`~/.config/ace/ace.toml`. The lookup order is
-**user → project → school's school.toml**, so anything you set per-project
-overrides the user default.
+`ace.toml` lives at the project root, and `ace.local.toml` beside it holds
+uncommitted personal overrides. Per-user defaults go in `~/.config/ace/ace.toml`.
+The school's `school.toml` is the weakest layer; then user, project, and local
+each override the one before. `ace config explain <key>` shows which layer set a
+value.
 
-To see custom backends a school declares:
-
-```sh
-ace config | grep -A3 '\[\[backends\]\]'
-```
+To see the backends a school declares, run `ace config` and look for the
+`[backends.<name>]` tables.
 
 ## Contributing
 
