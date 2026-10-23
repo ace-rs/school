@@ -62,7 +62,9 @@ a substitute for `git commit`.
 Either a diff landed without going through `/ace`'s audit (ad-hoc edits, late skill loads,
 drift), or a large body of work just landed and you want a deliberate quality pass over
 it. `ace-audit` re-runs the audit against the relevant coding skills — catching structural
-problems while a rewrite is still cheap.
+problems while a rewrite is still cheap. Ask for a loop and it fixes, verifies, and
+re-audits until a pass is clean, inside a frozen plan with a 10-pass cap; otherwise it asks
+whether you want findings only.
 
 ## `ace-school` — make a fix outlive this repo
 

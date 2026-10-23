@@ -45,7 +45,7 @@ Eight skills, all loaded by default for any school that imports this one:
 |--------------|---------------------------------------------------------|
 | `ace`        | Start or resume the ACE workflow at session boundaries  |
 | `ace-afk`    | Unattended autonomous mode inside a safety envelope     |
-| `ace-audit`  | Audit landed work — recovery or standalone quality pass |
+| `ace-audit`  | Audit landed work — a fix loop until clean, or findings |
 | `ace-docs`   | Scaffold a `docs/` tree routed by a single gate         |
 | `ace-init`   | One-time onboarding of a repo into ACE                  |
 | `ace-save`   | Persist session state before `/clear` or context switch |
