@@ -61,8 +61,9 @@ belong in `.docs/` (gitignored) or nowhere. Prefer placeholder names in examples
 ## Common commands
 
 - `ace config` — print effective configuration
-- `ace paths` — resolved filesystem paths for school clone, data dir, etc.
-- `ace diff` — review pending skill edits; run it before committing a skill change
+- `ace paths` — resolved paths: user config, project, cache, and the linked school clone
+- `git diff` — review pending skill edits in this checkout before committing. `ace diff`
+  shows only the linked school clone, never this checkout.
 - `ace link` — regenerate the per-harness skill symlinks after adding or removing a skill
 - `ace import <owner/repo>` — pull in another school as an import
 - `ace school pull` — re-fetch imports
