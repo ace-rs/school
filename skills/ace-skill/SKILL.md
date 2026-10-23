@@ -106,11 +106,12 @@ result and required user authorization as evidence. Do not print per-step marker
   normal request, a missing prerequisite, and any applicable instruction conflict. For
   each case, identify the loaded text, selected branch, required action, and completion
   evidence. Fix ambiguity and unreachable text. Treat these as textual checks, not
-  evidence of model behavior. Present the result and wait for approval. This is a Wait;
-  the approval opens F2.
-- **F2. Commit.** Open by quoting the user's approval. Commit the reviewed files in the
-  P0 checkout using the repository's convention. End with the commit hash and subject as
-  evidence. In a proposal worktree, pushing and the PR belong to `ace-school` P1–P5.
+  evidence of model behavior.
+- **F2. Commit.** When the repository or user instructions authorize local commits,
+  commit the reviewed files in the P0 checkout using the repository's convention.
+  Otherwise present the reviewed diff and wait for approval. This is a Wait. End with the
+  commit hash and subject, or the reviewed diff, as evidence. In a proposal worktree,
+  pushing and the PR belong to `ace-school` P1–P5.
 
 ## House style checklist
 
