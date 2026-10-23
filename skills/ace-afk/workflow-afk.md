@@ -30,7 +30,9 @@ unresolved edits and select another task.
 ## **5. Audit**
 
 Inspect the full diff against the approved task, envelope, specs, and loaded skills. Fix
-every Violation, verify, and repeat the full audit until a fresh pass is clean.
+every Violation under `ace/audit-loop.md`, verify, and repeat the full audit until a fresh
+pass is clean. Its frozen plan is the approved task. Record each Conflict, Proposed rule,
+cap stop, or work-pass stop as a blocker. Never create or amend a spec during an AFK run.
 
 ## **6. Close**
 

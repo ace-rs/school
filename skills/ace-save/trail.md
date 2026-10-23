@@ -12,6 +12,7 @@ after the user settles or kills it in verbatim words.
 .ace/
   save.md            current truth: now / standing facts / pointers
   save.ledger.md     in-flight items: status + provenance per item
+  audit.md           frozen plan and round log of a running fix loop (ace/audit-loop.md)
 ```
 
 Anything carrying a status is an item and belongs in `save.ledger.md`. Everything else

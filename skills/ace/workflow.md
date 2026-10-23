@@ -69,8 +69,8 @@ and loaded skills.
 Classify findings:
 
 - **Violation** — a clear rule, requirement, or scope breach. In an authorized action
-  task, fix it, verify again, and restart the full audit. In assessment-only work, record
-  it without editing.
+  task, fix it under `audit-loop.md` in this directory: verify again and restart the full
+  audit. In assessment-only work, record it without editing.
 - **Borderline** — a permitted judgment call. Flag it once and leave it unless the user
   asks to change it.
 - **Out of scope** — pre-existing and not introduced here. Report it without fixing it.
