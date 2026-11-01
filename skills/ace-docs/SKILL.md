@@ -128,12 +128,12 @@ Do not print per-step markers.
 
 - **D1. Test the exception.** Confirm that the user settled a rule, that they gave a
   reason or rejected an option in their own words, and that those words do not fit in
-  the spec entry in a sentence or two. Apply only R1's root-selection checks, then read
-  the resolved root's `README.md` and `spec/README.md`; do not route the record through
-  the normal gate. If any condition fails, report that the material belongs in the spec
-  entry itself under `spec/README.md` "Recording a settled rule". Amend the spec only
-  when the user requested that write, then report the result and stop. When every
-  condition holds, continue to D2.
+  the spec entry in a sentence or two. Apply only the root-selection checks of **Route
+  an artifact** R1, then read the resolved root's `README.md` and `spec/README.md`; do
+  not route the record through the normal gate. If any condition fails, report that the
+  material belongs in the spec entry itself under `spec/README.md` "Recording a settled
+  rule". Amend the spec only when the user requested that write, then report the result
+  and stop. When every condition holds, continue to D2.
 - **D2. Confirm the write.** Present the user's reason, the spec file to amend, and the
   proposed decision-record path. Wait for explicit approval to open the folder. This is
   a Wait.
@@ -159,10 +159,9 @@ Do not print per-step markers.
   `spec/` with a link to the record, the user's reason is in the decision record in
   their words, both reachable pointers are installed, and no gate names `decisions/`. If
   repository instructions authorize autonomous local commits, commit all surfaces
-  together. Otherwise, report the reviewed
-  files and wait for explicit commit approval. Report the paths, validation result, and
-  pending gate. After approval, open by quoting it, commit all surfaces together, and
-  report the commit hash.
+  together. Otherwise, report the reviewed files and wait for explicit commit approval.
+  Report the paths, validation result, and pending gate. After approval, open by quoting
+  it, commit all surfaces together, and report the commit hash.
 
 ## Migration boundary
 
