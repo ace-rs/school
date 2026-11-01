@@ -19,8 +19,9 @@ mixed, their origin is unclear, or authority for the next action is absent, pres
 exact state and wait for the user's disposition. This is a Wait. Do not select new work
 over an unresolved tree.
 
-For task discovery, search the storage cascade below, present what is pending, and propose
-the natural next task. Wait for the user's confirmation before planning it. A direct
+For task discovery, search the storage cascade below, run each pending item through
+`ledger.md` "Items presented to the user" (I2–I3), present what remains, and propose the
+natural next task. Wait for the user's confirmation before planning it. A direct
 action request authorizes only the action it names. A request to check, review, audit, or
 investigate authorizes assessment and a findings report only.
 
