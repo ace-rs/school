@@ -1,20 +1,19 @@
 # Decisions log — exception only
 
 This folder is not a routing destination. Every settled rule remains an amendment to
-`../spec/`. A decision record may preserve one substantial losing argument in addition
-to that amendment.
+`../spec/`. A decision record holds the user's reason for a rule, or the option they
+rejected, when their words are too long for the spec entry itself.
 
 ## When an entry is warranted
 
 Require both conditions:
 
-1. An argument happened. Two positions were considered, one lost, and the conversation or
-   review thread contains the evidence.
-2. The losing case cannot be preserved adequately in one sentence and would otherwise be
-   argued again from the beginning.
+1. The user settled the rule and gave a reason or rejected an option in their own words.
+2. Those words do not fit in the spec entry in a sentence or two.
 
-When either condition fails, amend `../spec/` only. A surprising rule, stated preference,
-chosen library, format, name, or default does not qualify.
+When either condition fails, amend `../spec/` only, following its "Recording a settled
+rule" steps. A stated preference, chosen library, format, name, or default does not
+qualify, and a reason that fits in the entry stays in the entry.
 
 **Read the relevant spec before working, and comply.** Raise a wrong spec with the user
 and amend it. Do not use a decision record to route around the spec.
@@ -35,14 +34,15 @@ Use one file per decision: `YYYY-MM-DD-slug.md`.
 
 ## Decision
 
-State the current decision in one sentence.
+State the current rule in one sentence, as the user gave it.
 
-## Rationale
+## Reason
 
-Record the substantial losing case and why it lost.
+The user's reason, or the option they rejected, in their words.
 ```
 
-Amend `../spec/` in the same change. Readers learn the current rule from the spec.
+Amend `../spec/` in the same change and link this file from the entry. Readers learn the
+current rule from the spec.
 
 ## Statuses
 

@@ -19,7 +19,7 @@ Install a docs tree and the always-loaded instructions that make its rules reach
 |--------------------------|-------|----------------------------------------------------|
 | Route an artifact        | R1–R2 | an existing durable-docs root defines the gate     |
 | Scaffold durable docs    | S1–S7 | the repo has no durable-docs convention            |
-| Open the decisions hatch | D1–D5 | a substantial losing argument needs its own record |
+| Open the decisions hatch | D1–D5 | a settled rule's reason is too long for its entry  |
 
 Run only the matching operation. An established tree with a different shape needs a
 separately approved migration; assess it and stop.
@@ -94,11 +94,10 @@ Do not print per-step markers.
   would have picked, or from what you expected is not grounds to escalate, annotate, or
   re-open it. If a spec is wrong, raise it with the user and amend the spec.
 
-  **Everything settled is a `docs/spec/` amendment** — an instruction you were given, an
-  approach that was agreed, a library that was picked, a convention or preference that
-  was fixed. Write it there as it was given: the rule, at the length it was given, with
-  no reason supplied and no note of what it was chosen over. A one-sentence rule — "use
-  RESTful routes" — is a complete entry. There is no decisions log.
+  **Everything settled is a `docs/spec/` amendment**, written as the user gave it — an
+  instruction you were given, an approach that was agreed, a library that was picked, a
+  convention or preference that was fixed. Record it with the steps in
+  `docs/spec/README.md`, "Recording a settled rule".
 
   File new material by the gate, first match wins: third-party lookup → `vendor/`; a
   how-to → `guides/`; our own design or surface → `spec/`; unsettled exploration →
@@ -127,16 +126,17 @@ Do not print per-step markers.
 
 ## Open the decisions hatch
 
-- **D1. Test the exception.** Confirm that an argument actually happened, two positions
-  were considered, one lost, and the losing case is too detailed to preserve as one
-  sentence. Apply only R1's root-selection checks, then read the resolved root's
-  `README.md` and `spec/README.md`; do not route the argument through the normal gate. If
-  any exception condition fails, report that the artifact belongs in that root's `spec/`.
-  Amend the spec only when the user requested that write, then report the result and stop.
-  When every condition holds, continue to D2.
-- **D2. Confirm the write.** Present the qualifying argument, the spec file to amend, and
-  the proposed decision-record path. Wait for explicit approval to open the folder. This
-  is a Wait.
+- **D1. Test the exception.** Confirm that the user settled a rule, that they gave a
+  reason or rejected an option in their own words, and that those words do not fit in
+  the spec entry in a sentence or two. Apply only R1's root-selection checks, then read
+  the resolved root's `README.md` and `spec/README.md`; do not route the record through
+  the normal gate. If any condition fails, report that the material belongs in the spec
+  entry itself under `spec/README.md` "Recording a settled rule". Amend the spec only
+  when the user requested that write, then report the result and stop. When every
+  condition holds, continue to D2.
+- **D2. Confirm the write.** Present the user's reason, the spec file to amend, and the
+  proposed decision-record path. Wait for explicit approval to open the folder. This is
+  a Wait.
 - **D3. Install the folder.** Open by quoting the approval. If the resolved root's
   `decisions/` exists, read its README and stop on any conflict; never overwrite it.
   Otherwise create the folder and copy `templates/decisions-README.md` to its `README.md`.
@@ -148,16 +148,18 @@ Do not print per-step markers.
   ```markdown
   **Decision records are an exception, not a routing destination.** If
   `{docs-root}/decisions/` exists, read its `README.md` before writing there. Every
-  decision record adds a substantial losing argument to an accompanying
-  `{docs-root}/spec/` amendment; never route an artifact there from the normal gate.
+  decision record holds the user's reason for a rule when it is too long for the
+  accompanying `{docs-root}/spec/` entry; never route an artifact there from the normal
+  gate.
   ```
 
   Then write `{docs-root}/decisions/YYYY-MM-DD-slug.md` in the template's format and
   amend the authoritative `{docs-root}/spec/` file in the same change.
 - **D5. Validate and close.** Confirm that the current rule is in the resolved root's
-  `spec/`, the losing argument is in the decision record, both reachable pointers are
-  installed, and no gate names `decisions/`. If repository instructions authorize
-  autonomous local commits, commit all surfaces together. Otherwise, report the reviewed
+  `spec/` with a link to the record, the user's reason is in the decision record in
+  their words, both reachable pointers are installed, and no gate names `decisions/`. If
+  repository instructions authorize autonomous local commits, commit all surfaces
+  together. Otherwise, report the reviewed
   files and wait for explicit commit approval. Report the paths, validation result, and
   pending gate. After approval, open by quoting it, commit all surfaces together, and
   report the commit hash.

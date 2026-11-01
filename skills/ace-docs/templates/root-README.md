@@ -22,9 +22,9 @@ the folder.
 ## Everything settled amends `spec/`
 
 Put every settled instruction, agreement, library choice, convention, and preference in
-[`spec/`](spec/). Write the rule at the length it was given. Do not add a reason or an
-alternative the user did not state. A one-sentence rule such as "use RESTful routes" is
-complete. Do not create a separate ruling artifact.
+[`spec/`](spec/), written as the user gave it. Record it with the steps in
+[`spec/README.md`](spec/README.md), "Recording a settled rule". A one-sentence rule such
+as "use RESTful routes" is complete.
 
 **Read the relevant spec before working, and comply.** Raise a wrong spec with the user
 and amend it. Do not reopen, annotate, or route around a spec because it differs from a
