@@ -80,7 +80,8 @@ live, so they scatter or rot. `ace-docs` uses an established durable-docs root o
 scaffolds a `docs/` tree routed by a single gate — `vendor/` (third-party reference),
 `guides/` (how-to), `spec/` (our design and surface), `scratch/` (residual exploration)
 — and wires `CLAUDE.md`/`AGENTS.md` to its root index so humans and agents both find it.
-Everything settled amends `spec/`, which is authoritative; there is no decisions log.
+Everything settled amends `spec/`, which is authoritative, by the recording steps in its
+README; a decisions folder opens only for a reason too long for its spec entry.
 
 ## `ace-skill` — write skills agents actually follow
 
