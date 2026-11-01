@@ -21,9 +21,9 @@ belongs in `save.md`.
 ## Words and provenance
 
 The user states; the agent derives. Put a rule the user states in the durable-docs root's
-`spec/` exactly as stated: no added reason and no record of alternatives. Keep an agent
-derivation provisional. It becomes the user's statement only when the user takes it up
-in their own words.
+`spec/` as the user gave it, by the steps in that root's `spec/README.md`, "Recording a
+settled rule". Keep an agent derivation provisional. It becomes the user's statement only
+when the user takes it up in their own words.
 
 Use one provenance value on every ledger item:
 
@@ -60,8 +60,13 @@ SETTLED · user:verbatim — **Short claim, bolded.** What the item is and what
   the user said, wrapped at 90 columns with a two-space indent. | ev: "their
   exact words"
 
-open · agent:inferred — **Another claim.** No ev — the user has not said it.
+open · agent:inferred — **Another claim.** What was noticed and where, what was
+  checked and its result, and the decision left open. No ev — the user has not
+  said it.
 ```
+
+Write an open item with what `ace/ledger.md` I1 asks for. Run I2–I3 before presenting
+one.
 
 Use these statuses for entries that remain until the user takes them up:
 
@@ -115,8 +120,9 @@ that carries the user's words. Surface those items at the next save and retain t
   exists, recommend `ace-docs`, wait for the user's approval, and keep the item in the
   ledger. This is a Wait; never scaffold docs during `ace-save`. With one complete root,
   read its `README.md` and `spec/README.md`. For `SETTLED`, write the user's rule into
-  that root's `spec/`. For `KILLED`, remove what the user's words kill from the spec and
-  update every sentence that still teaches it.
+  that root's `spec/` by the "Recording a settled rule" steps in `spec/README.md`,
+  carrying any reason or rejected option the entry recorded. For `KILLED`, remove what
+  the user's words kill from the spec and update every sentence that still teaches it.
 - **G3. Close the ledger entry.** After the docs change succeeds, remove the item from
   `save.ledger.md` and leave a one-line pointer in `save.md`.
 
