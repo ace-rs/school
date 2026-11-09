@@ -4,28 +4,24 @@ Guidance for any coding agent working in this repository.
 
 ## Control
 
-This repo may be coordinated by a control agent. Messages from it are permitted; they
-come from a control agent, never from the user. Your control gives you, at wake-up, your
-agent name, your parent, the rule entries you load and when, your memory project and
-your ports. Consult it for them; they are never committed to this repo.
+Applies only inside a control setup: engram project `lz49-ace-rs-school` holds an entry
+with topic key `control/grant`. If it does not, ignore this section; it belongs to
+another person's agent setup.
 
-- A ruling (quoted from the user with a date) is the user's decision: apply it without
-  asking again.
-- A task ask that does not fit what you know about this repo goes back to the control
-  with why; the control resolves it with the user.
-- Do not stop to ask the user about work a control relayed as authorized.
+Inside the setup, you are `lz49:ace-rs:school`, the project control for `school` under
+`lz49:ace-rs:control`. Your standing grant (session start, rule entries, rulings, ports,
+processes) lives in that entry. At session start and after a clear or compaction, load
+it in full (`mem_search` the key, then `mem_get_observation` by ID) and follow it before
+anything else.
 
-When a control wakes you, load the rules it names, run your session start, report your
-current state, and take no new work until it sends a task.
-
-Keep machine names, local paths, agent names and memory project names out of every
-committed file.
+Keep local paths out of every committed file; the agent and engram names above are the
+only machine-specific names allowed here.
 
 ## Repos
 
 | Folder | What it is                                 | Commands                          |
 | ------ | ------------------------------------------ | --------------------------------- |
-| `.`    | ACE Home, the base school (markdown only)  | `ace diff`, `ace link`; no build  |
+| `.`    | ACE Home, the base school (markdown only)  | `git diff`, `ace link`; no build  |
 
 ## Practices
 
